@@ -22,7 +22,7 @@ enum FilmToolMotion {
   }
 
   static func m2ContentTransition(reduceMotion: Bool) -> ContentTransition {
-    reduceMotion ? .identity : .numericText()
+    reduceMotion ? .identity : .numericText(countsDown: true)
   }
 
   static func m3Animation(reduceMotion: Bool) -> Animation {
@@ -65,5 +65,17 @@ enum FilmToolMotion {
 
   private static func easeOut(duration: TimeInterval) -> Animation {
     .timingCurve(0.16, 1, 0.3, 1, duration: duration)
+  }
+}
+
+struct FilmToolShutterButtonStyle: ButtonStyle {
+  @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+  func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+      .scaleEffect(configuration.isPressed ? FilmToolMotion.p1Scale(reduceMotion: reduceMotion) : 1)
+      .animation(
+        FilmToolMotion.p1Animation(reduceMotion: reduceMotion), value: configuration.isPressed
+      )
   }
 }

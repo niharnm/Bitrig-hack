@@ -58,3 +58,6 @@
 "error.noDevices" = "Camera preview unavailable — tips still work";
 "error.sessionFailed" = "Couldn’t start the camera. Try again.";
 "error.retry" = "Retry";
+
+"capture.simulatedProActive" = "Simulated Pro";
+"outer.simulatedProBadge" = "SIMULATED PRO";

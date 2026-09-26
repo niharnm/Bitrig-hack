@@ -1,27 +1,25 @@
 # Demo last pass
 
-**State: Pending.** The demo script is planned and unrehearsed. No live feature or demo acceptance test is claimed as passed. Record each result only after observing it on the required target.
+**State: Pending.** `DEMO-SCRIPT.md` is planned and unrehearsed. Record acceptance only after observing the required target.
 
-**Current evidence:** Xcode 27.1 build 27A9269 and iOS SDK 27.1 are installed. The registered iOS 27.1 runtime is build 24A94401. Duo simulator `AF299D52-1471-4F63-9B56-877C15E9C8A4` is Booted, and the placeholder launch is visually verified on display 1. Timed launch and fold proof remain absent. Debug SDK 27.1 build passed. The final integrated nine unit tests passed on ordinary iPhone 17 Pro / iOS 27.0; these are not Duo proof, and test fixtures do not prove a configured or successful RevenueCat purchase. The final integrated Release build passed on the Duo simulator destination. The root now hosts the initial capture shell and CameraCaptureAccessory tip handoff. The camera preview and shutter remain unwired to a capture session. DesignSystem, shared types, and isolated Frost standby views exist. Duo-core and the initial CaptureAccessory handoffs are merged; complete Capture/CCA and RevenueCat handoffs are still needed. No cutover decision or RC behavior exists.
+## Current implementation and evidence
 
-## Canonical acceptance coverage
+Cursor has integrated the Duo-core and Capture/CCA handoffs, root entitlement snapshot, inner-only paywall host, and shared motion consumers. The coach cycles tips and shows the guide oval for actual or explicitly simulated Pro. Simulation labels distinguish rehearsal from purchase evidence. Preview and photo capture remain unwired. Frost remains standby; no cutover flag was changed.
 
-- **Shell:** TC-S01 BLOCKED pending timed Duo launch; TC-S02 BLOCKED pending fold proof; TC-S03 BLOCKED pending Duo-core implementation review; TC-S04 NOT RUN pending live cutover-reader verification; TC-S05 NOT RUN; TC-S06 NOT RUN.
-- **RevenueCat:** TC-R01 BLOCKED pending human RC IDs and configuration; TC-R02 BLOCKED; TC-R03 BLOCKED; TC-R04 BLOCKED; TC-R05 BLOCKED; TC-R06 BLOCKED; TC-R07 BLOCKED; TC-R08 BLOCKED. The SDK reference and unit-test fixtures do not establish a purchase path.
-- **Outer Lens primary:** TC-C01 BLOCKED; TC-C02 BLOCKED; TC-C03 BLOCKED; TC-C04 BLOCKED; TC-C05 BLOCKED; TC-C06 BLOCKED; TC-C07 BLOCKED; TC-C08 BLOCKED; TC-C09 BLOCKED; TC-C10 BLOCKED; TC-C11 BLOCKED; TC-C12 BLOCKED. The accessory host and static tip are present; complete capture behavior and live accessory acceptance remain unverified.
-- **FrostDuo cutover:** TC-F01 NOT RUN; TC-F02 NOT RUN; TC-F03 BLOCKED pending Duo simulator integration; TC-F04 BLOCKED pending RC and entitlement integration; TC-F05 NOT RUN; TC-F06 NOT RUN; TC-F07 NOT RUN; TC-F08 NOT RUN; TC-F09 NOT RUN. Frost is isolated standby and cutover has not been selected. Do not mark these N/A until Orchestrator confirms Outer Lens mode.
-- **Demo / rehearsal:** TC-D01 BLOCKED; TC-D02 BLOCKED; TC-D03 NOT RUN; TC-D04 NOT RUN; TC-D05 NOT RUN; TC-D06 NOT RUN; TC-D07 NOT RUN. `DEMO-SCRIPT.md` is planned and unrehearsed; rehearsal times are not measured.
-- **Integration:** TC-I01 BLOCKED pending Debug and Release checks on the integrate branch and Duo simulator; TC-I02 NOT RUN; TC-I03 NOT RUN; TC-I04 BLOCKED pending lane gate artifacts; TC-I05 NOT RUN; TC-I06 NOT RUN.
-- **Pitch / brand:** TC-P01 NOT RUN; TC-P02 NOT RUN; TC-P03 NOT RUN; TC-P04 NOT RUN; TC-P05 NOT RUN; TC-P06 NOT RUN.
+`GATE-SCAFFOLD.md` records current build and policy-test results, historical nine-test coverage, and the blocked iOS app-host attempt. `SHELL-READY.md` contains the Duo-core owner's partial shell evidence. `BITRIG-REVIEW.md` contains external visual review limits. These reports do not establish all-pose behavior, live capture, purchases, or other-display unlock.
 
-## Downstream handoff
+## Acceptance coverage
 
-Cursor integration has consumed Duo-core and the initial accessory host. Complete Capture/CCA and RevenueCat handoffs are still required for the final demo path. The Frost slice remains standby. Orchestrator owns cutover selection and gate decisions. No waiver or product behavior is inferred from builds, unit tests, previews, or source presence.
+| Area | Status and missing evidence |
+| --- | --- |
+| Shell | PARTIAL. Timed clean launch and all fold poses are unverified. Hinge effects have source review; launch-argument cutover has owner simulator evidence. |
+| RevenueCat | BLOCKED. Release key removal/configuration and live purchase, restore, cancellation, and entitlement propagation need owner evidence. The supplied key remains in the Release executable and is logged during DEBUG configuration. |
+| Capture/CCA | BLOCKED. Camera session and photo capture remain unwired; live accessory behavior and entitlement unlock across displays are unverified. |
+| Frost | STANDBY. Views and contracts exist, but cutover and live entitlement integration are not accepted. |
+| Demo | NOT RUN. Rehearsal timing and complete free-to-Pro path are unmeasured. |
+| Integration | PARTIAL. Current build and logic evidence are recorded separately from failed app-host startup and live acceptance. |
+| Pitch / brand | NOT RUN. No pitch or final brand acceptance is claimed. |
 
-Duo XCTest failed before connecting, with signal kill during bootstrap; no test cases ran in that attempt. Its cause remains unresolved. The integrated capture shell was visually observed in `/tmp/outer-lens-integrated-duo-inner.png`, with the accessory-unavailable banner and an unwired shutter. This is launch evidence only.
+## Handoff
 
-## Incoming RC handoff, 2026-09-26
-
-At `7e6eb80`, RevenueCat and paywall sources are present but the handoff does not compile. SDK 27.1 Debug build failed at `Monetization/Entitlements.swift:19`: public `state` exposes internal `EntitlementState`. Log: `/tmp/outer-lens-rc-handoff-build.log`. The earlier successful builds and nine tests apply to the pre-RC integration revision.
-
-The generated project now includes `OfferingsRepository.swift`. Root paywall and read-only entitlement wiring wait for a compiling RC handoff. `GATE-RC.md` readiness claims are not treated as observed purchase, restore, cancellation, or cross-display unlock proof. Cursor has not modified monetization or paywall implementation.
+Capture owner completes preview and photo capture. RC owner fixes Release key retention and key logging, then provides live purchase/restore evidence. QA records full Duo pose and accessory behavior. Orchestrator owns cutover and canonical gates. Cursor does not infer acceptance from simulation controls, previews, build success, or a lane's readiness claim.
