@@ -22,6 +22,11 @@ struct InnerCaptureView: View {
   @Environment(\.scenePhase) private var scenePhase
 
   private var isPro: Bool { entitlementState.isPro || coach.isProSimulated }
+  private var isStarting: Bool { capture.phase == .starting }
+  private var isSessionFailed: Bool {
+    if case .failed = capture.phase { return true }
+    return false
+  }
 
   var body: some View {
     Group {
@@ -51,20 +56,31 @@ struct InnerCaptureView: View {
           .ignoresSafeArea()
       }
       shutterFlash
-      if !isSubjectAvailable {
+      brandWhisper
+      if isStarting {
+        startingOverlay
+      }
+      if !isSubjectAvailable, !isStarting {
         subjectPreview
           .frame(maxHeight: .infinity)
       }
-      VStack(spacing: 16) {
+      VStack(spacing: FilmToolTokens.Space.s4) {
         if let banner {
           Text(banner)
             .font(.footnote.weight(.medium))
-            .foregroundStyle(.white.opacity(0.7))
+            .foregroundStyle(FilmToolTokens.Palette.inkMuted)
+        }
+        if isSessionFailed {
+          Button("error.retry") {
+            Task { await capture.start() }
+          }
+          .buttonStyle(.glassProminent)
+          .tint(FilmToolTokens.Palette.accent)
         }
         shutterButton
           .frame(maxWidth: .infinity)
           .overlay(alignment: .leading) {
-            HStack(spacing: 12) {
+            HStack(spacing: FilmToolTokens.Space.s3) {
               flipButton
               subjectToggle
             }
@@ -73,8 +89,8 @@ struct InnerCaptureView: View {
             proControl
           }
       }
-      .padding(.horizontal, 24)
-      .padding(.bottom, 24)
+      .padding(.horizontal, FilmToolTokens.Space.s5)
+      .padding(.bottom, FilmToolTokens.Space.s5)
     }
     .toolbar {
       ToolbarItem(placement: .topBarTrailing) {
@@ -102,8 +118,37 @@ struct InnerCaptureView: View {
         model: coach))
   }
 
+  /// Quiet on-canvas wordmark — brand test without nav reliance (§11.0.4).
+  private var brandWhisper: some View {
+    VStack {
+      Text("capture.brand")
+        .font(FilmToolTokens.Brand.font)
+        .foregroundStyle(FilmToolTokens.Palette.inkMuted)
+        .padding(.top, FilmToolTokens.Space.s3)
+      Spacer()
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .allowsHitTesting(false)
+    .accessibilityHidden(true)
+  }
+
+  /// B.starting: Activation Energy — never leave first launch as blank charcoal.
+  private var startingOverlay: some View {
+    VStack(spacing: FilmToolTokens.Space.s3) {
+      ProgressView()
+        .tint(FilmToolTokens.Palette.ink)
+      Text("capture.starting")
+        .font(.subheadline.weight(.medium))
+        .foregroundStyle(FilmToolTokens.Palette.inkMuted)
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .allowsHitTesting(false)
+    .accessibilityElement(children: .combine)
+  }
+
   /// One status line at most. Missing camera wins because it explains the black preview.
   private var banner: LocalizedStringKey? {
+    if isStarting { return nil }
     if case .failed = capture.phase {
       return "error.sessionFailed"
     }
@@ -193,15 +238,22 @@ struct InnerCaptureView: View {
         await capture.capturePhoto()
       }
     } label: {
-      Circle()
-        .fill(.white)
-        .frame(width: 68, height: 68)
-        .padding(6)
-        .overlay(Circle().stroke(.white, lineWidth: 3))
+      ZStack {
+        Circle()
+          .stroke(.white, lineWidth: 3)
+        Circle()
+          .fill(.white)
+          .padding(6)
+      }
+      .frame(
+        width: FilmToolTokens.Control.shutterSize,
+        height: FilmToolTokens.Control.shutterSize)
     }
     .buttonStyle(FilmToolShutterButtonStyle())
-    .disabled(capture.phase == .shutterFlash || coach.countdown != nil)
-    .sensoryFeedback(.impact(weight: .light), trigger: capture.capturedPhotoCount)
+    .disabled(
+      isStarting || isSessionFailed || capture.phase == .shutterFlash || coach.countdown != nil)
+    // Peak-End: haptic on shutterFlash entry, same-frame as the flash (causality).
+    .sensoryFeedback(.impact(weight: .light), trigger: capture.phase == .shutterFlash)
     .accessibilityLabel("Shutter")
   }
 

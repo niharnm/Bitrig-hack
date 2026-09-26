@@ -78,4 +78,12 @@ enum FilmToolTokens {
     static let fill = Color.white.opacity(0.12)
     static let duration: TimeInterval = 0.12
   }
+
+  public enum KidMagnet {
+    public static let pulseDuration: TimeInterval = 0.85
+    public static let bounceOffset: CGFloat = 8.0
+    public static let minScale: CGFloat = 0.96
+    public static let maxScale: CGFloat = 1.16
+  }
 }
+

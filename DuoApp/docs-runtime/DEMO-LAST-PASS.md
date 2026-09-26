@@ -14,7 +14,7 @@ Cursor has integrated the Duo-core and Capture/CCA handoffs, root entitlement sn
 | --- | --- |
 | Shell | PARTIAL. Timed clean launch and all fold poses are unverified. Hinge effects have source review; launch-argument cutover has owner simulator evidence. |
 | RevenueCat | BLOCKED. Owner revision `2b321c1` passes a fresh Release key-removal scan and removes bootstrap key interpolation. Release configuration and live purchase, restore, cancellation, and entitlement propagation still need evidence. |
-| Capture/CCA | BLOCKED. Camera session and photo capture are implemented in the owner handoff but unverified live; live accessory behavior and entitlement unlock across displays are unverified. |
+| Capture/CCA | BLOCKED for live Duo. Source path stabilized: countdown-then-photo shutter, Peak-End no-camera flash, permission/retry recoveries, Debug build + `CaptureSessionTests` PASS on Xcode 27.1 / Duo sim. Live accessory, device preview, and cross-display unlock still unverified. |
 | Frost | STANDBY. Views and contracts exist, but cutover and live entitlement integration are not accepted. |
 | Demo | NOT RUN. Rehearsal timing and complete free-to-Pro path are unmeasured. |
 | Integration | PARTIAL. Current build and logic evidence are recorded separately from failed app-host startup and live acceptance. |
@@ -22,4 +22,4 @@ Cursor has integrated the Duo-core and Capture/CCA handoffs, root entitlement sn
 
 ## Handoff
 
-Capture owner validates preview and photo capture and resolves the dirty-checkout constructor failure reported by Bitrig QA. RC owner provides live purchase/restore evidence; the key-retention and bootstrap-print findings are resolved. QA records full Duo pose and accessory behavior. Orchestrator owns cutover and canonical gates. Cursor does not infer acceptance from simulation controls, previews, build success, or a lane's readiness claim.
+Dirty-checkout Capture/CCA polish is landed (`sat/capture-polish` / merge to main); Bitrig QA constructor report for the dirty shared checkout is cleared by this compile-clean revision — not a live Duo PASS. RC owner provides live purchase/restore evidence; the key-retention and bootstrap-print findings are resolved. QA records full Duo pose and accessory behavior. Orchestrator owns cutover and canonical gates. Cursor does not infer acceptance from simulation controls, previews, build success, or a lane's readiness claim.

@@ -5,21 +5,44 @@ import SwiftUI
 @Observable
 final class CoachModel {
   static let freeTips = ["tip.free.1", "tip.free.2", "tip.free.3"]
-  static let proTips = ["tip.kids.1", "tip.kids.2", "tip.kids.3"]
+  static let kidsTips = ["tip.kids.1", "tip.kids.2", "tip.kids.3"]
+  static let portraitTips = ["tip.portrait.1", "tip.portrait.2", "tip.portrait.3"]
+  static let proTips = kidsTips
   static let tipInterval: Duration = .seconds(6)
 
+  var activePack: TipPack = .free
   private(set) var tipIndex = 0
   private(set) var countdown: Int?
   /// Settings override for rehearsal. Real unlocks come from EntitlementsModel.
   var isProSimulated = false
 
+  func currentTips(isPro: Bool) -> [String] {
+    guard isPro else { return Self.freeTips }
+    switch activePack {
+    case .free:
+      return Self.freeTips
+    case .kidsPro:
+      return Self.kidsTips
+    case .portraitPro:
+      return Self.portraitTips
+    }
+  }
+
   func tipKey(isPro: Bool) -> String {
-    let tips = isPro ? Self.proTips : Self.freeTips
+    let tips = currentTips(isPro: isPro)
     return tips[tipIndex % tips.count]
   }
 
   func advanceTip() {
     tipIndex += 1
+  }
+
+  func resetTipIndex() {
+    tipIndex = 0
+  }
+
+  func setCountdown(_ value: Int?) {
+    countdown = value
   }
 
   /// Advances the tip on a timer until the calling task is cancelled.
@@ -51,6 +74,7 @@ struct SubjectCoachView: View {
 
   private var isPro: Bool { entitlementState.isPro || model.isProSimulated }
   private var tipKey: String { model.tipKey(isPro: isPro) }
+  private var showKidMagnet: Bool { isPro && model.activePack == .kidsPro }
 
   var body: some View {
     ZStack {
@@ -65,8 +89,8 @@ struct SubjectCoachView: View {
       VStack {
         HStack {
           Text("outer.brand")
-            .font(.system(size: 14, weight: .medium))
-            .foregroundStyle(.white.opacity(0.55))
+            .font(FilmToolTokens.Brand.font)
+            .foregroundStyle(FilmToolTokens.Palette.inkMuted)
           Spacer()
           if isPro {
             Text(
@@ -74,10 +98,21 @@ struct SubjectCoachView: View {
                 entitlementState.isPro ? "outer.proBadge" : "outer.simulatedProBadge"
               )
             )
-            .font(.system(size: 14, weight: .semibold))
+            .font(.system(size: FilmToolTokens.Brand.size, weight: .semibold))
             .foregroundStyle(GuideOvalView.accent)
           }
         }
+
+        if showKidMagnet {
+          KidMagnetView()
+            .padding(.top, FilmToolTokens.Space.s2)
+            .transition(
+              reduceMotion
+                ? .opacity
+                : .opacity.combined(with: .scale(scale: 0.85))
+            )
+        }
+
         Spacer()
         ZStack {
           // Keyed by tip so a change settles in (M1) instead of stacking two plates.
@@ -102,6 +137,8 @@ struct SubjectCoachView: View {
     }
     .animation(FilmToolMotion.m1Animation(reduceMotion: reduceMotion), value: tipKey)
     .animation(FilmToolMotion.m3Animation(reduceMotion: reduceMotion), value: isPro)
+    .animation(FilmToolMotion.m3Animation(reduceMotion: reduceMotion), value: showKidMagnet)
     .allowsHitTesting(false)
   }
 }
+
