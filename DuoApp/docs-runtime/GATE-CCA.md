@@ -2,7 +2,7 @@
 
 **Status: PARTIAL — tip story coded; live Duo CCA / purchase→oval BLOCKED.**
 
-`time_local:` 13:40 (Sat Sep 26, 2026)  
+`time_local:` 13:50 (Sat Sep 26, 2026)  
 `lane:` Capture / CameraCaptureAccessory / outer coach  
 `scope_frozen:` Tip-only outer + guide oval on Pro. FilmStock, KidMagnet, tip-pack theater **out of win bar** (parked on `sat/capture` / `sat/coach`, not merged).
 
@@ -15,10 +15,13 @@
 | CCA host | `CameraCaptureAccessoryHost` on `InnerCaptureView`; binds `isEnabled` / `isAvailable` and shared `CoachModel` |
 | Tip-only outer | `SubjectCoachView`: free tips cycle; Pro shows `GuideOvalView` bloom; brand quieter than tip |
 | Simulate controls | Settings: Simulate tip, Simulate Pro (labeled simulated), Simulate countdown |
-| Shutter → tip + T3 | Shutter advances tip **and** `Task { await coach.startCountdown() }` (not Settings-only) |
-| Photo result | `origin/sat/capture-result` on main: shutter flash, failure banner, `CaptureSessionTests`; photo not saved |
+| Shutter → tip + T3 | Shutter advances tip, awaits countdown, then `capturePhoto()` (not Settings-only; `1ec017a` + polish) |
+| Photo result | shutter flash, failure banner + Retry, `CaptureSessionTests`; photo not saved |
 | Inner paywall host | Pro CTA → `presentPaywall()`; unlock contract is outer oval via `entitlementState.isPro` |
-| Sim no-camera path | Banner when no devices; tips still advance |
+| Sim no-camera path | Banner when no devices; idle+`!hasCamera` Peak-End flash; tips still advance |
+| Recovery | Restricted/denied Settings path; session-failed Retry → `start()`; accessory-unavailable banner |
+| Debug build | **PASS** — Xcode 27.1 (`Desktop/Xcode.app` 27A9269), SDK 27.1, `generic/platform=iOS Simulator`, log `/tmp/duoapp-polish-build.log` |
+| Unit tests | **PASS** — `CaptureSessionTests` 3/3 on Duo sim `A5F8B31A…`, log `/tmp/duoapp-capture-tests.log` |
 
 ---
 
