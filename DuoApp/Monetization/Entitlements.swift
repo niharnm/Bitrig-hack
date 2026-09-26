@@ -2,7 +2,8 @@
 //  Entitlements.swift
 //  DuoApp
 //
-//  Live EntitlementState publisher. Owned by LANE-RC (Codex).
+//  OWNER: LANE-RC · Live EntitlementState publisher.
+//  Observes Purchases.shared.customerInfoStream and publishes EntitlementState.
 //
 
 import Foundation
@@ -15,32 +16,44 @@ import RevenueCat
 public final class EntitlementsModel: ObservableObject {
     public static let shared = EntitlementsModel()
 
-    @Published public private(set) var state = EntitlementState(
-        status: .unknown,
-        entitlementID: RCIdentifiers.entitlementId,
-        lastError: nil
-    )
+    @Published public private(set) var state: EntitlementState
 
-    private init() {
+    private var streamTask: Task<Void, Never>?
+
+    public init() {
+        self.state = EntitlementState(
+            status: .unknown,
+            entitlementID: RCIdentifiers.entitlementId,
+            lastError: nil
+        )
         start()
     }
 
     public func start() {
         state = EntitlementState(status: .loading, entitlementID: RCIdentifiers.entitlementId, lastError: nil)
         #if canImport(RevenueCat)
-        Task {
+        streamTask?.cancel()
+        streamTask = Task { [weak self] in
             guard Purchases.isConfigured else {
-                state = EntitlementState(status: .inactive, entitlementID: RCIdentifiers.entitlementId, lastError: nil)
+                self?.state = EntitlementState(
+                    status: .inactive,
+                    entitlementID: RCIdentifiers.entitlementId,
+                    lastError: "Purchases not configured"
+                )
                 return
             }
-            for await info in Purchases.shared.customerInfoStream {
-                let id = RCIdentifiers.entitlementId
-                let unlocked = info.entitlements[id]?.isActive == true
-                self.state = EntitlementState(
-                    status: unlocked ? .active : .inactive,
-                    entitlementID: id,
-                    lastError: nil
-                )
+            do {
+                for await info in Purchases.shared.customerInfoStream {
+                    guard !Task.isCancelled else { break }
+                    let id = RCIdentifiers.entitlementId
+                    precondition(!id.contains("PLACEHOLDER"), "RC BLOCKED §9.2")
+                    let unlocked = info.entitlements[id]?.isActive == true
+                    self?.state = EntitlementState(
+                        status: unlocked ? .active : .inactive,
+                        entitlementID: id,
+                        lastError: nil
+                    )
+                }
             }
         }
         #else
@@ -48,12 +61,7 @@ public final class EntitlementsModel: ObservableObject {
         #endif
     }
 
-    /// Rehearsal and stage-safe recovery helper
-    public func simulateUnlock() {
-        self.state = EntitlementState(status: .active, entitlementID: RCIdentifiers.entitlementId, lastError: nil)
-    }
-
-    public func simulateLock() {
-        self.state = EntitlementState(status: .inactive, entitlementID: RCIdentifiers.entitlementId, lastError: nil)
+    deinit {
+        streamTask?.cancel()
     }
 }
