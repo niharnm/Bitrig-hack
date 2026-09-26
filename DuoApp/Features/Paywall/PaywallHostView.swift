@@ -63,7 +63,7 @@ public struct PaywallHostView: View {
 
                     // Value Proposition Header
                     VStack(spacing: 8) {
-                        Text("Outer Lens Pro")
+                        Text("Insider Pro")
                             .font(.system(.largeTitle, design: .rounded, weight: .bold))
                             .foregroundColor(.white)
 

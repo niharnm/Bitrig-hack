@@ -14,6 +14,7 @@ struct InnerCaptureView: View {
   @State private var isSubjectEnabled = true
   @State private var isSubjectAvailable = false
   @State private var isSettingsPresented = false
+  @State private var isSubjectPreviewPresented = false
   @State private var subscriptionMessage: String?
   @ObservedObject private var entitlements = EntitlementsModel.shared
   @Environment(\.presentPaywall) private var presentPaywall
@@ -47,7 +48,7 @@ struct InnerCaptureView: View {
   }
 
   private var captureShell: some View {
-    ZStack(alignment: .bottom) {
+    ZStack {
       FilmToolTokens.Palette.canvas.ignoresSafeArea()
       if capture.isLive {
         CapturePreviewView(session: capture.session)
@@ -63,54 +64,31 @@ struct InnerCaptureView: View {
           }
           .ignoresSafeArea()
       }
+      controlScrim
       shutterFlash
-      brandWhisper
       if isStarting {
         startingOverlay
       }
-      VStack(spacing: FilmToolTokens.Space.s4) {
-        // Stacked above the controls so the film stock row never covers the tip plate.
-        if !isSubjectAvailable, !isStarting {
-          subjectPreview
-        }
-        if let banner {
-          Text(banner)
-            .font(.footnote.weight(.medium))
-            .foregroundStyle(FilmToolTokens.Palette.inkMuted)
-        }
-        if isSessionFailed {
-          Button("error.retry") {
-            Task { await capture.start() }
-          }
-          .buttonStyle(.glassProminent)
-          .tint(FilmToolTokens.Palette.accent)
-        }
-        // Locked stocks open the paywall only through presentPaywall, which is inner-display only.
-        FilmStockSelectorView(selectedStock: $selectedStock, isPro: isPro)
-        shutterButton
-          .frame(maxWidth: .infinity)
-          .overlay(alignment: .leading) {
-            HStack(spacing: FilmToolTokens.Space.s3) {
-              flipButton
-              subjectToggle
-            }
-          }
-          .overlay(alignment: .trailing) {
-            proControl
-          }
+      if let countdown = coach.countdown {
+        // Mirrors the outer countdown so the photographer sees progress after pressing the shutter.
+        CountdownView(value: countdown)
+          .allowsHitTesting(false)
       }
-      .padding(.horizontal, FilmToolTokens.Space.s5)
-      .padding(.bottom, FilmToolTokens.Space.s5)
-    }
-    .toolbar {
-      ToolbarItem(placement: .topBarTrailing) {
-        Button("capture.settings.title", systemImage: "gearshape") {
-          isSettingsPresented = true
-        }
+      VStack(spacing: 0) {
+        topBar
+        statusStack
+        Spacer(minLength: 0)
+        bottomControls
       }
     }
+    .toolbarVisibility(.hidden, for: .navigationBar)
     .sheet(isPresented: $isSettingsPresented) {
       settingsSheet
+    }
+    .sheet(isPresented: $isSubjectPreviewPresented) {
+      SubjectCoachView(model: coach)
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
     }
     .onChange(of: isPro) { _, newIsPro in
       if !newIsPro && selectedStock.requiresPro {
@@ -133,16 +111,71 @@ struct InnerCaptureView: View {
         model: coach))
   }
 
-  /// Quiet on-canvas wordmark — brand test without nav reliance (§11.0.4).
-  private var brandWhisper: some View {
-    VStack {
-      Text("capture.brand")
-        .font(FilmToolTokens.Brand.font)
-        .foregroundStyle(FilmToolTokens.Palette.inkMuted)
-        .padding(.top, FilmToolTokens.Space.s3)
+  /// Settings on the leading edge, Pro on the trailing edge. Nothing else competes with the preview.
+  private var topBar: some View {
+    HStack {
+      Button("capture.settings.title", systemImage: "gearshape") {
+        isSettingsPresented = true
+      }
+      .labelStyle(.iconOnly)
+      .buttonStyle(.glass)
+      .buttonBorderShape(.circle)
       Spacer()
+      proControl
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .tint(.white)
+    .padding(.horizontal, FilmToolTokens.Space.s4)
+    .padding(.top, FilmToolTokens.Space.s2)
+  }
+
+  /// Only real problems surface here, as one quiet pill.
+  @ViewBuilder
+  private var statusStack: some View {
+    VStack(spacing: FilmToolTokens.Space.s3) {
+      if let banner {
+        Text(banner)
+          .font(.footnote.weight(.medium))
+          .foregroundStyle(FilmToolTokens.Palette.ink)
+          .padding(.horizontal, FilmToolTokens.Space.s3)
+          .padding(.vertical, FilmToolTokens.Space.s2)
+          .glassEffect(in: Capsule())
+      }
+      if isSessionFailed {
+        Button("error.retry") {
+          Task { await capture.start() }
+        }
+        .buttonStyle(.glassProminent)
+        .tint(FilmToolTokens.Palette.accent)
+      }
+    }
+    .padding(.top, FilmToolTokens.Space.s3)
+  }
+
+  /// Film stock strip above a symmetric shutter row, like the system Camera app.
+  private var bottomControls: some View {
+    VStack(spacing: FilmToolTokens.Space.s5) {
+      // Locked stocks open the paywall only through presentPaywall, which is inner-display only.
+      FilmStockSelectorView(selectedStock: $selectedStock, isPro: isPro)
+      HStack {
+        leadingSlot
+          .frame(maxWidth: .infinity)
+        shutterButton
+        flipButton
+          .frame(maxWidth: .infinity)
+      }
+    }
+    .padding(.horizontal, FilmToolTokens.Space.s5)
+    .padding(.bottom, FilmToolTokens.Space.s4)
+  }
+
+  /// Darkens the bottom of the preview so the controls stay legible over bright scenes.
+  private var controlScrim: some View {
+    LinearGradient(
+      colors: [.clear, .black.opacity(0.55)],
+      startPoint: .center,
+      endPoint: .bottom
+    )
+    .ignoresSafeArea()
     .allowsHitTesting(false)
     .accessibilityHidden(true)
   }
@@ -161,19 +194,16 @@ struct InnerCaptureView: View {
     .accessibilityElement(children: .combine)
   }
 
-  /// One status line at most. Missing camera wins because it explains the black preview.
+  /// One status line at most, and only when the photographer can act on it.
   private var banner: LocalizedStringKey? {
     if isStarting { return nil }
     if case .failed = capture.phase {
       return "error.sessionFailed"
     }
-    if !capture.hasCamera {
-      return "capture.banner.noDevices"
-    }
     if capture.lastPhotoFailed {
       return "capture.banner.photoFailed"
     }
-    return isSubjectAvailable ? nil : "capture.banner.accessoryUnavailable"
+    return nil
   }
 
   @ViewBuilder
@@ -183,9 +213,15 @@ struct InnerCaptureView: View {
         Task { await capture.flipCamera() }
       }
       .labelStyle(.iconOnly)
+      .font(FilmToolTokens.Control.iconFont)
+      .frame(width: FilmToolTokens.Control.minHit, height: FilmToolTokens.Control.minHit)
       .buttonStyle(.glass)
+      .buttonBorderShape(.circle)
+      .controlSize(.large)
       .tint(.white)
       .disabled(capture.phase == .shutterFlash)
+    } else {
+      Color.clear.frame(width: FilmToolTokens.Control.minHit, height: FilmToolTokens.Control.minHit)
     }
   }
 
@@ -199,28 +235,43 @@ struct InnerCaptureView: View {
       .accessibilityHidden(true)
   }
 
-  /// While the system is not presenting the accessory, show the photographer what the subject would see.
-  private var subjectPreview: some View {
-    SubjectCoachView(model: coach)
-      .frame(width: 466, height: 678)
-      .scaleEffect(0.42)
-      .frame(width: 196, height: 285)
-      .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-      .overlay(
-        RoundedRectangle(cornerRadius: 18, style: .continuous)
-          .stroke(.white.opacity(0.2), lineWidth: 1))
-      .accessibilityHidden(true)
-  }
-
+  /// Where the Camera app puts the last photo: the subject screen toggle, or a thumbnail of what the subject sees.
   @ViewBuilder
-  private var subjectToggle: some View {
-    // Shown only while the system can present the accessory; enabled is the user's choice.
+  private var leadingSlot: some View {
     if isSubjectAvailable {
+      // Shown only while the system can present the accessory; enabled is the user's choice.
       Toggle("capture.subjectToggle", systemImage: "person.crop.rectangle", isOn: $isSubjectEnabled)
         .toggleStyle(.button)
         .labelStyle(.iconOnly)
-        .tint(.white)
+        .font(FilmToolTokens.Control.iconFont)
+        .frame(width: FilmToolTokens.Control.minHit, height: FilmToolTokens.Control.minHit)
+        .buttonStyle(.glass)
+        .buttonBorderShape(.circle)
+        .controlSize(.large)
+        // On reads as amber, like the Camera app's active toggles, so the white glyph stays visible.
+        .tint(FilmToolTokens.Palette.accent)
+    } else if !isStarting {
+      subjectThumbnail
     }
+  }
+
+  /// Without the accessory, a tap shows the photographer what the subject would see.
+  private var subjectThumbnail: some View {
+    Button {
+      isSubjectPreviewPresented = true
+    } label: {
+      SubjectCoachView(model: coach)
+        .frame(width: 466, height: 678)
+        .scaleEffect(48.0 / 466)
+        .frame(width: 48, height: 70)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(
+          RoundedRectangle(cornerRadius: 8, style: .continuous)
+            .stroke(.white.opacity(0.6), lineWidth: 1.5))
+        .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+    }
+    .buttonStyle(FilmToolSideButtonStyle())
+    .accessibilityLabel("capture.subjectPreview")
   }
 
   @ViewBuilder
@@ -231,12 +282,16 @@ struct InnerCaptureView: View {
           entitlements.state.isPro ? "capture.proActive" : "capture.simulatedProActive"
         ), systemImage: "checkmark.seal.fill"
       )
-      .font(.subheadline.weight(.semibold))
+      .font(.footnote.weight(.semibold))
       .foregroundStyle(GuideOvalView.accent)
+      .padding(.horizontal, FilmToolTokens.Space.s3)
+      .padding(.vertical, FilmToolTokens.Space.s2)
+      .glassEffect(in: Capsule())
     } else {
-      Button("capture.proCTA") {
+      Button("capture.proCTA", systemImage: "sparkles") {
         presentPaywall()
       }
+      .font(.footnote.weight(.semibold))
       .buttonStyle(.glass)
       .tint(GuideOvalView.accent)
       .disabled(!presentPaywall.isAvailable)
@@ -254,14 +309,15 @@ struct InnerCaptureView: View {
     } label: {
       ZStack {
         Circle()
-          .stroke(.white, lineWidth: 3)
+          .stroke(.white, lineWidth: 4)
         Circle()
           .fill(.white)
-          .padding(6)
+          .padding(7)
       }
       .frame(
         width: FilmToolTokens.Control.shutterSize,
         height: FilmToolTokens.Control.shutterSize)
+      .contentShape(Circle())
     }
     .buttonStyle(FilmToolShutterButtonStyle())
     .disabled(
@@ -271,7 +327,7 @@ struct InnerCaptureView: View {
       // Fire on entry only; the trigger also changes when the flash ends.
       isFlashing
     }
-    .accessibilityLabel("Shutter")
+    .accessibilityLabel("capture.shutter")
   }
 
   private var settingsSheet: some View {

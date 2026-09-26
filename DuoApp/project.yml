@@ -13,8 +13,8 @@ settings:
     TARGETED_DEVICE_FAMILY: "1"
     CODE_SIGN_STYLE: Automatic
     GENERATE_INFOPLIST_FILE: YES
-    INFOPLIST_KEY_CFBundleDisplayName: Outer Lens
-    INFOPLIST_KEY_NSCameraUsageDescription: Outer Lens uses the camera so you can shoot from the inner display while coaching the subject on the outer.
+    INFOPLIST_KEY_CFBundleDisplayName: Insider
+    INFOPLIST_KEY_NSCameraUsageDescription: Insider uses the camera so you can shoot from the inner display while coaching the subject on the outer.
     INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
     INFOPLIST_KEY_UILaunchScreen_Generation: YES
     INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight

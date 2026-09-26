@@ -1,25 +1,27 @@
-"brand.name" = "Outer Lens";
+"brand.name" = "Insider";
 
 "pitch.brad.outerLens" = "Parents photographing kids can’t see framing or pose while they shoot — Duo’s outer is the subject coach; free outer preview, Pro pose overlays.";
 "pitch.matt.outerLens" = "Free: outer preview. Pro: pose overlays on the outer display.";
-"pitch.close.outerLens" = "Parents pay for the overlays that make the kid look good without turning the phone around. That’s Outer Lens.";
+"pitch.close.outerLens" = "Parents pay for the overlays that make the kid look good without turning the phone around. That’s Insider.";
 "demo.verbal.ccaFlake" = "Subject coach is CCA; sim can’t always light outer for camera — on device the outer faces the kid.";
 
-"perm.brand" = "Outer Lens";
+"perm.brand" = "Insider";
 "perm.title" = "Subject coaching needs the camera";
-"perm.body" = "Outer Lens shows framing tips on the outer display while you shoot from the inner. Photos stay on this device.";
+"perm.body" = "Insider shows framing tips on the outer display while you shoot from the inner. Photos stay on this device.";
 "perm.cta" = "Continue to Camera";
 "perm.notNow" = "Not now";
-"perm.plist.camera" = "Outer Lens uses the camera so you can shoot from the inner display while coaching the subject on the outer.";
+"perm.plist.camera" = "Insider uses the camera so you can shoot from the inner display while coaching the subject on the outer.";
 
-"capture.brand" = "Outer Lens";
+"capture.brand" = "Insider";
 "capture.close" = "Close";
 "capture.subjectToggle" = "Subject screen";
 "capture.flip" = "Flip";
+"capture.shutter" = "Shutter";
+"capture.subjectPreview" = "Subject screen preview";
 "capture.tipPack.free" = "Free";
 "capture.tipPack.kids" = "Kids";
 "capture.tipPack.portrait" = "Portrait";
-"capture.proCTA" = "Pro coaching";
+"capture.proCTA" = "Pro";
 "capture.proActive" = "Pro";
 "capture.starting" = "Getting ready…";
 "capture.banner.accessoryUnavailable" = "Subject screen unavailable on this device";
@@ -53,7 +55,7 @@
 "tip.portrait.2" = "Chin over toes";
 "tip.portrait.3" = "Leave headroom";
 
-"outer.brand" = "Outer Lens";
+"outer.brand" = "Insider";
 "outer.proBadge" = "Pro";
 "outer.gettingReady" = "Getting ready…";
 
@@ -74,6 +76,7 @@
 "capture.simulatedProActive" = "Simulated Pro";
 "outer.simulatedProBadge" = "SIMULATED PRO";
 
+"filmStock.locked" = "Locked";
 "filmStock.natural.name" = "Natural";
 "filmStock.natural.description" = "True-to-life color with balanced contrast";
 "filmStock.leicaMono.name" = "Mono";
