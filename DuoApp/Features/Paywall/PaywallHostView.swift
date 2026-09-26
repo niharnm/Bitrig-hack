@@ -28,11 +28,11 @@ public struct PaywallHostView: View {
             #if canImport(RevenueCatUI)
             PaywallView(displayCloseButton: true)
                 .onPurchaseCompleted { customerInfo in
-                    print("PaywallHostView: Purchase completed. Entitlements: \(customerInfo.entitlements)")
+                    entitlements.apply(customerInfo: customerInfo)
                     isPresented = false
                 }
                 .onRestoreCompleted { customerInfo in
-                    print("PaywallHostView: Restore completed. Entitlements: \(customerInfo.entitlements)")
+                    entitlements.apply(customerInfo: customerInfo)
                     if customerInfo.entitlements[RCIdentifiers.entitlementId]?.isActive == true {
                         isPresented = false
                     }
