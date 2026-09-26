@@ -65,8 +65,8 @@ struct SubjectCoachView: View {
       VStack {
         HStack {
           Text("outer.brand")
-            .font(.system(size: 14, weight: .medium))
-            .foregroundStyle(.white.opacity(0.55))
+            .font(FilmToolTokens.Brand.font)
+            .foregroundStyle(FilmToolTokens.Palette.inkMuted)
           Spacer()
           if isPro {
             Text(
@@ -74,7 +74,7 @@ struct SubjectCoachView: View {
                 entitlementState.isPro ? "outer.proBadge" : "outer.simulatedProBadge"
               )
             )
-            .font(.system(size: 14, weight: .semibold))
+            .font(.system(size: FilmToolTokens.Brand.size, weight: .semibold))
             .foregroundStyle(GuideOvalView.accent)
           }
         }

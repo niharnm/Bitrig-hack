@@ -6,22 +6,22 @@ struct PermissionPrimerView: View {
   let onContinue: () -> Void
 
   var body: some View {
-    VStack(spacing: 20) {
+    VStack(spacing: FilmToolTokens.Space.s5) {
       Spacer()
       Text("perm.brand")
-        .font(.headline)
-        .foregroundStyle(.white.opacity(0.7))
+        .font(FilmToolTokens.Brand.font)
+        .foregroundStyle(FilmToolTokens.Palette.inkMuted)
       Image(systemName: "camera.fill")
         .font(.system(size: 56))
-        .foregroundStyle(.white)
+        .foregroundStyle(FilmToolTokens.Palette.ink)
         .accessibilityHidden(true)
       Text("perm.title")
         .font(.title2.bold())
-        .foregroundStyle(.white)
+        .foregroundStyle(FilmToolTokens.Palette.ink)
         .multilineTextAlignment(.center)
       Text("perm.body")
         .font(.body)
-        .foregroundStyle(.white.opacity(0.7))
+        .foregroundStyle(FilmToolTokens.Palette.inkMuted)
         .multilineTextAlignment(.center)
         .lineLimit(3)
       Spacer()
@@ -35,8 +35,8 @@ struct PermissionPrimerView: View {
       .tint(GuideOvalView.accent)
       .disabled(isRequesting)
     }
-    .padding(24)
+    .padding(FilmToolTokens.Space.s5)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background(Color(red: 5 / 255, green: 5 / 255, blue: 5 / 255).ignoresSafeArea())
+    .background(FilmToolTokens.Palette.canvas.ignoresSafeArea())
   }
 }
