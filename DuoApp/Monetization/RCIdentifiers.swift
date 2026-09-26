@@ -21,7 +21,7 @@ public enum RCIdentifiers {
     public static let apiKey: String = ""
     #endif
     public static let entitlementId = "pro"
-    public static let productId = "outerlens_pro_monthly"
+    public static let productId = "monthly"
     public static let offeringId = "default"
     /// Authoritative package on the live Test Store offering.
     public static let packageId = "$rc_monthly"
@@ -42,6 +42,7 @@ public enum RCIdentifiers {
 }
 
 public enum SubscriptionAccess {
+    /// Unlock only on entitlement `pro` (never `photon_pro` or other aliases).
     public static func isUnlocked(activeEntitlementIDs: some Sequence<String>) -> Bool {
         Set(activeEntitlementIDs).contains(RCIdentifiers.entitlementId)
     }
