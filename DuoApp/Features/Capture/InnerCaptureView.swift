@@ -15,13 +15,11 @@ struct InnerCaptureView: View {
             .font(.footnote.weight(.medium))
             .foregroundStyle(.white.opacity(0.7))
         }
-        HStack {
-          subjectToggle
-            .frame(maxWidth: .infinity, alignment: .leading)
-          shutterButton
-          Color.clear
-            .frame(maxWidth: .infinity)
-        }
+        shutterButton
+          .frame(maxWidth: .infinity)
+          .overlay(alignment: .leading) {
+            subjectToggle
+          }
       }
       .padding(.horizontal, 24)
       .padding(.bottom, 24)
