@@ -42,6 +42,19 @@ public final class EntitlementsModel: ObservableObject {
                 )
                 return
             }
+            Task {
+                try? await OfferingsRepository.assertCurrentOfferingMatchesDashboard()
+            }
+            do {
+                let info = try await Purchases.shared.customerInfo()
+                self?.apply(customerInfo: info)
+            } catch {
+                self?.state = EntitlementState(
+                    status: .error,
+                    entitlementID: RCIdentifiers.entitlementId,
+                    lastError: error.localizedDescription
+                )
+            }
             for await info in Purchases.shared.customerInfoStream {
                 guard !Task.isCancelled else { break }
                 self?.apply(customerInfo: info)
@@ -55,12 +68,11 @@ public final class EntitlementsModel: ObservableObject {
     /// Immediate unlock path for paywall completion — do not wait for the next stream tick.
     #if canImport(RevenueCat)
     public func apply(customerInfo info: CustomerInfo) {
-        let id = RCIdentifiers.entitlementId
-        precondition(!id.contains("PLACEHOLDER"), "RC BLOCKED §9.2")
-        let unlocked = info.entitlements[id]?.isActive == true
+        let activeIDs = info.entitlements.active.keys
+        let unlocked = SubscriptionAccess.isUnlocked(activeEntitlementIDs: activeIDs)
         state = EntitlementState(
             status: unlocked ? .active : .inactive,
-            entitlementID: id,
+            entitlementID: SubscriptionAccess.displayedEntitlementID(activeEntitlementIDs: activeIDs),
             lastError: nil
         )
     }

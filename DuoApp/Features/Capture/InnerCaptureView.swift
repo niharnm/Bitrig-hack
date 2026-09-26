@@ -1,4 +1,10 @@
 import SwiftUI
+#if canImport(RevenueCat)
+  import RevenueCat
+#endif
+#if canImport(RevenueCatUI)
+  import RevenueCatUI
+#endif
 
 /// Inner capture shell (SCR-OL-B). Hosts the outer coach and keeps the shutter working without it.
 struct InnerCaptureView: View {
@@ -8,11 +14,19 @@ struct InnerCaptureView: View {
   @State private var isSubjectEnabled = true
   @State private var isSubjectAvailable = false
   @State private var isSettingsPresented = false
+  @State private var subscriptionMessage: String?
   @ObservedObject private var entitlements = EntitlementsModel.shared
   @Environment(\.presentPaywall) private var presentPaywall
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
   private var isPro: Bool { entitlements.state.isPro || coach.isProSimulated }
+  private var isPurchasesConfigured: Bool {
+    #if canImport(RevenueCat)
+      Purchases.isConfigured
+    #else
+      false
+    #endif
+  }
   private var isStarting: Bool { capture.phase == .starting }
   private var isSessionFailed: Bool {
     if case .failed = capture.phase { return true }
@@ -263,6 +277,30 @@ struct InnerCaptureView: View {
   private var settingsSheet: some View {
     NavigationStack {
       List {
+        if isPurchasesConfigured {
+          Section {
+            NavigationLink("capture.settings.manageSubscription") {
+              subscriptionManagement
+            }
+            Button("capture.settings.restore") {
+              Task { await restorePurchases() }
+            }
+            Button("capture.settings.lifetime") {
+              Task { await purchase(RCIdentifiers.lifetimePackageId) }
+            }
+            Button("capture.settings.yearly") {
+              Task { await purchase(RCIdentifiers.yearlyPackageId) }
+            }
+            Button("capture.settings.monthly") {
+              Task { await purchase(RCIdentifiers.monthlyPackageId) }
+            }
+          }
+        } else {
+          Section {
+            Text("capture.settings.purchasesUnavailable")
+              .foregroundStyle(.secondary)
+          }
+        }
         Button("capture.settings.simulateTip") {
           coach.advanceTip()
         }
@@ -291,7 +329,78 @@ struct InnerCaptureView: View {
           }
         }
       }
+      .alert(
+        "capture.settings.purchases",
+        isPresented: Binding(
+          get: { subscriptionMessage != nil },
+          set: { if !$0 { subscriptionMessage = nil } }
+        )
+      ) {
+        Button("capture.close", role: .cancel) {
+          subscriptionMessage = nil
+        }
+      } message: {
+        Text(subscriptionMessage ?? "")
+      }
     }
-    .presentationDetents([.medium])
+    .presentationDetents([.medium, .large])
+  }
+
+  @ViewBuilder
+  private var subscriptionManagement: some View {
+    #if canImport(RevenueCatUI)
+      if isPurchasesConfigured {
+        CustomerCenterView(
+          navigationOptions: CustomerCenterNavigationOptions(
+            usesNavigationStack: true,
+            usesExistingNavigation: true,
+            shouldShowCloseButton: false
+          )
+        )
+        .onCustomerCenterRestoreFailed { error in
+          subscriptionMessage = error.localizedDescription
+        }
+        .onCustomerCenterRestoreCompleted { customerInfo in
+          EntitlementsModel.shared.apply(customerInfo: customerInfo)
+          let activeIDs = customerInfo.entitlements.active.keys
+          if SubscriptionAccess.isUnlocked(activeEntitlementIDs: activeIDs) {
+            subscriptionMessage = String(localized: "capture.settings.restoreUnlocked")
+          }
+        }
+      } else {
+        ContentUnavailableView(
+          "capture.settings.purchasesUnavailable",
+          systemImage: "person.crop.circle.badge.exclamationmark")
+      }
+    #else
+      ContentUnavailableView(
+        "capture.settings.customerCenterUnavailable",
+        systemImage: "person.crop.circle.badge.exclamationmark")
+    #endif
+  }
+
+  private func purchase(_ packageIdentifier: String) async {
+    do {
+      let snapshot = try await OfferingsRepository.purchase(packageIdentifier: packageIdentifier)
+      if snapshot.isUnlocked {
+        isSettingsPresented = false
+      }
+    } catch SubscriptionError.cancelled {
+      return
+    } catch {
+      subscriptionMessage = error.localizedDescription
+    }
+  }
+
+  private func restorePurchases() async {
+    do {
+      let snapshot = try await OfferingsRepository.restorePurchases()
+      subscriptionMessage =
+        snapshot.isUnlocked
+        ? String(localized: "capture.settings.restoreUnlocked")
+        : String(localized: "capture.settings.restoreEmpty")
+    } catch {
+      subscriptionMessage = error.localizedDescription
+    }
   }
 }
