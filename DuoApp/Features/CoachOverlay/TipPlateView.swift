@@ -6,15 +6,15 @@ struct TipPlateView: View {
 
   var body: some View {
     Text(tipKey)
-      .font(.system(size: 30, weight: .semibold, design: .rounded))
-      .foregroundStyle(.white)
+      .font(FilmToolTokens.Tip.primaryFont)
+      .foregroundStyle(FilmToolTokens.Palette.ink)
       .multilineTextAlignment(.center)
       .lineLimit(2)
-      .padding(.horizontal, 20)
-      .padding(.vertical, 16)
+      .padding(.horizontal, FilmToolTokens.Space.s5)
+      .padding(.vertical, FilmToolTokens.Space.s4)
       .frame(maxWidth: .infinity)
       .background(
-        Color(red: 28 / 255, green: 28 / 255, blue: 30 / 255),
-        in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        FilmToolTokens.Palette.panel,
+        in: RoundedRectangle(cornerRadius: FilmToolTokens.Radius.tip, style: .continuous))
   }
 }

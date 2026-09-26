@@ -46,16 +46,16 @@ final class CoachModel {
 /// Outer subject coach (SCR-OL-C). Exactly one tip, no controls. The brand stays quieter than the tip.
 struct SubjectCoachView: View {
   let model: CoachModel
-  @ObservedObject private var entitlements = EntitlementsModel.shared
+  @Environment(\.entitlementState) private var entitlementState
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-  private var isPro: Bool { entitlements.state.isPro || model.isProSimulated }
+  private var isPro: Bool { entitlementState.isPro || model.isProSimulated }
   private var tipKey: String { model.tipKey(isPro: isPro) }
 
   var body: some View {
     ZStack {
       // Tip-only stage until a shared preview is proven stable (§11.3.9 priority 1).
-      Color(red: 5 / 255, green: 5 / 255, blue: 5 / 255)
+      FilmToolTokens.Palette.canvas
         .ignoresSafeArea()
       if isPro {
         // T2 guide blooms in on unlock (M3).
@@ -69,9 +69,13 @@ struct SubjectCoachView: View {
             .foregroundStyle(.white.opacity(0.55))
           Spacer()
           if isPro {
-            Text("outer.proBadge")
-              .font(.system(size: 14, weight: .semibold))
-              .foregroundStyle(GuideOvalView.accent)
+            Text(
+              LocalizedStringKey(
+                entitlementState.isPro ? "outer.proBadge" : "outer.simulatedProBadge"
+              )
+            )
+            .font(.system(size: 14, weight: .semibold))
+            .foregroundStyle(GuideOvalView.accent)
           }
         }
         Spacer()
@@ -82,19 +86,22 @@ struct SubjectCoachView: View {
             .transition(
               reduceMotion
                 ? .opacity
-                : .asymmetric(insertion: .opacity.combined(with: .offset(y: 10)), removal: .opacity))
+                : .asymmetric(
+                  insertion: .opacity.combined(
+                    with: .offset(y: -FilmToolMotion.m1Rise(reduceMotion: false))),
+                  removal: .opacity))
         }
         .opacity(model.countdown == nil ? 1 : 0.25)
       }
-      .padding(.horizontal, 16)
-      .padding(.top, 12)
-      .padding(.bottom, 34)
+      .padding(.horizontal, FilmToolTokens.Space.outerInsetX)
+      .padding(.top, FilmToolTokens.Space.s3)
+      .padding(.bottom, FilmToolTokens.Space.safeTipBottom)
       if let countdown = model.countdown {
         CountdownView(value: countdown)
       }
     }
-    .animation(reduceMotion ? nil : .easeOut(duration: 0.22), value: tipKey)
-    .animation(reduceMotion ? nil : .easeOut(duration: 0.36), value: isPro)
+    .animation(FilmToolMotion.m1Animation(reduceMotion: reduceMotion), value: tipKey)
+    .animation(FilmToolMotion.m3Animation(reduceMotion: reduceMotion), value: isPro)
     .allowsHitTesting(false)
   }
 }
