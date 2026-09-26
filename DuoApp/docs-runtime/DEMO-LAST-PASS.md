@@ -13,7 +13,7 @@ Cursor has integrated the Duo-core and Capture/CCA handoffs, root entitlement sn
 | Area | Status and missing evidence |
 | --- | --- |
 | Shell | PARTIAL. Timed clean launch and all fold poses are unverified. Hinge effects have source review; launch-argument cutover has owner simulator evidence. |
-| RevenueCat | BLOCKED. Release key removal/configuration and live purchase, restore, cancellation, and entitlement propagation need owner evidence. The supplied key remains in the Release executable and is logged during DEBUG configuration. |
+| RevenueCat | BLOCKED. Owner revision `2b321c1` passes a fresh Release key-removal scan and removes bootstrap key interpolation. Release configuration and live purchase, restore, cancellation, and entitlement propagation still need evidence. |
 | Capture/CCA | BLOCKED. Camera session and photo capture are implemented in the owner handoff but unverified live; live accessory behavior and entitlement unlock across displays are unverified. |
 | Frost | STANDBY. Views and contracts exist, but cutover and live entitlement integration are not accepted. |
 | Demo | NOT RUN. Rehearsal timing and complete free-to-Pro path are unmeasured. |
@@ -22,4 +22,4 @@ Cursor has integrated the Duo-core and Capture/CCA handoffs, root entitlement sn
 
 ## Handoff
 
-Capture owner validates preview and photo capture and resolves the dirty-checkout constructor failure reported by Bitrig QA. RC owner fixes Release key retention and key logging, then provides live purchase/restore evidence. QA records full Duo pose and accessory behavior. Orchestrator owns cutover and canonical gates. Cursor does not infer acceptance from simulation controls, previews, build success, or a lane's readiness claim.
+Capture owner validates preview and photo capture and resolves the dirty-checkout constructor failure reported by Bitrig QA. RC owner provides live purchase/restore evidence; the key-retention and bootstrap-print findings are resolved. QA records full Duo pose and accessory behavior. Orchestrator owns cutover and canonical gates. Cursor does not infer acceptance from simulation controls, previews, build success, or a lane's readiness claim.
