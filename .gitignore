@@ -1,0 +1,6 @@
+.agents/
+sat/
+.DS_Store
+DerivedData/
+.build/
+.swiftpm/
