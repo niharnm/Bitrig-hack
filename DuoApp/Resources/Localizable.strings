@@ -33,7 +33,7 @@
 "capture.settings.monthly" = "Monthly";
 "capture.settings.purchases" = "Purchases";
 "capture.settings.restoreUnlocked" = "An active subscription entitlement was found.";
-"capture.settings.restoreEmpty" = "No active photon_pro or pro entitlement was found.";
+"capture.settings.restoreEmpty" = "No active pro entitlement was found.";
 "capture.settings.customerCenterUnavailable" = "Customer Center unavailable";
 "capture.settings.simulateTip" = "Simulate tip";
 "capture.settings.simulatePro" = "Simulate Pro unlock";
