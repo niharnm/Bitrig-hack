@@ -5,7 +5,6 @@ struct InnerCaptureView: View {
   @State private var capture = CaptureSessionController()
   @State private var coach = CoachModel()
   @State private var selectedStock: FilmStock = .natural
-  @State private var showPaywall = false
   @State private var isSubjectEnabled = true
   @State private var isSubjectAvailable = false
   @State private var isSettingsPresented = false
@@ -55,11 +54,11 @@ struct InnerCaptureView: View {
       if isStarting {
         startingOverlay
       }
-      if !isSubjectAvailable, !isStarting {
-        subjectPreview
-          .frame(maxHeight: .infinity)
-      }
       VStack(spacing: FilmToolTokens.Space.s4) {
+        // Stacked above the controls so the film stock row never covers the tip plate.
+        if !isSubjectAvailable, !isStarting {
+          subjectPreview
+        }
         if let banner {
           Text(banner)
             .font(.footnote.weight(.medium))
@@ -72,11 +71,8 @@ struct InnerCaptureView: View {
           .buttonStyle(.glassProminent)
           .tint(FilmToolTokens.Palette.accent)
         }
-        FilmStockSelectorView(
-          selectedStock: $selectedStock,
-          isPro: isPro,
-          showPaywall: $showPaywall
-        )
+        // Locked stocks open the paywall only through presentPaywall, which is inner-display only.
+        FilmStockSelectorView(selectedStock: $selectedStock, isPro: isPro)
         shutterButton
           .frame(maxWidth: .infinity)
           .overlay(alignment: .leading) {
@@ -101,9 +97,6 @@ struct InnerCaptureView: View {
     }
     .sheet(isPresented: $isSettingsPresented) {
       settingsSheet
-    }
-    .sheet(isPresented: $showPaywall) {
-      PaywallHostView(isPresented: $showPaywall)
     }
     .onChange(of: isPro) { _, newIsPro in
       if !newIsPro && selectedStock.requiresPro {
