@@ -16,8 +16,11 @@ struct RootArrangementView: View {
   private let cutover = CutoverFlag.current
 
   var body: some View {
+    // Outer Lens: closed still hosts InnerCaptureView (CCA is the outer), so the Pro sheet may open.
+    // Frost closed shows the outer decoy only — keep paywall blocked there.
     let paywallPresenter = PaywallPresenter(
       currentPose: { pose.mode },
+      allowsClosedPose: !cutover.isFrost,
       {
         isPaywallPresented = true
       })
@@ -149,19 +152,25 @@ struct RootArrangementView: View {
 /// Opens the inner paywall slot. Features call it; only the root presents.
 struct PaywallPresenter: Sendable {
   private let currentPose: @MainActor @Sendable () -> PoseMode
+  /// When true, folded/closed Outer Lens can still present the inner Pro sheet (demo climax pose).
+  private let allowsClosedPose: Bool
   private let open: @MainActor @Sendable () -> Void
 
   init(
     currentPose: @escaping @MainActor @Sendable () -> PoseMode = { .unknown },
+    allowsClosedPose: Bool = true,
     _ open: @escaping @MainActor @Sendable () -> Void
   ) {
     self.currentPose = currentPose
+    self.allowsClosedPose = allowsClosedPose
     self.open = open
   }
 
   @MainActor var isAvailable: Bool {
     let pose = currentPose()
-    return pose != .closed && pose != .unknown
+    if pose == .unknown { return false }
+    if pose == .closed { return allowsClosedPose }
+    return true
   }
 
   @MainActor func callAsFunction() {

@@ -17,7 +17,8 @@
 | Simulate controls | Settings: Simulate tip, Simulate Pro (labeled simulated), Simulate countdown |
 | Shutter → tip + T3 | Shutter advances tip, awaits countdown, then `capturePhoto()` (not Settings-only; `1ec017a` + polish) |
 | Photo result | shutter flash, failure banner + Retry, `CaptureSessionTests`; photo not saved |
-| Inner paywall host | Pro CTA → `presentPaywall()`; unlock contract is outer oval via `entitlementState.isPro` |
+| Inner paywall host | Pro CTA → `presentPaywall()`; Outer Lens allows **closed** (capture + CCA pose); Frost closed still blocked |
+| Unlock wire | `SubjectCoachView` / `InnerCaptureView` observe `EntitlementsModel.shared`; paywall `apply(customerInfo:)` on purchase/restore |
 | Sim no-camera path | Banner when no devices; idle+`!hasCamera` Peak-End flash; tips still advance |
 | Recovery | Restricted/denied Settings path; session-failed Retry → `start()`; accessory-unavailable banner |
 | Debug build | **PASS** — Xcode 27.1 (`Desktop/Xcode.app` 27A9269), SDK 27.1, `generic/platform=iOS Simulator`, log `/tmp/duoapp-polish-build.log` |
@@ -32,8 +33,8 @@
 | Real `CameraCaptureAccessory` on folded Duo outer display | **BLOCKED** — coded host; no live accessory observation this gate |
 | Inner live `AVCaptureSession` preview + shutter on device | **BLOCKED** — simulator/unit only so far |
 | Free tip readable at 2–3 m on outer | **NEEDS LIVE** — Simulate tip honesty OK for rehearsal; not substitute for accessory |
-| Test Store purchase → `pro` → oval on **other** pane | **BLOCKED** — RC wiring claimed elsewhere; cross-display unlock unverified live |
-| 90s full path rehearsal (grant → tip → Pro → oval) | **NOT RUN** |
+| Test Store purchase → `pro` → oval on **other** pane | **SOURCE FIXED** — shared `EntitlementsModel` + paywall `apply`; still needs live Test Store observation |
+| 90s full path rehearsal (grant → tip → Pro → oval) | ignored for this pass (human practice) |
 | All fold poses + accessory unavailable recovery | **NEEDS LIVE** |
 
 ---

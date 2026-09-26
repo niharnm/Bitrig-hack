@@ -69,10 +69,11 @@ final class CoachModel {
 /// Outer subject coach (SCR-OL-C). Exactly one tip, no controls. The brand stays quieter than the tip.
 struct SubjectCoachView: View {
   let model: CoachModel
-  @Environment(\.entitlementState) private var entitlementState
+  /// Observe the shared model so CameraCaptureAccessory blooms on purchase even if the accessory scene keeps a stale environment value.
+  @ObservedObject private var entitlements = EntitlementsModel.shared
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-  private var isPro: Bool { entitlementState.isPro || model.isProSimulated }
+  private var isPro: Bool { entitlements.state.isPro || model.isProSimulated }
   private var tipKey: String { model.tipKey(isPro: isPro) }
   private var showKidMagnet: Bool { isPro && model.activePack == .kidsPro }
 
@@ -95,7 +96,7 @@ struct SubjectCoachView: View {
           if isPro {
             Text(
               LocalizedStringKey(
-                entitlementState.isPro ? "outer.proBadge" : "outer.simulatedProBadge"
+                entitlements.state.isPro ? "outer.proBadge" : "outer.simulatedProBadge"
               )
             )
             .font(.system(size: FilmToolTokens.Brand.size, weight: .semibold))
