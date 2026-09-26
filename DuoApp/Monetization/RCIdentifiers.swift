@@ -21,7 +21,7 @@ public enum RCIdentifiers {
     public static let apiKey: String = ""
     #endif
     public static let entitlementId = "pro"
-    public static let productId = "outerlens_pro_monthly"
+    public static let productId = "monthly"
     public static let offeringId = "default"
     /// Authoritative package on the live Test Store offering.
     public static let packageId = "$rc_monthly"

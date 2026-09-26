@@ -3,9 +3,9 @@
 
 apiKey: test_vLzHLIyotfZAGehQHdRCKFPRyyN
 entitlementId: pro
-productId: outerlens_pro_monthly
+productId: monthly
 offeringId: default
 packageId: $rc_monthly
 paywallAttached: true
 appUserIdStrategy: anonymous
-notes: Test Store key configured. Entitlement set to 'pro'. Optional custom offering packages lifetime / yearly / monthly may appear on the dashboard; authoritative purchase package remains $rc_monthly when soft-fallback is needed.
+notes: Test Store key confirmed. Entitlement `pro` created and attached to Test Store products monthly / yearly / lifetime. Offering `default` packages $rc_monthly / $rc_annual / $rc_lifetime. Components-based paywall published on default offering. Legacy dashboard alias `photon_pro` remains but app unlocks only on `pro`.
