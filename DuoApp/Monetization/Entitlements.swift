@@ -16,7 +16,7 @@ import RevenueCat
 public final class EntitlementsModel: ObservableObject {
     public static let shared = EntitlementsModel()
 
-    @Published public private(set) var state: EntitlementState
+    @Published private(set) var state: EntitlementState
 
     private var streamTask: Task<Void, Never>?
 
