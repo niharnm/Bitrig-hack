@@ -71,3 +71,12 @@
 
 "capture.simulatedProActive" = "Simulated Pro";
 "outer.simulatedProBadge" = "SIMULATED PRO";
+
+"filmStock.natural.name" = "Natural";
+"filmStock.natural.description" = "True-to-life color with balanced contrast";
+"filmStock.leicaMono.name" = "Mono";
+"filmStock.leicaMono.description" = "High-contrast black and white inspired by classic street photography";
+"filmStock.warmAmber.name" = "Amber 400";
+"filmStock.warmAmber.description" = "Warm golden hour tones with rich shadows";
+"filmStock.portraSoft.name" = "Portra Soft";
+"filmStock.portraSoft.description" = "Gentle highlight rolloff and flattering skin tones";

@@ -12,6 +12,8 @@ import SwiftUI
 struct InnerCaptureView: View {
   @State private var capture = CaptureSessionController()
   @State private var coach = CoachModel()
+  @State private var selectedStock: FilmStock = .natural
+  @State private var showPaywall = false
   @State private var isSubjectEnabled = true
   @State private var isSubjectAvailable = false
   @State private var isSettingsPresented = false
@@ -53,6 +55,16 @@ struct InnerCaptureView: View {
       FilmToolTokens.Palette.canvas.ignoresSafeArea()
       if capture.isLive {
         CapturePreviewView(session: capture.session)
+          .contrast(selectedStock.grade.contrast)
+          .saturation(selectedStock.grade.saturation)
+          .overlay {
+            if selectedStock.grade.amberTintOpacity > 0 {
+              selectedStock.grade.tintColor
+                .opacity(selectedStock.grade.amberTintOpacity)
+                .blendMode(.color)
+                .allowsHitTesting(false)
+            }
+          }
           .ignoresSafeArea()
       }
       shutterFlash
@@ -77,6 +89,11 @@ struct InnerCaptureView: View {
           .buttonStyle(.glassProminent)
           .tint(FilmToolTokens.Palette.accent)
         }
+        FilmStockSelectorView(
+          selectedStock: $selectedStock,
+          isPro: isPro,
+          showPaywall: $showPaywall
+        )
         shutterButton
           .frame(maxWidth: .infinity)
           .overlay(alignment: .leading) {
@@ -101,6 +118,14 @@ struct InnerCaptureView: View {
     }
     .sheet(isPresented: $isSettingsPresented) {
       settingsSheet
+    }
+    .sheet(isPresented: $showPaywall) {
+      PaywallHostView(isPresented: $showPaywall)
+    }
+    .onChange(of: isPro) { _, newIsPro in
+      if !newIsPro && selectedStock.requiresPro {
+        selectedStock = .natural
+      }
     }
     .task {
       await capture.start()
@@ -253,7 +278,10 @@ struct InnerCaptureView: View {
     .disabled(
       isStarting || isSessionFailed || capture.phase == .shutterFlash || coach.countdown != nil)
     // Peak-End: haptic on shutterFlash entry, same-frame as the flash (causality).
-    .sensoryFeedback(.impact(weight: .light), trigger: capture.phase == .shutterFlash)
+    .sensoryFeedback(.impact(weight: .light), trigger: capture.phase == .shutterFlash) { _, isFlashing in
+      // Fire on entry only; the trigger also changes when the flash ends.
+      isFlashing
+    }
     .accessibilityLabel("Shutter")
   }
 

@@ -47,7 +47,6 @@ final class CaptureSessionTests: XCTestCase {
     XCTAssertFalse(capture.isLive)
   }
 
-
   /// B.noDevices Peak-End: idle + !hasCamera still gets a flash beat and success count.
   @MainActor
   func testShutterWithoutCameraStillFlashes() async {
