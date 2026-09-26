@@ -95,6 +95,14 @@ final class PaywallPresentationTests: XCTestCase {
       RCIdentifiers.packageId
     )
     XCTAssertEqual(
+      OfferingPackages.resolvePurchasePackageId(requested: "monthly", availableIdentifiers: available),
+      RCIdentifiers.packageId
+    )
+    XCTAssertEqual(
+      OfferingPackages.resolvePurchasePackageId(requested: "lifetime", availableIdentifiers: available),
+      RCIdentifiers.packageId
+    )
+    XCTAssertEqual(
       OfferingPackages.resolvePurchasePackageId(requested: "missing", availableIdentifiers: []),
       RCIdentifiers.packageId
     )

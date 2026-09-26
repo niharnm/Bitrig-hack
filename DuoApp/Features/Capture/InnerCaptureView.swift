@@ -16,11 +16,11 @@ struct InnerCaptureView: View {
   @State private var isSettingsPresented = false
   @State private var isSubjectPreviewPresented = false
   @State private var subscriptionMessage: String?
-  @ObservedObject private var entitlements = EntitlementsModel.shared
+  @Environment(\.entitlementState) private var entitlementState
   @Environment(\.presentPaywall) private var presentPaywall
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-  private var isPro: Bool { entitlements.state.isPro || coach.isProSimulated }
+  private var isPro: Bool { entitlementState.isPro || coach.isProSimulated }
   private var isPurchasesConfigured: Bool {
     #if canImport(RevenueCat)
       Purchases.isConfigured
@@ -279,7 +279,7 @@ struct InnerCaptureView: View {
     if isPro {
       Label(
         LocalizedStringKey(
-          entitlements.state.isPro ? "capture.proActive" : "capture.simulatedProActive"
+          entitlementState.isPro ? "capture.proActive" : "capture.simulatedProActive"
         ), systemImage: "checkmark.seal.fill"
       )
       .font(.footnote.weight(.semibold))
