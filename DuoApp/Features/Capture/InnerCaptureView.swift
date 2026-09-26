@@ -188,6 +188,7 @@ struct InnerCaptureView: View {
     Button {
       // The shutter also advances the tip (§11.3.6).
       coach.advanceTip()
+      Task { await coach.startCountdown() }
       Task { await capture.capturePhoto() }
     } label: {
       Circle()
