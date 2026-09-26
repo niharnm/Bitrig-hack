@@ -1,5 +1,7 @@
 # Multi-AI Saturday build routing — Project Duo
 
+**Routing update, 2026-09-26:** Bitrig owns visual QA and Duo demo captures now, then replaces Cursor for ASSETS polish after the current owner hands off. Cursor retains scaffold, integration, and Frost standby. Use the Codex provider in Bitrig. See [Bitrig task assignment](bitrig-task-plan.md) for evidence, exact file locks, handoff conditions, and the first task prompt. This update takes precedence over older tool assignments below; lane boundaries and the three-writer limit still apply.
+
 **For:** Nihar Manchikalapudi  
 **Event:** Bitrig Hacks: iPhone Duo · Sat Sep 26, 2026 · YC SF · ~4h (11:30–3:30)  
 **Role:** Assign each bible lane to a primary AI tool/model + backup; paste-ready ownership blurbs; conflict locks; start order.  
@@ -36,8 +38,8 @@ Lanes match bible blueprint §3.2 (Agent OS). “Tool” = surface; “model” 
 | **4** | **Outer Lens (primary feature)** | `Features/Capture/`, `Features/CoachOverlay/`, CCA host wiring per §08/§11 | **Claude Code + Opus** (or Cursor+Opus) **[E]/[I]** SwiftUI craft + stick-to-spec | **Cursor Agent + Sonnet/Opus**; GPT-5.x in Cursor if Claude rate-limits | `Monetization/`, `Features/Frost/`, redesign DesignSystem |
 | **5** | **RevenueCat** | `Monetization/`, `Features/Paywall/`, `RC-IDs.md` fill | **Codex CLI** (or Cursor+GPT) **[E]** bounded SDK recipe / headless patch | **Claude Code + Sonnet** | Pose router, CCA, inventing RC dashboard IDs |
 | **6** | **FrostDuo cutover standby** | `Features/Frost/` only (behind flag) | **Cursor Background Agent** or second **Codex** thread **[I]** parallelizable stub | Claude Code + Sonnet | Touching Capture/Coach or flipping cutover alone |
-| **7** | **Polish / motion** | `DesignSystem/`, §14 motions (late) | **Cursor Agent + Claude/Sonnet** **[I]** diff-visible UI polish | Claude Code | New screens, second climax API |
-| **8** | **QA / demo** | TC-XXX results, `DEMO-LAST-PASS.md` | **Nihar** + Cursor checklist agent (cheap) | Claude for failure triage | “Fix everything” refactors after freeze |
+| **7** | **Polish / motion** | `DesignSystem/`, §14 motions (late) | **Bitrig with Codex** after ASSETS handoff; simulator-led polish **[I]** | Claude Code | New screens, second climax API |
+| **8** | **QA / demo** | TC-XXX results, `DEMO-LAST-PASS.md` | **Nihar** + Bitrig visual QA; Cursor checklist backup | Claude for failure triage | “Fix everything” refactors after freeze |
 | **9** | **Doubt / scope guard** | Nacks only | **Claude Opus** (read-only reviewer) **[E]** instruction-following | Second human / Cursor ask mode | Write access to repo |
 
 ### Model tier cheat (inside Cursor when choosing)
@@ -61,7 +63,7 @@ Lanes match bible blueprint §3.2 (Agent OS). “Tool” = surface; “model” 
 | **Codex CLI** | Bounded, sandboxed patches; good for “implement this SDK recipe in these files” | Smaller MCP ecosystem; less interactive UI taste | **[E]** Codex = headless/batch/sandboxed strength |
 | **Gemini 2.5 Pro** | **1M context + native PDF** — best first pass over a 150–300p bible | Weaker as sole Xcode-side implementer in this workflow | **[E]** Google Gemini 2.5 Pro model card (PDF in, 1M tokens) |
 | **ChatGPT / GPT-5.x (in Cursor or chat)** | Competitive on some SwiftUI codegen tasks; strong when given exact SDK snippets | Can invent APIs if bible §08 not pasted | **[E]** mixed iOS bake-offs (GPT-4.1 sometimes beat Claude on constrained SwiftUI tasks; results vary) |
-| **Bitrig** (if used) | Duo-aware design/sim sponsor path | Optional prize UNKNOWN; don’t bet the vertical slice on it | **[I]** event research |
+| **Bitrig** | Native build diagnostics, simulator interaction, isolated workspaces, and documented 3D Duo preview | Local preview and Duo runtime readiness remain unverified | **[E]** vendor docs in `bitrig-task-plan.md`; task fit **[I]** |
 
 ### Capability → lane mapping
 
@@ -224,7 +226,8 @@ T+4:00  Demo mode
 
 | Slot | Tool logged in | Lane |
 |------|----------------|------|
-| Mac Xcode | Cursor Agent | Scaffold, integrate, polish, QA |
+| Mac Xcode | Cursor Agent | Scaffold, integrate, Frost standby |
+| Bitrig Mac | Codex provider | Visual QA now; ASSETS polish after handoff |
 | Terminal pane A | Claude Code (Opus) | Duo core → Outer Lens (hand off after shell) |
 | Terminal pane B | Codex CLI | RC (and Frost stubs if needed) |
 | Phone/browser | Gemini or Claude.ai | PDF questions / scope nacks |
