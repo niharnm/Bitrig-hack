@@ -19,7 +19,7 @@ public enum PurchasesConfig {
         let key = RCIdentifiers.apiKey
         precondition(!key.contains("PLACEHOLDER") && !key.isEmpty, "RC BLOCKED: paste RC-IDs.md — see bible §09 §9.2")
         Purchases.configure(withAPIKey: key)
-        print("PurchasesConfig: Configured RevenueCat Test Store with key prefix: \(key.prefix(8))...")
+        print("PurchasesConfig: Configured RevenueCat Test Store.")
         #else
         assertionFailure("Release configure not used in Duo hackathon demo path")
         #endif
