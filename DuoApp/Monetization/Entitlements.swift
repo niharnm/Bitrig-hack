@@ -44,7 +44,7 @@ public final class EntitlementsModel: ObservableObject {
             }
             do {
                 let info = try await Purchases.shared.customerInfo()
-                self?.apply(info)
+                self?.apply(customerInfo: info)
             } catch {
                 self?.state = EntitlementState(
                     status: .error,
@@ -54,7 +54,7 @@ public final class EntitlementsModel: ObservableObject {
             }
             for await info in Purchases.shared.customerInfoStream {
                 guard !Task.isCancelled else { break }
-                self?.apply(info)
+                self?.apply(customerInfo: info)
             }
         }
         #else
@@ -63,7 +63,7 @@ public final class EntitlementsModel: ObservableObject {
     }
 
     #if canImport(RevenueCat)
-    private func apply(_ info: CustomerInfo) {
+    public func apply(customerInfo info: CustomerInfo) {
         let activeIDs = info.entitlements.active.keys
         let unlocked = SubscriptionAccess.isUnlocked(activeEntitlementIDs: activeIDs)
         state = EntitlementState(

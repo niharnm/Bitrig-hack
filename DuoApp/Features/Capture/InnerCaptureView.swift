@@ -18,12 +18,12 @@ struct InnerCaptureView: View {
   @State private var isSubjectAvailable = false
   @State private var isSettingsPresented = false
   @State private var subscriptionMessage: String?
-  @Environment(\.entitlementState) private var entitlementState
+  @ObservedObject private var entitlements = EntitlementsModel.shared
   @Environment(\.presentPaywall) private var presentPaywall
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
   @Environment(\.scenePhase) private var scenePhase
 
-  private var isPro: Bool { entitlementState.isPro || coach.isProSimulated }
+  private var isPro: Bool { entitlements.state.isPro || coach.isProSimulated }
   private var isStarting: Bool { capture.phase == .starting }
   private var isSessionFailed: Bool {
     if case .failed = capture.phase { return true }
@@ -239,7 +239,7 @@ struct InnerCaptureView: View {
     if isPro {
       Label(
         LocalizedStringKey(
-          entitlementState.isPro ? "capture.proActive" : "capture.simulatedProActive"
+          entitlements.state.isPro ? "capture.proActive" : "capture.simulatedProActive"
         ), systemImage: "checkmark.seal.fill"
       )
       .font(.subheadline.weight(.semibold))

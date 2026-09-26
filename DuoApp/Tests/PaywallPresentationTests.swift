@@ -22,13 +22,35 @@ final class PaywallPresentationTests: XCTestCase {
   }
 
   @MainActor
-  func testClosedAndUnknownPosesCannotOpenPaywall() async {
+  func testUnknownPoseCannotOpenPaywall() async {
     var presentations = 0
-    for pose in [PoseMode.closed, .unknown] {
-      let presenter = PaywallPresenter(currentPose: { pose }, { presentations += 1 })
-      XCTAssertFalse(presenter.isAvailable)
-      presenter()
+    let presenter = PaywallPresenter(currentPose: { .unknown }, allowsClosedPose: true) {
+      presentations += 1
     }
+    XCTAssertFalse(presenter.isAvailable)
+    presenter()
+    XCTAssertEqual(presentations, 0)
+  }
+
+  @MainActor
+  func testOuterLensClosedPoseCanOpenPaywall() async {
+    var presentations = 0
+    let presenter = PaywallPresenter(currentPose: { .closed }, allowsClosedPose: true) {
+      presentations += 1
+    }
+    XCTAssertTrue(presenter.isAvailable)
+    presenter()
+    XCTAssertEqual(presentations, 1)
+  }
+
+  @MainActor
+  func testFrostClosedPoseCannotOpenPaywall() async {
+    var presentations = 0
+    let presenter = PaywallPresenter(currentPose: { .closed }, allowsClosedPose: false) {
+      presentations += 1
+    }
+    XCTAssertFalse(presenter.isAvailable)
+    presenter()
     XCTAssertEqual(presentations, 0)
   }
 
@@ -36,7 +58,9 @@ final class PaywallPresentationTests: XCTestCase {
   func testInnerPosesCanRequestPaywall() async {
     var presentations = 0
     for pose in [PoseMode.flat, .open, .tabletop, .book] {
-      let presenter = PaywallPresenter(currentPose: { pose }, { presentations += 1 })
+      let presenter = PaywallPresenter(currentPose: { pose }, allowsClosedPose: false) {
+        presentations += 1
+      }
       XCTAssertTrue(presenter.isAvailable)
       presenter()
     }
@@ -47,7 +71,9 @@ final class PaywallPresentationTests: XCTestCase {
   func testRetainedPresenterReadsCurrentPoseBeforeOpening() async {
     var pose = PoseMode.open
     var presentations = 0
-    let presenter = PaywallPresenter(currentPose: { pose }, { presentations += 1 })
+    let presenter = PaywallPresenter(currentPose: { pose }, allowsClosedPose: false) {
+      presentations += 1
+    }
 
     presenter()
     XCTAssertEqual(presentations, 1)

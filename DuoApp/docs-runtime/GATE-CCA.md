@@ -19,9 +19,10 @@ The build and three-test results below are historical owner reports. Current che
 | Simulate controls | Settings: Simulate tip, Simulate Pro (labeled simulated), Simulate countdown |
 | Shutter → tip + T3 | Shutter advances tip, awaits countdown, then `capturePhoto()` (not Settings-only; `1ec017a` + polish) |
 | Photo result | shutter flash, failure banner + Retry, `CaptureSessionTests`; photo not saved |
-| Inner paywall host | Pro CTA → `presentPaywall()`; unlock contract is outer oval via `entitlementState.isPro` |
-| Sim no-camera path | Banner when no devices; idle+`!hasCamera` simulated flash; tips still advance; no photo is taken |
-| Recovery | Denied offers Settings; restricted explains the limitation; session-failed Retry → `start()`; accessory-unavailable banner |
+| Inner paywall host | Outer Lens permits the closed capture pose; Frost closed remains blocked. |
+| Unlock wire | Coach and capture observe EntitlementsModel.shared; paywall completion applies CustomerInfo immediately. |
+| Sim no-camera path | Missing-camera banner and simulated flash; tips still advance; no photo is taken. |
+| Recovery | Denied offers Settings; restricted explains the limitation; failed sessions offer Retry. |
 | Debug build | **PASS** — Xcode 27.1 (`Desktop/Xcode.app` 27A9269), SDK 27.1, `generic/platform=iOS Simulator`, log `/tmp/duoapp-polish-build.log` |
 | Unit tests | **PASS** — `CaptureSessionTests` 3/3 on Duo sim `A5F8B31A…`, log `/tmp/duoapp-capture-tests.log` |
 
@@ -34,8 +35,8 @@ The build and three-test results below are historical owner reports. Current che
 | Real `CameraCaptureAccessory` on folded Duo outer display | **BLOCKED** — coded host; no live accessory observation this gate |
 | Inner live `AVCaptureSession` preview + shutter on device | **BLOCKED** — simulator/unit only so far |
 | Free tip readable at 2–3 m on outer | **NEEDS LIVE** — Simulate tip honesty OK for rehearsal; not substitute for accessory |
-| Test Store purchase → `pro` → oval on **other** pane | **BLOCKED** — RC wiring claimed elsewhere; cross-display unlock unverified live |
-| 90s full path rehearsal (grant → tip → Pro → oval) | **NOT RUN** |
+| Test Store purchase → `pro` → oval on **other** pane | **SOURCE FIXED** — shared `EntitlementsModel` + paywall `apply`; still needs live Test Store observation |
+| 90s full path rehearsal (grant → tip → Pro → oval) | ignored for this pass (human practice) |
 | All fold poses + accessory unavailable recovery | **NEEDS LIVE** |
 
 ---
