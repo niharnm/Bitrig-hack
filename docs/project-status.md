@@ -8,7 +8,7 @@ The plan is **not complete**. The primary implementation is combined, but its re
 
 | Completion gate | Current state | Remaining work |
 | --- | --- | --- |
-| Combined implementation | Reconciled in PR #13, including newer main changes | Confirm the final merge receipt and clean main |
+| Combined implementation | Reconciled in the cleanup candidate, including newer main changes | Publish the verified reconciliation and confirm clean main |
 | Build and regression | See the revision-specific reconciliation receipt | Build results do not count as live acceptance |
 | Duo capture and shell | Partial historical observations | Current launch, flat/book/tabletop layouts, accessory or labeled fallback, permission recovery and capture behavior |
 | Real monetization | Blocked by observed package lookup failures | Verify the current offering, then purchase, cancel/fail, restore, Customer Center and purchase-driven outer guide |

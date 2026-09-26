@@ -7,7 +7,7 @@ This record replaces earlier PASS labels that described source wiring without ob
 | Test | Status | Evidence and remaining requirement |
 | --- | --- | --- |
 | TC-R01 | Implemented; runtime recheck required | Guarded Debug configuration exists. Final build evidence is in the reconciliation receipt. |
-| TC-R02 | NOT RUN on final build | Inner RevenueCatUI paywall exists. The last Duo run was closed, where the Pro CTA is disabled. |
+| TC-R02 | NOT RUN on final build | Inner RevenueCatUI paywall exists. The historical closed-pose run could not open it. PR #17 now permits the Outer Lens closed capture pose; this needs a runtime recheck. |
 | TC-R03 | BLOCKED | Monthly, Yearly and Lifetime each returned a missing-package error in the recorded Bitrig run. No transaction sheet or successful purchase was observed. |
 | TC-R04 | NOT RUN | No purchase-driven Pro guide on the other display has been observed. |
 | TC-R05 | NOT RUN | Source handles cancellation/errors, but cancel and failure inside an actual Test Store transaction have not been observed. |

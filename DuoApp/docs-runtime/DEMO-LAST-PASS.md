@@ -50,7 +50,7 @@ This ledger follows the test inventory in [Bible section 15](../../docs/bible/15
 | TC-D07 | One demo feature | NOT RUN | Script exists; no complete timed rehearsal or acceptance waiver is recorded. |
 | TC-I01 | Debug and Release compilation | PENDING CHECK | See reconciliation receipt for final compile results. |
 | TC-I02 | Shared types | PASS, source scope | Shared contracts in Shared/Types.swift. |
-| TC-I03 | Integration history | RECORDED | PR #13 reconciles prior lane merges and concurrent PRs #14 to #16. |
+| TC-I03 | Integration history | RECORDED | Cleanup reconciles the superseded PR #13 with main changes through PR #18. |
 | TC-I04 | Gate artifacts | PASS, source scope | Canonical shell, capture, RC and demo files exist. |
 | TC-I05 | Package scope | PASS, source scope | Project package graph contains purchases-ios-spm. |
 | TC-I06 | Final freeze | NOT RUN | Repository merge does not select a demo freeze or waive failed gates. |

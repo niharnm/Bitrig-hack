@@ -1,5 +1,7 @@
 # Project: Dual-Engine Filter System for iPhone Duo
 
+Status note, 2026-09-26: this is the separate filter-system proposal. PRs #15 and #16 merged its coach and FilmStock source, but the extra packs and selector remain inactive on the default Outer Lens demo path. Its milestone table is historical planning, not current acceptance. See [the completion board](docs/project-status.md) for the agreed primary scope and remaining requirements.
+
 ## Architecture
 The Dual-Engine Filter System spans two primary user-facing domains operating across parallel displays:
 1. **Outer Coach & Kid Magnet Lane (`sat/coach`)**:
