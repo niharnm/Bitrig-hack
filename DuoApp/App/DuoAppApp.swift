@@ -7,9 +7,9 @@ struct DuoAppApp: App {
   }
 
   var body: some Scene {
-    // Event demo: capture session, CCA, and permission screens stay off the launch path. RootArrangementView is unchanged.
+    // Launch flow: account, angle setup, then the two-pane stranger guide. No camera on this path.
     WindowGroup {
-      OuterLensDemoView()
+      InsiderRootView()
         .preferredColorScheme(.dark)
     }
   }

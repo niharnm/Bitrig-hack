@@ -193,24 +193,4 @@ final class CoachOverlayTests: XCTestCase {
     XCTAssertNotNil(countdownView)
   }
 
-  // MARK: - Event demo launch surface
-
-  func testDemoTipsEachMoveTheStandInSubject() {
-    var pose = SubjectPose.centered
-    for tip in [DemoTip.stepLeft, .chinUp, .holdStill, .thatsTheShot] {
-      let next = pose.applying(tip)
-      XCTAssertNotEqual(next, pose, "\(tip) must change the stand-in pose")
-      pose = next
-    }
-    XCTAssertLessThan(SubjectPose.centered.applying(.stepLeft).x, 0, "Step left moves left")
-    XCTAssertLessThan(SubjectPose.centered.applying(.chinUp).y, 0, "Chin up rises")
-    XCTAssertTrue(pose.isFrozen, "The shot keeps the subject still")
-    XCTAssertEqual(pose.applying(.lookAtOuter), .centered, "Reset recenters")
-  }
-
-  func testDemoOuterCopyIsFiveWordsOrFewer() {
-    for tip in DemoTip.allCases {
-      XCTAssertLessThanOrEqual(tip.outerCopy.split(separator: " ").count, 5, "\(tip)")
-    }
-  }
 }
