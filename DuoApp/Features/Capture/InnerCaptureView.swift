@@ -9,6 +9,7 @@ struct InnerCaptureView: View {
   @State private var isSettingsPresented = false
   @Environment(\.entitlementState) private var entitlementState
   @Environment(\.presentPaywall) private var presentPaywall
+  @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
   private var isPro: Bool { entitlementState.isPro || coach.isProSimulated }
 
@@ -28,10 +29,11 @@ struct InnerCaptureView: View {
   private var captureShell: some View {
     ZStack(alignment: .bottom) {
       FilmToolTokens.Palette.canvas.ignoresSafeArea()
-      if capture.phase == .live {
+      if capture.isLive {
         CapturePreviewView(session: capture.session)
           .ignoresSafeArea()
       }
+      shutterFlash
       if !isSubjectAvailable {
         subjectPreview
           .frame(maxHeight: .infinity)
@@ -91,19 +93,33 @@ struct InnerCaptureView: View {
     if !capture.hasCamera {
       return "capture.banner.noDevices"
     }
+    if capture.lastPhotoFailed {
+      return "capture.banner.photoFailed"
+    }
     return isSubjectAvailable ? nil : "capture.banner.accessoryUnavailable"
   }
 
   @ViewBuilder
   private var flipButton: some View {
-    if capture.phase == .live {
+    if capture.isLive {
       Button("capture.flip", systemImage: "camera.rotate") {
         Task { await capture.flipCamera() }
       }
       .labelStyle(.iconOnly)
       .buttonStyle(.glass)
       .tint(.white)
+      .disabled(capture.phase == .shutterFlash)
     }
+  }
+
+  /// B.capturing: an opacity-only flash over the preview, so it also holds under Reduce Motion.
+  private var shutterFlash: some View {
+    Color.white
+      .opacity(capture.phase == .shutterFlash ? 0.35 : 0)
+      .ignoresSafeArea()
+      .allowsHitTesting(false)
+      .animation(FilmToolMotion.p1Animation(reduceMotion: reduceMotion), value: capture.phase)
+      .accessibilityHidden(true)
   }
 
   /// While the system is not presenting the accessory, show the photographer what the subject would see.
@@ -153,8 +169,8 @@ struct InnerCaptureView: View {
   private var shutterButton: some View {
     Button {
       // The shutter also advances the tip (§11.3.6).
-      capture.capturePhoto()
       coach.advanceTip()
+      Task { await capture.capturePhoto() }
     } label: {
       Circle()
         .fill(.white)
@@ -163,6 +179,8 @@ struct InnerCaptureView: View {
         .overlay(Circle().stroke(.white, lineWidth: 3))
     }
     .buttonStyle(FilmToolShutterButtonStyle())
+    .disabled(capture.phase == .shutterFlash)
+    .sensoryFeedback(.impact(weight: .light), trigger: capture.capturedPhotoCount)
     .accessibilityLabel("Shutter")
   }
 

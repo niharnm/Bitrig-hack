@@ -9,9 +9,15 @@ final class CaptureSessionController {
   private(set) var phase: CaptureSessionPhase = .idle
   /// False when discovery finds no camera, as in the simulator. Tips still work (§11.2.4 B.noDevices).
   private(set) var hasCamera = true
+  /// Successful captures this session. Drives the shutter haptic.
+  private(set) var capturedPhotoCount = 0
+  /// True when the most recent shutter produced no photo. Cleared by the next shutter.
+  private(set) var lastPhotoFailed = false
   @ObservationIgnored private let pipeline = CapturePipeline()
 
   var session: AVCaptureSession { pipeline.session }
+  /// `shutterFlash` belongs to the live family (§07): the preview stays up while a photo is taken.
+  var isLive: Bool { phase == .live || phase == .shutterFlash }
 
   static func currentPermission() -> PermissionSubstate {
     switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -49,9 +55,32 @@ final class CaptureSessionController {
     _ = await pipeline.flip()
   }
 
-  func capturePhoto() {
+  /// C8: live → shutterFlash → live. The flash lasts at least 200ms (§11.2.4 B.capturing).
+  func capturePhoto() async {
     guard phase == .live else { return }
-    pipeline.capturePhoto()
+    phase = .shutterFlash
+    lastPhotoFailed = false
+    async let minimumFlash: Void? = try? Task.sleep(for: .milliseconds(200))
+    let outcome = await pipeline.capturePhoto()
+    _ = await minimumFlash
+    switch outcome {
+    case .captured: capturedPhotoCount += 1
+    case .failed: lastPhotoFailed = true
+    }
+    // `stop()` may have run while the photo was processing.
+    if phase == .shutterFlash {
+      phase = .live
+    }
+  }
+}
+
+/// Photo-only slice: the photo is not saved, so no photo library permission is requested (§11.1.4).
+enum PhotoCaptureOutcome: Equatable, Sendable {
+  case captured
+  case failed
+
+  init(fileData: Data?, error: Error?) {
+    self = error == nil && fileData?.isEmpty == false ? .captured : .failed
   }
 }
 
@@ -67,6 +96,8 @@ private final class CapturePipeline: NSObject, AVCapturePhotoCaptureDelegate, @u
   private let photoOutput = AVCapturePhotoOutput()
   private let queue = DispatchQueue(label: "outerlens.capture")
   private var input: AVCaptureDeviceInput?
+  /// Keyed by `AVCapturePhotoSettings.uniqueID`. Touched only on `queue`.
+  private var pendingPhotos: [Int64: (outcome: PhotoCaptureOutcome?, finish: (PhotoCaptureOutcome) -> Void)] = [:]
 
   func start(position: AVCaptureDevice.Position) async -> StartResult {
     await withCheckedContinuation { continuation in
@@ -91,14 +122,42 @@ private final class CapturePipeline: NSObject, AVCapturePhotoCaptureDelegate, @u
     }
   }
 
-  func capturePhoto() {
-    queue.async {
-      // Photo-only slice: the capture proves the pipeline; saving needs an add-only library key first.
-      self.photoOutput.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+  func capturePhoto() async -> PhotoCaptureOutcome {
+    await withCheckedContinuation { continuation in
+      queue.async {
+        // Capturing without an active video connection raises an Objective-C exception.
+        guard self.session.isRunning,
+          self.photoOutput.connection(with: .video)?.isActive == true
+        else {
+          continuation.resume(returning: .failed)
+          return
+        }
+        let settings = AVCapturePhotoSettings()
+        self.pendingPhotos[settings.uniqueID] = (nil, { continuation.resume(returning: $0) })
+        self.photoOutput.capturePhoto(with: settings, delegate: self)
+      }
     }
   }
 
-  func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {}
+  func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+    let outcome = PhotoCaptureOutcome(fileData: photo.fileDataRepresentation(), error: error)
+    let id = photo.resolvedSettings.uniqueID
+    queue.async {
+      self.pendingPhotos[id]?.outcome = outcome
+    }
+  }
+
+  /// Always the last callback for a request, including failures before any photo was processed.
+  func photoOutput(
+    _ output: AVCapturePhotoOutput, didFinishCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings,
+    error: Error?
+  ) {
+    let id = resolvedSettings.uniqueID
+    queue.async {
+      guard let pending = self.pendingPhotos.removeValue(forKey: id) else { return }
+      pending.finish(error == nil ? pending.outcome ?? .failed : .failed)
+    }
+  }
 
   private func configure(position: AVCaptureDevice.Position) -> StartResult {
     guard
