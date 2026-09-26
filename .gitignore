@@ -4,3 +4,4 @@ sat/
 DerivedData/
 .build/
 .swiftpm/
+build/
