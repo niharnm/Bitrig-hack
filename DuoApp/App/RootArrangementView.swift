@@ -14,6 +14,10 @@ struct RootArrangementView: View {
   private let cutover = CutoverFlag.current
 
   var body: some View {
+    let paywallPresenter = PaywallPresenter(currentPose: { pose.mode }) {
+      isPaywallPresented = true
+    }
+
     NavigationStack {
       Group {
         if cutover.isFrost {
@@ -25,7 +29,12 @@ struct RootArrangementView: View {
       .publishRegions(to: pose)
       .navigationTitle(cutover.isFrost ? "FrostDuo" : "Outer Lens")
       .navigationBarTitleDisplayMode(.inline)
-      .sheet(isPresented: $isPaywallPresented) {
+      .sheet(
+        isPresented: Binding(
+          get: { isPaywallPresented && paywallPresenter.isAvailable },
+          set: { isPaywallPresented = $0 }
+        )
+      ) {
         paywallSlot
       }
     }
@@ -36,9 +45,9 @@ struct RootArrangementView: View {
     .environment(pose)
     .environment(\.cutoverFlag, cutover)
     .environment(\.entitlementState, entitlements.state)
-    .environment(\.presentPaywall, PaywallPresenter(pose: pose.mode) { isPaywallPresented = true })
-    .onChange(of: pose.mode) { _, mode in
-      if mode == .closed || mode == .unknown {
+    .environment(\.presentPaywall, paywallPresenter)
+    .onChange(of: paywallPresenter.isAvailable) { _, available in
+      if !available {
         isPaywallPresented = false
       }
     }
@@ -122,12 +131,20 @@ struct RootArrangementView: View {
 
 /// Opens the inner paywall slot. Features call it; only the root presents.
 struct PaywallPresenter: Sendable {
-  let isAvailable: Bool
+  private let currentPose: @MainActor @Sendable () -> PoseMode
   private let open: @MainActor @Sendable () -> Void
 
-  init(pose: PoseMode = .unknown, _ open: @escaping @MainActor @Sendable () -> Void) {
-    isAvailable = pose != .closed && pose != .unknown
+  init(
+    currentPose: @escaping @MainActor @Sendable () -> PoseMode = { .unknown },
+    _ open: @escaping @MainActor @Sendable () -> Void
+  ) {
+    self.currentPose = currentPose
     self.open = open
+  }
+
+  @MainActor var isAvailable: Bool {
+    let pose = currentPose()
+    return pose != .closed && pose != .unknown
   }
 
   @MainActor func callAsFunction() {
