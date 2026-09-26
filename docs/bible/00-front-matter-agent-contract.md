@@ -1,5 +1,7 @@
 # §00 — Front matter & agent contract
 
+**Routing update, 2026-09-26:** Bitrig owns visual QA and Duo demo captures now, then replaces Cursor for ASSETS polish after the current owner hands off. Cursor retains scaffold, integration, and Frost standby. Use the Codex provider in Bitrig. See [Bitrig task assignment](../bitrig-task-plan.md) for evidence, exact file locks, handoff conditions, and the first task prompt. This update takes precedence over older tool assignments below; lane boundaries and the three-writer limit still apply.
+
 **Bible chapter:** `docs/bible/00-front-matter-agent-contract.md`  
 **For:** Any AI tool (Claude Code, Codex CLI, Cursor Agent/Composer, Gemini, GPT-in-Cursor, human Integrator) that touches Outer Lens / FrostDuo Saturday work  
 **Event:** Bitrig Hacks: iPhone Duo · Sat Sep 26, 2026 · YC SF · build 11:30–3:30 · demos 3:30–5:00  
@@ -48,6 +50,7 @@ If blocked, write BLOCKED: <reason> + owner — stop.
 | **Claude Code / Opus** | Duo core · Outer Lens CCA · cutover architecture review · scope nacks (read-only role) | Inventing RC IDs · editing `CUTOVER.flag` · merging `.pbxproj` without Integrator |
 | **Codex CLI / GPT** | RevenueCat recipe in `Monetization/**` + `Features/Paywall/**` · Frost stubs if assigned | PoseRouter edits · CCA host redesign · dashboard ID invention |
 | **Cursor Agent on Xcode Mac** | Scaffold · integrate · polish · QA checklists · sim clicks via human | Owning all lanes at once · silent cross-lane patches |
+| **Bitrig with Codex** | Visual QA report now; ASSETS tokens, motion, and assets after recorded handoff | Fourth code writer; feature edits without handoff; invented visual or hardware passes |
 | **Cursor Background Agent** | Frost standby files behind flag | Flipping cutover · Capture/Coach edits |
 | **Gemini 2.5 Pro** | PDF/bible ingest → lane briefs, SCR/TC index, BLOCKED list | Writing Swift into the app repo |
 | **Scope guard (Claude Opus read-only)** | Nack PRs that violate §00 / kill list | Write access |
