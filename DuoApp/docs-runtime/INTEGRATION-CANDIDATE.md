@@ -40,3 +40,11 @@ The existing Bitrig operator received the source hash, copied artifact, hashes a
 | 6. Demo closure | Pending ordered evidence, two timed rehearsals, gate updates and Nihar's final decision. |
 
 Builds and simulation controls do not establish live acceptance. Release intentionally leaves RevenueCat unconfigured; unavailable UI remains guarded. No final product PASS or readiness percentage is claimed.
+
+## Sprint freeze and observed runtime limit
+
+Source frozen at `5b14d9defffe3276d3cb28db73eb5bddca555537`, including main `49bb414` countdown hook. Its incremental builds remain in progress at this receipt update: `/tmp/outer-lens-combined-main-debug.log` and `/tmp/outer-lens-combined-main-release.log`. Earlier passing builds and the copied artifact apply to `28717dc`; Bitrig observations apply to `bcd6d97`, which differs from it only in logging.
+
+Coordinator reports Bitrig at `bcd6d97`: Settings with Simulate Pro OFF, Monthly purchase showed “Package monthly is not in the current offering.” No Test Store transaction sheet opened. Closed-pose launch and three shutter taps were observed within no-camera simulator limits; fold controls remained disabled. This does not establish purchase, real photo capture, all-pose behavior or full demo readiness.
+
+Main's later `1ec017a` countdown-before-photo correction is pending after the explicit sprint freeze. No identifiers or dashboard settings were guessed or changed.
