@@ -43,23 +43,36 @@ public final class EntitlementsModel: ObservableObject {
                 return
             }
             do {
-                for await info in Purchases.shared.customerInfoStream {
-                    guard !Task.isCancelled else { break }
-                    let id = RCIdentifiers.entitlementId
-                    precondition(!id.contains("PLACEHOLDER"), "RC BLOCKED §9.2")
-                    let unlocked = info.entitlements[id]?.isActive == true
-                    self?.state = EntitlementState(
-                        status: unlocked ? .active : .inactive,
-                        entitlementID: id,
-                        lastError: nil
-                    )
-                }
+                let info = try await Purchases.shared.customerInfo()
+                self?.apply(info)
+            } catch {
+                self?.state = EntitlementState(
+                    status: .error,
+                    entitlementID: RCIdentifiers.photonProEntitlementId,
+                    lastError: error.localizedDescription
+                )
+            }
+            for await info in Purchases.shared.customerInfoStream {
+                guard !Task.isCancelled else { break }
+                self?.apply(info)
             }
         }
         #else
-        state = EntitlementState(status: .inactive, entitlementID: RCIdentifiers.entitlementId, lastError: nil)
+        state = EntitlementState(status: .inactive, entitlementID: RCIdentifiers.photonProEntitlementId, lastError: nil)
         #endif
     }
+
+    #if canImport(RevenueCat)
+    private func apply(_ info: CustomerInfo) {
+        let activeIDs = info.entitlements.active.keys
+        let unlocked = SubscriptionAccess.isUnlocked(activeEntitlementIDs: activeIDs)
+        state = EntitlementState(
+            status: unlocked ? .active : .inactive,
+            entitlementID: SubscriptionAccess.displayedEntitlementID(activeEntitlementIDs: activeIDs),
+            lastError: nil
+        )
+    }
+    #endif
 
     deinit {
         streamTask?.cancel()

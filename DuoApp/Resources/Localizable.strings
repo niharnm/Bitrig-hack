@@ -25,6 +25,15 @@
 "capture.banner.accessoryUnavailable" = "Subject screen unavailable on this device";
 "capture.banner.noDevices" = "Camera preview unavailable — tips still work";
 "capture.settings.title" = "Settings";
+"capture.settings.manageSubscription" = "Manage subscription";
+"capture.settings.restore" = "Restore purchases";
+"capture.settings.lifetime" = "Lifetime";
+"capture.settings.yearly" = "Yearly";
+"capture.settings.monthly" = "Monthly";
+"capture.settings.purchases" = "Purchases";
+"capture.settings.restoreUnlocked" = "photon_pro is active.";
+"capture.settings.restoreEmpty" = "No active photon_pro or pro entitlement was found.";
+"capture.settings.customerCenterUnavailable" = "Customer Center unavailable";
 "capture.settings.simulateTip" = "Simulate tip";
 "capture.settings.simulatePro" = "Simulate Pro unlock";
 "capture.settings.simulateCountdown" = "Simulate countdown";
