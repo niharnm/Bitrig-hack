@@ -5,13 +5,13 @@ import SwiftUI
 struct CameraCaptureAccessoryHost: ViewModifier {
   @Binding var isEnabled: Bool
   @Binding var isAvailable: Bool
-  let tipKey: LocalizedStringKey
+  let model: CoachModel
 
   func body(content: Content) -> some View {
     if #available(iOS 27.1, *) {
       content.sceneAccessory {
         CameraCaptureAccessory(isEnabled: $isEnabled) {
-          SubjectCoachView(tipKey: tipKey)
+          SubjectCoachView(model: model)
         }
         .onAvailabilityChange { available in
           isAvailable = available
