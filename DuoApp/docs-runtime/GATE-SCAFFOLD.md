@@ -6,7 +6,7 @@
 
 Generated app/test targets, frozen shared contracts, copy, DesignSystem tokens and motion, and isolated Frost standby are present. The incoming Duo-core and Capture/CCA handoffs are consumed. Root configuration calls the provided RC API, observes its entitlement model, and supplies a read-only snapshot to capture and accessory consumers. The supplied paywall host is inner-only; retained presenters check the current pose, and closing dismisses presentation. Pro rehearsal states are visibly labeled simulated.
 
-Tip, countdown, guide-oval, and shutter consumers now use shared motion and Reduce Motion handling. The guide oval reacts to the entitlement snapshot or the explicit rehearsal override. Camera preview and photo capture remain unwired. No live purchase or cross-display unlock is claimed. Frost remains standby; `CUTOVER.flag` is untouched.
+Tip, countdown, guide-oval, and shutter consumers now use shared motion and Reduce Motion handling. The guide oval reacts to the entitlement snapshot or the explicit rehearsal override. Owner commit `fc65ca8` adds camera preview and photo-capture wiring; live behavior remains unverified. No live purchase or cross-display unlock is claimed. Frost remains standby; `CUTOVER.flag` is untouched.
 
 ## Verification
 
@@ -24,3 +24,9 @@ Tip, countdown, guide-oval, and shutter consumers now use shared motion and Redu
 The incoming RC access-control error was resolved by `d0e4243`. Release still lacks SDK configuration, retains the supplied Test Store key, and DEBUG configuration logs the key. These findings were sent to the coordinating tasks for the RC owner. Cursor has not changed `Monetization/**` or `Features/Paywall/**`.
 
 No canonical scaffold, CCA, RevenueCat, Frost, or demo PASS follows from these builds, tests, or source presence.
+
+## Incoming owner revision verification
+
+Exact committed revision `1a4e42fedffca355d3f4fdfa6f6802c5dd7462f8`: Release simulator build PASS with SDK 27.1, log `/tmp/outer-lens-1a4e42f-release.log`. A scan of that fresh executable using the original supplied key from the earlier committed identifiers still finds the Test Store key. DEBUG bootstrap still logs its configured key. Source grep gates do not substitute for this executable scan.
+
+Bitrig QA separately reports an `InnerCaptureView.swift:242:25` constructor error in the dirty shared checkout. That is not attributed to this committed revision; preserve owner edits and resolve it in their lane. The newly wired Frost slots compile. Protect governs automatic sensing; manual Simulate remains allowed when it is off per §12.5.3 and §12.6.1. Automatic sensing is not implemented, and no cutover acceptance is claimed.

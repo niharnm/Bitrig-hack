@@ -2,7 +2,7 @@
 
 The app contains the generated DuoApp target, shared contracts, DesignSystem tokens and motion, Duo pose routing, and the Capture/CCA coaching handoff. The root observes the supplied entitlement model and publishes a read-only snapshot to both capture and accessory consumers. Closed and unknown poses block paywall requests; closing dismisses the sheet. An unconfigured SDK shows a dismissible unavailable state.
 
-The coach cycles tips, displays the Pro guide oval, and supports rehearsal controls. Rehearsal unlocks explicitly say “Simulated Pro”; they are not purchase evidence. Tip, countdown, guide, and shutter motion use the shared tokens and respect Reduce Motion. The camera preview and shutter remain unwired to a capture session. Frost stays isolated standby, and `CUTOVER.flag` remains untouched.
+The coach cycles tips, displays the Pro guide oval, and supports rehearsal controls. Rehearsal unlocks explicitly say “Simulated Pro”; they are not purchase evidence. Tip, countdown, guide, and shutter motion use the shared tokens and respect Reduce Motion. Owner commit `fc65ca8` adds the capture session, permission screens, preview, and photo-capture call. Live capture remains unverified. Frost stays isolated standby, and `CUTOVER.flag` remains untouched.
 
 ## Build
 
