@@ -42,6 +42,7 @@ public enum RCIdentifiers {
 }
 
 public enum SubscriptionAccess {
+    /// Unlock only on entitlement `pro` (never `photon_pro` or other aliases).
     public static func isUnlocked(activeEntitlementIDs: some Sequence<String>) -> Bool {
         Set(activeEntitlementIDs).contains(RCIdentifiers.entitlementId)
     }

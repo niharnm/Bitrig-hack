@@ -8,4 +8,4 @@ offeringId: default
 packageId: $rc_monthly
 paywallAttached: true
 appUserIdStrategy: anonymous
-notes: Test Store key configured. Entitlement set to 'pro'.
+notes: Test Store key configured. Entitlement set to 'pro'. Optional custom offering packages lifetime / yearly / monthly may appear on the dashboard; authoritative purchase package remains $rc_monthly when soft-fallback is needed.
