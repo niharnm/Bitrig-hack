@@ -56,6 +56,7 @@ final class CaptureSessionController {
     guard permission == .authorized, phase == .idle else { return }
     phase = .starting
     let result = await pipeline.start(position: .back)
+    guard permission == .authorized, phase == .starting else { return }
     hasCamera = result != .noCamera
     phase = result == .running ? .live : .idle
     if result == .failed {
