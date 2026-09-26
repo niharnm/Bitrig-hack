@@ -43,7 +43,7 @@ Builds and simulation controls do not establish live acceptance. Release intenti
 
 ## Sprint freeze and observed runtime limit
 
-Source frozen at `5b14d9defffe3276d3cb28db73eb5bddca555537`, including main `49bb414` countdown hook. Its incremental builds remain in progress at this receipt update: `/tmp/outer-lens-combined-main-debug.log` and `/tmp/outer-lens-combined-main-release.log`. Earlier passing builds and the copied artifact apply to `28717dc`; Bitrig observations apply to `bcd6d97`, which differs from it only in logging.
+Source frozen at `5b14d9defffe3276d3cb28db73eb5bddca555537`, including main `49bb414` countdown hook. Its incremental build attempt was invalidated when a transient merge conflict reached the compiler. The merge was abandoned at the explicit freeze and source is clean; fresh compilation is still required. Logs: `/tmp/outer-lens-combined-main-debug.log` and `/tmp/outer-lens-combined-main-release.log`. Earlier passing builds and the copied artifact apply to `28717dc`; Bitrig observations apply to `bcd6d97`, which differs from it only in logging.
 
 Coordinator reports Bitrig at `bcd6d97`: Settings with Simulate Pro OFF, Monthly purchase showed “Package monthly is not in the current offering.” No Test Store transaction sheet opened. Closed-pose launch and three shutter taps were observed within no-camera simulator limits; fold controls remained disabled. This does not establish purchase, real photo capture, all-pose behavior or full demo readiness.
 
