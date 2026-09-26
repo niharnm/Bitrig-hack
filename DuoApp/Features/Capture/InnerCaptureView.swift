@@ -15,19 +15,27 @@ struct InnerCaptureView: View {
   @Environment(\.entitlementState) private var entitlementState
   @Environment(\.presentPaywall) private var presentPaywall
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
+  @Environment(\.scenePhase) private var scenePhase
 
   private var isPro: Bool { entitlementState.isPro || coach.isProSimulated }
 
   var body: some View {
-    switch capture.permission {
-    case .notDetermined, .requesting:
-      PermissionPrimerView(isRequesting: capture.permission == .requesting) {
-        Task { await capture.requestAccess() }
+    Group {
+      switch capture.permission {
+      case .notDetermined, .requesting:
+        PermissionPrimerView(isRequesting: capture.permission == .requesting) {
+          Task { await capture.requestAccess() }
+        }
+      case .denied, .restricted:
+        CaptureDeniedView(isRestricted: capture.permission == .restricted)
+      case .authorized:
+        captureShell
       }
-    case .denied, .restricted:
-      CaptureDeniedView(isRestricted: capture.permission == .restricted)
-    case .authorized:
-      captureShell
+    }
+    .onChange(of: scenePhase, initial: true) { _, phase in
+      if phase == .active {
+        capture.refreshPermission()
+      }
     }
   }
 
@@ -136,7 +144,8 @@ struct InnerCaptureView: View {
       .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
       .overlay(
         RoundedRectangle(cornerRadius: 18, style: .continuous)
-          .stroke(.white.opacity(0.2), lineWidth: 1))
+          .stroke(.white.opacity(0.2), lineWidth: 1)
+      )
       .accessibilityHidden(true)
   }
 
