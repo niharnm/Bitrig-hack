@@ -5,25 +5,25 @@
 ## Current evidence
 
 - DesignSystem tokens and motion, shared `ThreatLevel` and `DecoyPack` types, and the isolated Frost views are implemented.
-- Duo-core root slots and the initial accessory host handoff have been merged. Frost slots remain placeholders and do not activate this standby slice.
+- Duo-core root slots now host the Frost views, shared paywall and entitlement snapshot. The outer decoy is only hosted in the closed pose; open-pose decoy hosting remains incomplete.
 - The Duo simulator is booted. An isolated, explicitly labeled free fixture rendered locked frost and the free lock-style decoy on display 1. Screenshot: `/tmp/outer-lens-frost-duo-inner.png`. Both views share one fixture display; this is not separate inner/outer arrangement proof or a purchase. This fixture does not activate Frost in the production root.
 - The final integrated nine unit tests passed on an ordinary iPhone 17 Pro simulator running iOS 27.0. Test fixtures do not prove Duo behavior or a RevenueCat purchase.
-- RevenueCat configuration, entitlement updates, paywall presentation, and successful purchase behavior are not implemented.
+- RevenueCat configuration, entitlement updates and inner paywall source are implemented. Successful purchase and the purchase-driven outer pack C remain unverified.
 - No cutover decision has been made. `CUTOVER.flag` remains untouched.
 
 ## Acceptance status
 
 - TC-F01: NOT RUN. No integrated Duo threat-to-frost observation.
 - TC-F02: NOT RUN. No Duo outer decoy observation.
-- TC-F03: BLOCKED pending Duo simulator integration and observation of Simulate Threat.
-- TC-F04: BLOCKED pending RevenueCat purchase and entitlement integration, followed by outer pack C observation.
+- TC-F03: NOT RUN. Simulate Threat is wired but needs observation on the combined Duo build.
+- TC-F04: BLOCKED pending a working RevenueCat purchase and observed outer pack C unlock.
 - TC-F05: NOT RUN. Optional closed-cover path.
 - TC-F06: NOT RUN.
 - TC-F07: NOT RUN. Motion is present in source but not observed in the integrated Duo flow.
-- TC-F08: NOT RUN. Shared inner paywall flow is not integrated.
-- TC-F09: NOT RUN. Orchestrator has not selected cutover; the root flag consumer is not integrated.
+- TC-F08: NOT RUN. Shared inner paywall is wired; its Frost flow has not been observed.
+- TC-F09: NOT RUN. Cutover is not selected. The root consumes the flag, but its parser also accepts true and frostDuo; the canonical contract requires exact frost.
 - TC-P02: NOT RUN. Frost copy and the cutover demo have not been rehearsed.
 
 ## Handoff and limits
 
-Keep Frost isolated standby until Orchestrator records `GATE-CCA.md = RED` and writes the exact cutover token `frost`. Before any canonical gate decision, complete Duo-core and root integration, then integrate RevenueCat and verify the entitlement-gated pack C on the outer display. Builds, previews, and unit-test fixtures are not proof of a Duo demo or purchase. No privacy guarantee is claimed here.
+Keep Frost isolated standby until Orchestrator records `GATE-CCA.md = RED` and writes the exact cutover token `frost`. Before any canonical gate decision, complete open-pose decoy hosting and exact-token agreement, then verify the entitlement-gated pack C on the outer display. Builds, previews, and unit-test fixtures are not proof of a Duo demo or purchase. No privacy guarantee is claimed here.

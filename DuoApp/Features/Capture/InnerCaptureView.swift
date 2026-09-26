@@ -18,6 +18,7 @@ struct InnerCaptureView: View {
   @ObservedObject private var entitlements = EntitlementsModel.shared
   @Environment(\.presentPaywall) private var presentPaywall
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
+  @Environment(\.scenePhase) private var scenePhase
 
   private var isPro: Bool { entitlements.state.isPro || coach.isProSimulated }
   private var isPurchasesConfigured: Bool {
@@ -34,15 +35,22 @@ struct InnerCaptureView: View {
   }
 
   var body: some View {
-    switch capture.permission {
-    case .notDetermined, .requesting:
-      PermissionPrimerView(isRequesting: capture.permission == .requesting) {
-        Task { await capture.requestAccess() }
+    Group {
+      switch capture.permission {
+      case .notDetermined, .requesting:
+        PermissionPrimerView(isRequesting: capture.permission == .requesting) {
+          Task { await capture.requestAccess() }
+        }
+      case .denied, .restricted:
+        CaptureDeniedView(isRestricted: capture.permission == .restricted)
+      case .authorized:
+        captureShell
       }
-    case .denied, .restricted:
-      CaptureDeniedView(isRestricted: capture.permission == .restricted)
-    case .authorized:
-      captureShell
+    }
+    .onChange(of: scenePhase, initial: true) { _, phase in
+      if phase == .active {
+        capture.refreshPermission()
+      }
     }
   }
 

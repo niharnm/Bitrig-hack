@@ -1,6 +1,6 @@
 # Outer Lens demo script
 
-**Status: PLANNED, NOT REHEARSED.** No Duo simulator is available, and the scaffold has no implemented capture, accessory, pose layout, purchases, or paywall behavior. The steps and outcomes below are unverified. Use this for rehearsal only after the prerequisites pass. Until then, use for internal readthrough only.
+**Status: PLANNED, NOT REHEARSED.** Capture, accessory, pose routing and monetization source are implemented, and historical Duo launches are recorded. Successful purchase, purchase-driven outer unlock and complete pose acceptance remain blocked or unverified. The two required timed rehearsals have not run.
 
 **Live-run prerequisites:** Confirm Outer Lens is the active mode with Orchestrator. Pass TC-S01; TC-C01 for the outer tip; TC-C02 if showing capture or flip; TC-R02, TC-R03, and TC-R04 for the paywall, successful Test Store purchase, and purchase-driven outer unlock. Pass TC-C09 before using any Simulate control. Grant camera permission or verify the permission primer. Simulate tip or Simulate Pro shows a simulated state only. Do not claim working device accessory behavior, a completed purchase, wired Test Store behavior, or a purchase-driven unlock until the relevant gate evidence exists. If a live-run prerequisite is missing, do not present this as a product demo.
 

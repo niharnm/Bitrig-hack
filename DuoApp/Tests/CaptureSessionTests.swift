@@ -7,7 +7,8 @@ final class CaptureSessionTests: XCTestCase {
 
   func testPhotoOutcomeRequiresDataAndNoError() {
     XCTAssertEqual(PhotoCaptureOutcome(fileData: Data([0xFF, 0xD8]), error: nil), .captured)
-    XCTAssertEqual(PhotoCaptureOutcome(fileData: Data([0xFF, 0xD8]), error: ProcessingError()), .failed)
+    XCTAssertEqual(
+      PhotoCaptureOutcome(fileData: Data([0xFF, 0xD8]), error: ProcessingError()), .failed)
     XCTAssertEqual(PhotoCaptureOutcome(fileData: Data(), error: nil), .failed)
     XCTAssertEqual(PhotoCaptureOutcome(fileData: nil, error: nil), .failed)
   }
@@ -23,6 +24,27 @@ final class CaptureSessionTests: XCTestCase {
     XCTAssertFalse(capture.isLive)
     XCTAssertEqual(capture.capturedPhotoCount, 0)
     XCTAssertFalse(capture.lastPhotoFailed)
+  }
+  @MainActor
+  func testPermissionRefreshRecoversAfterSettingsGrant() async {
+    var permission = PermissionSubstate.denied
+    let capture = CaptureSessionController(permissionProvider: { permission })
+    XCTAssertEqual(capture.permission, .denied)
+    permission = .authorized
+    capture.refreshPermission()
+    XCTAssertEqual(capture.permission, .authorized)
+    XCTAssertEqual(capture.phase, .idle)
+  }
+
+  @MainActor
+  func testPermissionRefreshReflectsSettingsRevocation() async {
+    var permission = PermissionSubstate.authorized
+    let capture = CaptureSessionController(permissionProvider: { permission })
+    permission = .denied
+    capture.refreshPermission()
+    XCTAssertEqual(capture.permission, .denied)
+    XCTAssertEqual(capture.phase, .idle)
+    XCTAssertFalse(capture.isLive)
   }
 
   /// B.noDevices Peak-End: idle + !hasCamera still gets a flash beat and success count.

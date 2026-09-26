@@ -5,7 +5,7 @@ import SwiftUI
 @MainActor
 @Observable
 final class CaptureSessionController {
-  private(set) var permission = CaptureSessionController.currentPermission()
+  private(set) var permission: PermissionSubstate
   private(set) var phase: CaptureSessionPhase = .idle
   /// False when discovery finds no camera, as in the simulator. Tips still work (§11.2.4 B.noDevices).
   private(set) var hasCamera = true
@@ -14,6 +14,24 @@ final class CaptureSessionController {
   /// True when the most recent shutter produced no photo. Cleared by the next shutter.
   private(set) var lastPhotoFailed = false
   @ObservationIgnored private let pipeline = CapturePipeline()
+  @ObservationIgnored private let permissionProvider: @MainActor () -> PermissionSubstate
+
+  init(
+    permissionProvider: @escaping @MainActor () -> PermissionSubstate = CaptureSessionController
+      .currentPermission
+  ) {
+    self.permissionProvider = permissionProvider
+    permission = permissionProvider()
+  }
+
+  func refreshPermission() {
+    let current = permissionProvider()
+    guard permission != current else { return }
+    permission = current
+    if current != .authorized {
+      stop()
+    }
+  }
 
   var session: AVCaptureSession { pipeline.session }
   /// `shutterFlash` belongs to the live family (§07): the preview stays up while a photo is taken.
@@ -31,7 +49,7 @@ final class CaptureSessionController {
   func requestAccess() async {
     permission = .requesting
     _ = await AVCaptureDevice.requestAccess(for: .video)
-    permission = Self.currentPermission()
+    permission = permissionProvider()
   }
 
   func start() async {
@@ -42,6 +60,7 @@ final class CaptureSessionController {
     }
     phase = .starting
     let result = await pipeline.start(position: .back)
+    guard permission == .authorized, phase == .starting else { return }
     hasCamera = result != .noCamera
     switch result {
     case .running: phase = .live
@@ -111,7 +130,8 @@ private final class CapturePipeline: NSObject, AVCapturePhotoCaptureDelegate, @u
   private let queue = DispatchQueue(label: "outerlens.capture")
   private var input: AVCaptureDeviceInput?
   /// Keyed by `AVCapturePhotoSettings.uniqueID`. Touched only on `queue`.
-  private var pendingPhotos: [Int64: (outcome: PhotoCaptureOutcome?, finish: (PhotoCaptureOutcome) -> Void)] = [:]
+  private var pendingPhotos:
+    [Int64: (outcome: PhotoCaptureOutcome?, finish: (PhotoCaptureOutcome) -> Void)] = [:]
 
   func start(position: AVCaptureDevice.Position) async -> StartResult {
     await withCheckedContinuation { continuation in
@@ -153,7 +173,9 @@ private final class CapturePipeline: NSObject, AVCapturePhotoCaptureDelegate, @u
     }
   }
 
-  func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+  func photoOutput(
+    _ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?
+  ) {
     let outcome = PhotoCaptureOutcome(fileData: photo.fileDataRepresentation(), error: error)
     let id = photo.resolvedSettings.uniqueID
     queue.async {
@@ -163,7 +185,8 @@ private final class CapturePipeline: NSObject, AVCapturePhotoCaptureDelegate, @u
 
   /// Always the last callback for a request, including failures before any photo was processed.
   func photoOutput(
-    _ output: AVCapturePhotoOutput, didFinishCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings,
+    _ output: AVCapturePhotoOutput,
+    didFinishCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings,
     error: Error?
   ) {
     let id = resolvedSettings.uniqueID
@@ -185,7 +208,8 @@ private final class CapturePipeline: NSObject, AVCapturePhotoCaptureDelegate, @u
     if let input {
       session.removeInput(input)
     }
-    guard let newInput = try? AVCaptureDeviceInput(device: device), session.canAddInput(newInput) else {
+    guard let newInput = try? AVCaptureDeviceInput(device: device), session.canAddInput(newInput)
+    else {
       session.commitConfiguration()
       return .failed
     }

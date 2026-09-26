@@ -2,11 +2,13 @@
 
 **Status: PARTIAL — tip story coded; live Duo CCA / purchase→oval BLOCKED.**
 
-`time_local:` 13:50 (Sat Sep 26, 2026)  
+`time_local:` 13:50 historical capture check; reconciliation update 2026-09-26
 `lane:` Capture / CameraCaptureAccessory / outer coach  
-`scope_frozen:` Tip-only outer + guide oval on Pro. FilmStock, KidMagnet, tip-pack theater **out of win bar** (parked on `sat/capture` / `sat/coach`, not merged).
+`scope_frozen:` Tip-only outer + guide oval on Pro. FilmStock, KidMagnet, tip-pack theater **out of win bar** (source merged through PRs #15 and #16, inactive on the default demo path).
 
 ---
+
+The build and three-test results below are historical owner reports. Current checks are in the [reconciliation receipt](../../docs/repository-cleanup-20260926.md). A simulated flash or incremented capture counter is not photo evidence.
 
 ## What is coded (source evidence only — not live PASS)
 
@@ -17,10 +19,10 @@
 | Simulate controls | Settings: Simulate tip, Simulate Pro (labeled simulated), Simulate countdown |
 | Shutter → tip + T3 | Shutter advances tip, awaits countdown, then `capturePhoto()` (not Settings-only; `1ec017a` + polish) |
 | Photo result | shutter flash, failure banner + Retry, `CaptureSessionTests`; photo not saved |
-| Inner paywall host | Pro CTA → `presentPaywall()`; Outer Lens allows **closed** (capture + CCA pose); Frost closed still blocked |
-| Unlock wire | `SubjectCoachView` / `InnerCaptureView` observe `EntitlementsModel.shared`; paywall `apply(customerInfo:)` on purchase/restore |
-| Sim no-camera path | Banner when no devices; idle+`!hasCamera` Peak-End flash; tips still advance |
-| Recovery | Restricted/denied Settings path; session-failed Retry → `start()`; accessory-unavailable banner |
+| Inner paywall host | Outer Lens permits the closed capture pose; Frost closed remains blocked. |
+| Unlock wire | Coach and capture observe EntitlementsModel.shared; paywall completion applies CustomerInfo immediately. |
+| Sim no-camera path | Missing-camera banner and simulated flash; tips still advance; no photo is taken. |
+| Recovery | Denied offers Settings; restricted explains the limitation; failed sessions offer Retry. |
 | Debug build | **PASS** — Xcode 27.1 (`Desktop/Xcode.app` 27A9269), SDK 27.1, `generic/platform=iOS Simulator`, log `/tmp/duoapp-polish-build.log` |
 | Unit tests | **PASS** — `CaptureSessionTests` 3/3 on Duo sim `A5F8B31A…`, log `/tmp/duoapp-capture-tests.log` |
 
@@ -46,7 +48,7 @@
 | Tip story can demo in simulator / with Simulate controls | **PARTIAL / GREEN for rehearsal** — tip cycle, simulate tip, simulate Pro (honest label), shutter→countdown |
 | Live CCA climax on Duo | **BLOCKED** |
 | Purchase → outer oval | **BLOCKED** until human runs Test Store → other-pane unlock |
-| FilmStock / KidMagnet / filters-integrate | **OUT OF BAR** — parked, not on main |
+| FilmStock / KidMagnet / filters-integrate | **OUT OF BAR**: parked source is merged; the default demo path remains tip plus guide |
 
 **Do not treat this file as PASS for Duo CCA.** Integrator: source + unit tests ≠ live accessory or Matt Berry purchase proof.
 
@@ -54,15 +56,15 @@
 
 ## Next steps (human)
 
-1. On Duo hardware: grant camera → confirm outer tip via real CCA (or document accessory unavailable + inner subject preview fallback).
+1. On the accepted Duo simulator or device: grant camera → confirm outer tip via real CCA (or document accessory unavailable + inner subject preview fallback).
 2. Pro → RevenueCatUI → Test Store **Successful Purchase** → confirm oval on outer (not toast-only).
 3. 90s rehearse; Brad one-liner + Matt free-vs-paid sentence.
 4. Leave parked filter branches alone unless win bar changes.
 
 ---
 
-## Parked (do not merge for demo)
+## Parked source, outside the primary demo
 
-- `sat/coach` @ `672f39b` — KidMagnet + tip packs  
-- `sat/capture` @ `4b1acc8` — FilmStock selector / grades  
-- No `sat/filters-integrate` branch created.
+- PR #15 includes KidMagnet and tip packs. `activePack` defaults to `.free`.
+- PR #16 includes FilmStock source and tests. The selector remains hidden on the primary path.
+- No additional filter integration is required for the primary demo.
