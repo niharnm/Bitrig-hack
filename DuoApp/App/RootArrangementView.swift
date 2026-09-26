@@ -130,10 +130,9 @@ private struct SlotPlaceholder: View {
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background {
-      // Film Tool canvas #050505 and raised surface #1C1C1E until DesignSystem tokens land.
       switch fill {
-      case .canvas: Color(red: 5 / 255, green: 5 / 255, blue: 5 / 255).ignoresSafeArea()
-      case .raised: Color(red: 28 / 255, green: 28 / 255, blue: 30 / 255).ignoresSafeArea()
+      case .canvas: FilmToolTokens.Palette.canvas.ignoresSafeArea()
+      case .raised: FilmToolTokens.Palette.panel.ignoresSafeArea()
       }
     }
   }
