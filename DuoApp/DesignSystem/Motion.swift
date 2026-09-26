@@ -63,6 +63,27 @@ enum FilmToolMotion {
     reduceMotion ? nil : .easeInOut(duration: durDecoy)
   }
 
+  static func kidMagnetPulseAnimation(reduceMotion: Bool) -> Animation? {
+    reduceMotion
+      ? nil
+      : .easeInOut(duration: FilmToolTokens.KidMagnet.pulseDuration).repeatForever(autoreverses: true)
+  }
+
+  static func kidMagnetBounceOffset(reduceMotion: Bool, phase: Bool) -> CGFloat {
+    reduceMotion ? 0 : (phase ? -FilmToolTokens.KidMagnet.bounceOffset : 0)
+  }
+
+  static func kidMagnetBounceOffset(reduceMotion: Bool, phase: Double) -> CGFloat {
+    reduceMotion ? 0 : CGFloat(phase) * FilmToolTokens.KidMagnet.bounceOffset
+  }
+
+  static func kidMagnetScale(reduceMotion: Bool, phase: Bool) -> CGFloat {
+    reduceMotion
+      ? 1.0
+      : (phase ? FilmToolTokens.KidMagnet.maxScale : FilmToolTokens.KidMagnet.minScale)
+  }
+
+
   private static func easeOut(duration: TimeInterval) -> Animation {
     .timingCurve(0.16, 1, 0.3, 1, duration: duration)
   }

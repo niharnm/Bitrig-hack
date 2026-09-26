@@ -129,3 +129,27 @@ enum RecoveryKind: Equatable, Sendable {
   case simulateCountdown
   case tipOnlyOuter
 }
+
+public enum TipPack: String, CaseIterable, Identifiable, Sendable {
+  case free
+  case kidsPro
+  case portraitPro
+
+  public var id: String { rawValue }
+
+  public var requiresPro: Bool {
+    switch self {
+    case .free: return false
+    case .kidsPro, .portraitPro: return true
+    }
+  }
+
+  public var displayNameKey: String {
+    switch self {
+    case .free: return "capture.tipPack.free"
+    case .kidsPro: return "capture.tipPack.kids"
+    case .portraitPro: return "capture.tipPack.portrait"
+    }
+  }
+}
+
