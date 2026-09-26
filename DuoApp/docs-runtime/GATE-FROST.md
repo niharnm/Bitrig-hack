@@ -5,9 +5,9 @@
 ## Current evidence
 
 - DesignSystem tokens and motion, shared `ThreatLevel` and `DecoyPack` types, and the isolated Frost views are implemented.
-- The app root is still a placeholder. Duo-core and root cutover integration are pending.
-- The Duo simulator is booted. An isolated, explicitly labeled free fixture rendered locked frost and the free lock-style decoy on display 1. Screenshot: `/tmp/outer-lens-frost-duo-inner.png`. Both views share one fixture display; this is not separate inner/outer arrangement proof or a purchase. The production root remains unchanged.
-- Nine unit tests passed on an ordinary iPhone 17 Pro simulator running iOS 27.0. Test fixtures do not prove Duo behavior or a RevenueCat purchase.
+- Duo-core root slots and the initial accessory host handoff have been merged. Frost slots remain placeholders and do not activate this standby slice.
+- The Duo simulator is booted. An isolated, explicitly labeled free fixture rendered locked frost and the free lock-style decoy on display 1. Screenshot: `/tmp/outer-lens-frost-duo-inner.png`. Both views share one fixture display; this is not separate inner/outer arrangement proof or a purchase. This fixture does not activate Frost in the production root.
+- The final integrated nine unit tests passed on an ordinary iPhone 17 Pro simulator running iOS 27.0. Test fixtures do not prove Duo behavior or a RevenueCat purchase.
 - RevenueCat configuration, entitlement updates, paywall presentation, and successful purchase behavior are not implemented.
 - No cutover decision has been made. `CUTOVER.flag` remains untouched.
 
