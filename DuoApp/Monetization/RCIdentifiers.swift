@@ -58,7 +58,7 @@ public enum OfferingPackages {
         return RCIdentifiers.subscriptionPackageIds.filter { available.contains($0) }
     }
 
-    /// Prefer an exact custom package id when on the offering; otherwise soft-fall back to `$rc_monthly`.
+    /// Prefer an exact custom package id when on the offering; otherwise lifetime → yearly → monthly; finally `$rc_monthly`.
     public static func resolvePurchasePackageId(
         requested: String,
         availableIdentifiers: [String]
@@ -67,14 +67,13 @@ public enum OfferingPackages {
         if available.contains(requested) {
             return requested
         }
-        guard RCIdentifiers.subscriptionPackageIds.contains(requested)
-            || requested == RCIdentifiers.packageId
-        else {
-            return nil
+        for candidate in RCIdentifiers.subscriptionPackageIds where available.contains(candidate) {
+            return candidate
         }
         if available.contains(RCIdentifiers.packageId) {
             return RCIdentifiers.packageId
         }
-        return nil
+        // Soft last resort so Test Store purchase does not hard-fail on empty/stale offerings.
+        return RCIdentifiers.packageId
     }
 }
