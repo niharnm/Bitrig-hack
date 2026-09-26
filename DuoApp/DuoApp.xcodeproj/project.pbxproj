@@ -27,11 +27,13 @@
 		B58CF2576124869F7E24C07C /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5280A7B339BB8FE6AE5CF89 /* Tokens.swift */; };
 		B9B9578EB2CE807C299DB389 /* RCIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DB8CCC16138EFD544F27CD /* RCIdentifiers.swift */; };
 		BDA28D68FD1AC793BDDE5FBD /* CutoverFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F75A4811FF91EAECD2B468 /* CutoverFlag.swift */; };
+		C13ACC0AB190CC954A2C59B6 /* PaywallPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326591DB60E17B942E78357 /* PaywallPresentationTests.swift */; };
 		C1D8EA3703D7B244839CACC2 /* FrostStandbyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BAB1F6A600D82293CF0471 /* FrostStandbyTests.swift */; };
 		C42CFAC24925FC7ED0CF2692 /* CaptureSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB2D7DF959653FAFDCA266B5 /* CaptureSessionController.swift */; };
 		C545986439EBF638CCCA5BD7 /* CaptureDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A29FFBDEC41539EDC234A06 /* CaptureDeniedView.swift */; };
 		C7BC5114BF437AC7CB54D5C4 /* ThreatLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6092AA6BA643BCE70C584 /* ThreatLevel.swift */; };
 		C8DB4F79477F1B7F4C113D9F /* ArrangementRegions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA772F70308E0826C46ACC4E /* ArrangementRegions.swift */; };
+		DEFF9CA391A05064ECB1A172 /* OfferingsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7596C579F54164B525207AC3 /* OfferingsRepository.swift */; };
 		E0555A5912D624A809E3A1F6 /* SensitiveSurfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475861CBA4629F76BF6348AF /* SensitiveSurfaceView.swift */; };
 		E28FF05C30DABC29B0730375 /* DuoAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BABD7BDE391BB692107487 /* DuoAppApp.swift */; };
 		E312F9D95D6ED75590A8E799 /* CameraCaptureAccessoryHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DF790BE3A93C72EBBB12B /* CameraCaptureAccessoryHost.swift */; };
@@ -53,6 +55,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0326591DB60E17B942E78357 /* PaywallPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallPresentationTests.swift; sourceTree = "<group>"; };
 		049DF790BE3A93C72EBBB12B /* CameraCaptureAccessoryHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureAccessoryHost.swift; sourceTree = "<group>"; };
 		26DFA355642198D1C0A8C0F3 /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
 		3A29FFBDEC41539EDC234A06 /* CaptureDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureDeniedView.swift; sourceTree = "<group>"; };
@@ -63,6 +66,7 @@
 		475861CBA4629F76BF6348AF /* SensitiveSurfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitiveSurfaceView.swift; sourceTree = "<group>"; };
 		525314560A17BB45BA5C549C /* GuideOvalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideOvalView.swift; sourceTree = "<group>"; };
 		6F8C466DBFB7C4471F2A125D /* DuoAppTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DuoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7596C579F54164B525207AC3 /* OfferingsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferingsRepository.swift; sourceTree = "<group>"; };
 		7C05765F02A3E03F6C8E45F1 /* PaywallHostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallHostView.swift; sourceTree = "<group>"; };
 		89BAB1F6A600D82293CF0471 /* FrostStandbyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrostStandbyTests.swift; sourceTree = "<group>"; };
 		89D85BE04E05C9F19A507638 /* OuterDecoyStageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OuterDecoyStageView.swift; sourceTree = "<group>"; };
@@ -124,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				8FFDD7694A77E6F63DD78FBB /* Entitlements.swift */,
+				7596C579F54164B525207AC3 /* OfferingsRepository.swift */,
 				EE9354EC8492B413DA144E21 /* PurchasesConfig.swift */,
 				C1DB8CCC16138EFD544F27CD /* RCIdentifiers.swift */,
 			);
@@ -193,6 +198,7 @@
 			children = (
 				89BAB1F6A600D82293CF0471 /* FrostStandbyTests.swift */,
 				AFBA01B4542BE5B7794E90EA /* MotionAccessibilityTests.swift */,
+				0326591DB60E17B942E78357 /* PaywallPresentationTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -345,6 +351,7 @@
 			files = (
 				C1D8EA3703D7B244839CACC2 /* FrostStandbyTests.swift in Sources */,
 				916B7F931C4C8305D0620FA3 /* MotionAccessibilityTests.swift in Sources */,
+				C13ACC0AB190CC954A2C59B6 /* PaywallPresentationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,6 +372,7 @@
 				2687E9AF706E4FCE630EF658 /* GuideOvalView.swift in Sources */,
 				69302CD4B12D63FD46A74AD7 /* InnerCaptureView.swift in Sources */,
 				5E09491D982F6A3401942275 /* Motion.swift in Sources */,
+				DEFF9CA391A05064ECB1A172 /* OfferingsRepository.swift in Sources */,
 				208F8E0C5A21F2C482B95ECC /* OuterDecoyStageView.swift in Sources */,
 				3737A0ABB32F372B6A37D1B8 /* PaywallHostView.swift in Sources */,
 				744ADA8E5315618169350853 /* PermissionPrimerView.swift in Sources */,

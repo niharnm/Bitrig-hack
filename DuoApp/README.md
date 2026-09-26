@@ -23,3 +23,9 @@ See `docs-runtime/GATE-SCAFFOLD.md` for current toolchain and Duo simulator evid
 Cursor integration remains pending the Duo-core, Capture/CCA, and RevenueCat handoffs. The cutover flag remains untouched. `docs-runtime/DEMO-SCRIPT.md` is planned and unrehearsed. No canonical acceptance gate is marked PASS.
 
 Duo XCTest failed before connecting, with signal kill during bootstrap; no test cases ran in that attempt. Its cause remains unresolved. The integrated capture shell was visually observed in `/tmp/outer-lens-integrated-duo-inner.png`, with the accessory-unavailable banner and an unwired shutter. This is launch evidence only.
+
+## Incoming RC handoff, 2026-09-26
+
+At `7e6eb80`, RevenueCat and paywall sources are present but the handoff does not compile. SDK 27.1 Debug build failed at `Monetization/Entitlements.swift:19`: public `state` exposes internal `EntitlementState`. Log: `/tmp/outer-lens-rc-handoff-build.log`. The earlier successful builds and nine tests apply to the pre-RC integration revision.
+
+The generated project now includes `OfferingsRepository.swift`. Root paywall and read-only entitlement wiring wait for a compiling RC handoff. `GATE-RC.md` readiness claims are not treated as observed purchase, restore, cancellation, or cross-display unlock proof. Cursor has not modified monetization or paywall implementation.
