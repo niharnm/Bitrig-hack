@@ -1,5 +1,7 @@
 # Outer Lens — 3-hour Saturday build plan (Film Tool only)
 
+**Routing update, 2026-09-26:** Bitrig owns visual QA and Duo demo captures now, then replaces Cursor for ASSETS polish after the current owner hands off. Cursor retains scaffold, integration, and Frost standby. Use the Codex provider in Bitrig. See [Bitrig task assignment](bitrig-task-plan.md) for evidence, exact file locks, handoff conditions, and the first task prompt. This update takes precedence over older tool assignments below; lane boundaries and the three-writer limit still apply.
+
 **For:** Nihar · Bitrig Hacks iPhone Duo · Sat Sep 26, 2026 · YC SF  
 **Product:** **Outer Lens** (Film Tool) — one climax: `CameraCaptureAccessory` subject coach on the outer  
 **Window this plan covers:** **11:30 → 3:15** (build + polish → freeze start); demos 3:30+  
@@ -64,11 +66,12 @@ Aligned with `docs/multi-ai-build-routing.md`. Paste lane stubs from that doc.
 | Slot | Human / AI | Lane | Owns |
 |------|------------|------|------|
 | **O** | **Nihar** (+ cheap Cursor checklist) | Orchestrator | Clock, gates, `CUTOVER.flag`, `GATE-CCA.md`, merge, sim clicks, demo |
-| **S** | **Cursor Agent** on Xcode Mac | Scaffold → later polish/integrate | Project tree, SPM stubs, integrate, DesignSystem late |
+| **S** | **Cursor Agent** on Xcode Mac | Scaffold → integrate | Project tree, SPM stubs, integration |
 | **D** | **Claude Code + Opus** | Duo core → then Outer Lens | `PoseRouter`, `RootArrangementView`, then `Capture/` + `CoachOverlay/` + CCA host |
 | **R** | **Codex CLI** (or Cursor+GPT) | RevenueCat | `Monetization/`, `Paywall/`, consumes `RC-IDs.md` only |
 | **F** | Cursor BG / 2nd Codex | Frost standby | `Features/Frost/**` behind flag — **upgrade to primary only if cutover** |
-| **Q** | Nihar + cheap Cursor | QA / demo | TC ticks, `DEMO-LAST-PASS.md` — no drive-by refactors |
+| **B** | Bitrig with Codex | Visual QA → ASSETS after handoff | `BITRIG-REVIEW.md` now; tokens, motion, assets after handoff |
+| **Q** | Nihar + Bitrig evidence | QA / demo | TC ticks, `DEMO-LAST-PASS.md`; timed rehearsal and approval by Nihar |
 | **G** | Claude Opus read-only | Scope guard | Nacks creep; no write |
 
 **Concurrency rule:** ≤3 writers. Preferred live set: **D + R + (F standby OR polish)**. Never four feature writers.

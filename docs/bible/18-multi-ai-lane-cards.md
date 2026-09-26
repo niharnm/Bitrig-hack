@@ -1,5 +1,7 @@
 # §18 — Multi-AI lane cards (paste-ready)
 
+**Routing update, 2026-09-26:** Bitrig owns visual QA and Duo demo captures now, then replaces Cursor for ASSETS polish after the current owner hands off. Cursor retains scaffold, integration, and Frost standby. Use the Codex provider in Bitrig. See [Bitrig task assignment](../bitrig-task-plan.md) for evidence, exact file locks, handoff conditions, and the first task prompt. This update takes precedence over older tool assignments below; lane boundaries and the three-writer limit still apply.
+
 **For:** Nihar · Bitrig Hacks iPhone Duo · Sat Sep 26, 2026  
 **Role:** One paste block per AI session — **own X / don’t touch Y / read these / done when**  
 **Tools:** Claude Code (Opus) · Codex CLI (or Cursor+GPT) · Cursor Agent on Xcode Mac · optional Gemini ingest · scope-guard Opus  
@@ -63,9 +65,9 @@ Do not expand scope. Done = lane TCs listed on your card.
 | **CCA** | Claude Code Opus | After SHELL-READY: `Duo/CameraCaptureAccessoryHost.swift`, `Features/Capture/**`, `Features/CoachOverlay/**` | `Monetization/**`, `Features/Frost/**`, PoseRouter tables, invent RC IDs |
 | **RC** | Codex CLI | `Monetization/**`, `Features/Paywall/**`, `GATE-RC.md` | Pose router, CCA/Frost layout, invent IDs |
 | **FROST** | Cursor BG / 2nd Codex | `Features/Frost/**` only (standby or promoted) | Capture/Coach; flipping `CUTOVER.flag` alone |
-| **ASSETS** | Cursor Sonnet late | After feature inputs freeze: `DesignSystem/**`, `Resources/Assets.xcassets/{Coach,Frost,Shared}` | New screens, climax APIs, mid-day parallel token rewrites |
+| **ASSETS** | Bitrig with Codex after handoff | After feature inputs freeze: `DesignSystem/**`, `Resources/Assets.xcassets/{Coach,Frost,Shared}` | New screens, climax APIs, mid-day parallel token rewrites |
 | **COPY** | Human / Cursor checklist | Strings, `DEMO-SCRIPT.md` | SDK logic; “improved” taglines |
-| **QA** | Nihar + cheap Cursor | TC ticks, `DEMO-LAST-PASS.md` | Drive-by refactors |
+| **QA** | Nihar + Bitrig visual evidence | TC ticks, `DEMO-LAST-PASS.md` | Drive-by refactors |
 | **GUARD** | Claude Opus read-only | Nacks | Write access |
 | **INTEG** | Nihar / Cursor | Cross-lane merges; `Shared/Types.swift` after stubs; EntitlementState → other-pane wire; root slot on cutover | Unowned feature invention; counting as a 4th parallel feature writer |
 
@@ -364,7 +366,7 @@ DONE WHEN (promoted primary after RED): TC-F01–F04 pass; TC-F05 optional cut.
 
 ---
 
-## 9. Card — ASSETS / Polish · Cursor + Sonnet (late · Block G)
+## 9. Card — ASSETS / Polish · Bitrig with Codex (late · Block G)
 
 ### Paste
 
@@ -413,7 +415,7 @@ DO NOT "improve" taglines. TC-P01 P02 P03 P04.
 
 ---
 
-## 11. Card — QA / Demo · Nihar + cheap Cursor
+## 11. Card — QA / Demo · Nihar + Bitrig
 
 ### Paste
 
