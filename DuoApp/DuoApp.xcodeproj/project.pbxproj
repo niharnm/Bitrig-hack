@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC0C00000000000000000100 /* BestAngle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0C00000000000000000200 /* BestAngle.swift */; };
+		AC0C00000000000000000101 /* AngleCoachState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0C00000000000000000201 /* AngleCoachState.swift */; };
+		AC0C00000000000000000102 /* CoachPersona.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0C00000000000000000202 /* CoachPersona.swift */; };
+		AC0C00000000000000000103 /* CoachChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0C00000000000000000203 /* CoachChatModel.swift */; };
+		AC0C00000000000000000104 /* CoachStudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0C00000000000000000204 /* CoachStudioView.swift */; };
+		AC0C00000000000000000105 /* AngleOverlayViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0C00000000000000000205 /* AngleOverlayViews.swift */; };
+		AC0C00000000000000000106 /* AngleCoachTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0C00000000000000000206 /* AngleCoachTests.swift */; };
 		0BDE03709A95FF7B8EC0AA0E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FDCC1482B943CB5C8E35503D /* Assets.xcassets */; };
 		1AEA2D56D6BA1F4BB001CD96 /* Entitlements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFDD7694A77E6F63DD78FBB /* Entitlements.swift */; };
 		208F8E0C5A21F2C482B95ECC /* OuterDecoyStageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89D85BE04E05C9F19A507638 /* OuterDecoyStageView.swift */; };
@@ -63,6 +70,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AC0C00000000000000000200 /* BestAngle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestAngle.swift; sourceTree = "<group>"; };
+		AC0C00000000000000000201 /* AngleCoachState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AngleCoachState.swift; sourceTree = "<group>"; };
+		AC0C00000000000000000202 /* CoachPersona.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachPersona.swift; sourceTree = "<group>"; };
+		AC0C00000000000000000203 /* CoachChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachChatModel.swift; sourceTree = "<group>"; };
+		AC0C00000000000000000204 /* CoachStudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachStudioView.swift; sourceTree = "<group>"; };
+		AC0C00000000000000000205 /* AngleOverlayViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AngleOverlayViews.swift; sourceTree = "<group>"; };
+		AC0C00000000000000000206 /* AngleCoachTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AngleCoachTests.swift; sourceTree = "<group>"; };
 		0326591DB60E17B942E78357 /* PaywallPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallPresentationTests.swift; sourceTree = "<group>"; };
 		049DF790BE3A93C72EBBB12B /* CameraCaptureAccessoryHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureAccessoryHost.swift; sourceTree = "<group>"; };
 		26DFA355642198D1C0A8C0F3 /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
@@ -121,6 +135,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AC0C00000000000000000300 /* AngleCoach */ = {
+			isa = PBXGroup;
+			children = (
+				AC0C00000000000000000200 /* BestAngle.swift */,
+				AC0C00000000000000000201 /* AngleCoachState.swift */,
+				AC0C00000000000000000202 /* CoachPersona.swift */,
+				AC0C00000000000000000203 /* CoachChatModel.swift */,
+				AC0C00000000000000000204 /* CoachStudioView.swift */,
+				AC0C00000000000000000205 /* AngleOverlayViews.swift */,
+			);
+			path = AngleCoach;
+			sourceTree = "<group>";
+		};
 		15E922DD3C3B26F9A97675EE /* Shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -177,6 +204,7 @@
 			children = (
 				F77E4F441309C15D178C8039 /* Capture */,
 				5EBA30DBF9BE222234B76D62 /* CoachOverlay */,
+				AC0C00000000000000000300 /* AngleCoach */,
 				AD32D9A0F8CB60E2016394D7 /* Frost */,
 				6836D6F61A1726FC81C70563 /* Paywall */,
 			);
@@ -216,6 +244,7 @@
 			children = (
 				89BAB1F6A600D82293CF00C1 /* CaptureSessionTests.swift */,
 				KM0100020000000000000002 /* CoachOverlayTests.swift */,
+				AC0C00000000000000000206 /* AngleCoachTests.swift */,
 				89BAB1F6A600D82293CF0471 /* FrostStandbyTests.swift */,
 				89BAB1F6A600D82293CF0003 /* MonetizationTests.swift */,
 				AFBA01B4542BE5B7794E90EA /* MotionAccessibilityTests.swift */,
@@ -376,6 +405,7 @@
 				C1D8EA3703D7B244839CA0C1 /* CaptureSessionTests.swift in Sources */,
 				FS01000303D7B244839C0003 /* CaptureFilmStockTests.swift in Sources */,
 				KM0100010000000000000002 /* CoachOverlayTests.swift in Sources */,
+				AC0C00000000000000000106 /* AngleCoachTests.swift in Sources */,
 				C1D8EA3703D7B244839CACC2 /* FrostStandbyTests.swift in Sources */,
 				C1D8EA3703D7B244839CA003 /* MonetizationTests.swift in Sources */,
 				916B7F931C4C8305D0620FA3 /* MotionAccessibilityTests.swift in Sources */,
@@ -415,6 +445,12 @@
 				E0555A5912D624A809E3A1F6 /* SensitiveSurfaceView.swift in Sources */,
 				EF772DC9E7DFAB8E98532483 /* SimulateThreatControl.swift in Sources */,
 				FAE0EE74E0F3FC37A35A4BCC /* SubjectCoachView.swift in Sources */,
+				AC0C00000000000000000100 /* BestAngle.swift in Sources */,
+				AC0C00000000000000000101 /* AngleCoachState.swift in Sources */,
+				AC0C00000000000000000102 /* CoachPersona.swift in Sources */,
+				AC0C00000000000000000103 /* CoachChatModel.swift in Sources */,
+				AC0C00000000000000000104 /* CoachStudioView.swift in Sources */,
+				AC0C00000000000000000105 /* AngleOverlayViews.swift in Sources */,
 				C7BC5114BF437AC7CB54D5C4 /* ThreatLevel.swift in Sources */,
 				40291ED9B533380229F98E99 /* TipPlateView.swift in Sources */,
 				B58CF2576124869F7E24C07C /* Tokens.swift in Sources */,

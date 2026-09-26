@@ -13,8 +13,21 @@ final class CoachModel {
   var activePack: TipPack = .free
   private(set) var tipIndex = 0
   private(set) var countdown: Int?
+  /// The owner's countdown phrase, shown on both displays while the photo is taken.
+  private(set) var countdownCue: String?
   /// Settings override for rehearsal. Real unlocks come from EntitlementsModel.
   var isProSimulated = false
+  /// Live best-angle cues and the outer mirror frame.
+  let angle = AngleCoachState()
+  @ObservationIgnored let personaStore: CoachPersonaStore
+  @ObservationIgnored let angleStore: BestAngleStore
+
+  init(personaStore: CoachPersonaStore = .shared, angleStore: BestAngleStore = .shared) {
+    self.personaStore = personaStore
+    self.angleStore = angleStore
+  }
+
+  var isCountingDown: Bool { countdown != nil || countdownCue != nil }
 
   func currentTips(isPro: Bool) -> [String] {
     guard isPro else { return Self.freeTips }
@@ -49,7 +62,7 @@ final class CoachModel {
   func runTipCycle() async {
     while !Task.isCancelled {
       try? await Task.sleep(for: Self.tipInterval)
-      if !Task.isCancelled, countdown == nil {
+      if !Task.isCancelled, !isCountingDown {
         advanceTip()
       }
     }
@@ -57,12 +70,28 @@ final class CoachModel {
 
   /// T3: counts 3, 2, 1 on the outer display.
   func startCountdown() async {
-    guard countdown == nil else { return }
-    for value in stride(from: 3, through: 1, by: -1) {
+    await runCountdown()
+  }
+
+  /// T3 with the owner's settings: counts down, shows the phrase while `capture` runs, then clears.
+  /// The phrase stays up at least `cueHold` so the subject sees the moment the photo is taken.
+  func runCountdown(cueHold: Duration = .milliseconds(700), capture: () async -> Void = {}) async {
+    guard !isCountingDown else { return }
+    let persona = personaStore.persona
+    for value in stride(from: max(1, persona.countdownSeconds), through: 1, by: -1) {
       countdown = value
       try? await Task.sleep(for: .seconds(1))
     }
     countdown = nil
+    countdownCue = persona.countdownPhrase
+    let clock = ContinuousClock()
+    let start = clock.now
+    await capture()
+    let remaining = cueHold - (clock.now - start)
+    if remaining > .zero {
+      try? await Task.sleep(for: remaining)
+    }
+    countdownCue = nil
   }
 }
 
@@ -74,18 +103,32 @@ struct SubjectCoachView: View {
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
   private var isPro: Bool { entitlements.state.isPro || model.isProSimulated }
-  private var tipKey: String { model.tipKey(isPro: isPro) }
   private var showKidMagnet: Bool { isPro && model.activePack == .kidsPro }
+  /// With a saved best angle and a live face, the plate carries the subject's cue instead of a generic tip.
+  private var tipKey: String { model.angle.guidance?.subject.key ?? model.tipKey(isPro: isPro) }
 
   var body: some View {
     ZStack {
-      // Tip-only stage until a shared preview is proven stable (§11.3.9 priority 1).
-      FilmToolTokens.Palette.canvas
-        .ignoresSafeArea()
-      if isPro {
-        // T2 guide blooms in on unlock (M3).
-        GuideOvalView()
-          .transition(reduceMotion ? .opacity : .opacity.combined(with: .scale(scale: 0.9)))
+      if let frame = model.angle.mirrorFrame {
+        // The subject sees themselves, mirrored, with their saved face spot when one exists.
+        SubjectMirrorView(
+          frame: frame,
+          target: model.angleStore.profile?.measurement,
+          isMatched: model.angle.guidance?.isMatched == true)
+          .ignoresSafeArea()
+        if model.isCountingDown {
+          FilmToolTokens.Palette.scrim
+            .ignoresSafeArea()
+        }
+      } else {
+        // Tip-only stage until a shared preview is proven stable (§11.3.9 priority 1).
+        FilmToolTokens.Palette.canvas
+          .ignoresSafeArea()
+        if isPro {
+          // T2 guide blooms in on unlock (M3).
+          GuideOvalView()
+            .transition(reduceMotion ? .opacity : .opacity.combined(with: .scale(scale: 0.9)))
+        }
       }
       VStack {
         HStack {
@@ -127,18 +170,21 @@ struct SubjectCoachView: View {
                     with: .offset(y: -FilmToolMotion.m1Rise(reduceMotion: false))),
                   removal: .opacity))
         }
-        .opacity(model.countdown == nil ? 1 : 0.25)
+        .opacity(model.isCountingDown ? 0.25 : 1)
       }
       .padding(.horizontal, FilmToolTokens.Space.outerInsetX)
       .padding(.top, FilmToolTokens.Space.s3)
       .padding(.bottom, FilmToolTokens.Space.safeTipBottom)
       if let countdown = model.countdown {
         CountdownView(value: countdown)
+      } else if let cue = model.countdownCue {
+        CountdownCueView(text: cue)
       }
     }
     .animation(FilmToolMotion.m1Animation(reduceMotion: reduceMotion), value: tipKey)
     .animation(FilmToolMotion.m3Animation(reduceMotion: reduceMotion), value: isPro)
     .animation(FilmToolMotion.m3Animation(reduceMotion: reduceMotion), value: showKidMagnet)
+    .animation(FilmToolMotion.m3Animation(reduceMotion: reduceMotion), value: model.countdownCue)
     .allowsHitTesting(false)
   }
 }
