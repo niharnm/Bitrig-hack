@@ -168,10 +168,12 @@ struct InnerCaptureView: View {
 
   private var shutterButton: some View {
     Button {
-      // The shutter also advances the tip (§11.3.6) and starts T3 countdown on the outer coach.
+      // The shutter advances the tip (§11.3.6), runs the T3 countdown on the outer coach, then takes the photo.
       coach.advanceTip()
-      Task { await coach.startCountdown() }
-      Task { await capture.capturePhoto() }
+      Task {
+        await coach.startCountdown()
+        await capture.capturePhoto()
+      }
     } label: {
       Circle()
         .fill(.white)
@@ -180,7 +182,7 @@ struct InnerCaptureView: View {
         .overlay(Circle().stroke(.white, lineWidth: 3))
     }
     .buttonStyle(FilmToolShutterButtonStyle())
-    .disabled(capture.phase == .shutterFlash)
+    .disabled(capture.phase == .shutterFlash || coach.countdown != nil)
     .sensoryFeedback(.impact(weight: .light), trigger: capture.capturedPhotoCount)
     .accessibilityLabel("Shutter")
   }
