@@ -1,5 +1,7 @@
 # Outer Lens: iPhone Duo demo shots
 
+Historical record. For the current combined source and acceptance gaps, see [completion board](../../docs/project-status.md) and [reconciliation receipt](../../docs/repository-cleanup-20260926.md).
+
 Plan dated 2026-09-26. Source checkout at writing: branch `cursor/revenuecat-photon-4c5a`, HEAD `c0e2fa9f69e01add2a31213b1c8a260b7d7d031c`. Dirty files: `docs-runtime/BITRIG-REVIEW.md` and `../docs/bitrig-task-plan.md`. The checkout changed during planning from `docs/bitrig-routing` at `975b6947d61b830a13cc1940dfcca0d53fd2c391`; no build or simulator check was run here. Recheck HEAD and dirty state before recording any shot.
 
 ## Evidence boundary

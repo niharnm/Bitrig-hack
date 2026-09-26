@@ -1,5 +1,7 @@
 # Outer Lens combined candidate
 
+Historical record. For the current combined source and acceptance gaps, see [completion board](../../docs/project-status.md) and [reconciliation receipt](../../docs/repository-cleanup-20260926.md).
+
 Build source: `28717dc7d939252e8ad67ee45d66f3ec4d33f300`. Base: `6d559c4`. Branch: `integrate/outer-lens-combined-20260926`. Isolated checkout: `/tmp/outer-lens-main-review-20260926`.
 
 ## Inputs and changes

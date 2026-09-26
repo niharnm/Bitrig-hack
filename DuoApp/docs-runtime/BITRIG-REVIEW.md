@@ -1,5 +1,7 @@
 # Bitrig visual QA review
 
+Historical record. For the current combined source and acceptance gaps, see [completion board](../../docs/project-status.md) and [reconciliation receipt](../../docs/repository-cleanup-20260926.md).
+
 Date: 2026-09-26. Scope: iPhone Duo only. App code and concurrent changes were read-only. Screenshots are outside the repository. Ordinary iPhone and iPad checks were cancelled by Nihar.
 
 ## Workspace and source state

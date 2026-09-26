@@ -14,7 +14,7 @@ DEVELOPER_DIR=/Applications/Xcode-27.1-beta.app/Contents/Developer \
 
 - `PurchasesConfig` calls `Purchases.configure` with the public Test Store key in `RCIdentifiers`.
 - Unlock checks the existing Test Store entitlement `pro`.
-- Current-offering package identifiers are `lifetime`, `yearly`, and `monthly`.
+- Settings currently requests package identifiers `lifetime`, `yearly`, and `monthly`. The last recorded offering lookup failed for all three; dashboard agreement remains unverified.
 - The inner paywall presents RevenueCat `PaywallView`. Capture settings is the subscriber surface: Customer Center, restore, and those three packages.
 
 Do not add App Store product ids beyond the identifiers already in source.
