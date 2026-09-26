@@ -1,5 +1,9 @@
 import SwiftUI
 
+#if canImport(RevenueCat)
+  import RevenueCat
+#endif
+
 #if canImport(RevenueCatUI)
   import RevenueCatUI
 #endif
@@ -265,22 +269,28 @@ struct InnerCaptureView: View {
 
   @ViewBuilder
   private var subscriptionManagement: some View {
-    #if canImport(RevenueCatUI)
-      CustomerCenterView(
-        navigationOptions: CustomerCenterNavigationOptions(
-          usesNavigationStack: true,
-          usesExistingNavigation: true,
-          shouldShowCloseButton: false
+    #if canImport(RevenueCatUI) && canImport(RevenueCat)
+      if Purchases.isConfigured {
+        CustomerCenterView(
+          navigationOptions: CustomerCenterNavigationOptions(
+            usesNavigationStack: true,
+            usesExistingNavigation: true,
+            shouldShowCloseButton: false
+          )
         )
-      )
-      .onCustomerCenterRestoreFailed { error in
-        subscriptionMessage = error.localizedDescription
-      }
-      .onCustomerCenterRestoreCompleted { customerInfo in
-        let activeIDs = customerInfo.entitlements.active.keys
-        if SubscriptionAccess.isUnlocked(activeEntitlementIDs: activeIDs) {
-          subscriptionMessage = String(localized: "capture.settings.restoreUnlocked")
+        .onCustomerCenterRestoreFailed { error in
+          subscriptionMessage = error.localizedDescription
         }
+        .onCustomerCenterRestoreCompleted { customerInfo in
+          let activeIDs = customerInfo.entitlements.active.keys
+          if SubscriptionAccess.isUnlocked(activeEntitlementIDs: activeIDs) {
+            subscriptionMessage = String(localized: "capture.settings.restoreUnlocked")
+          }
+        }
+      } else {
+        ContentUnavailableView(
+          "capture.settings.customerCenterUnavailable",
+          systemImage: "person.crop.circle.badge.exclamationmark")
       }
     #else
       ContentUnavailableView(
