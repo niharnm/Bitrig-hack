@@ -15,6 +15,7 @@ struct InnerCaptureView: View {
   @State private var isSubjectAvailable = false
   @State private var isSettingsPresented = false
   @State private var isSubjectPreviewPresented = false
+  @State private var isCoachStudioPresented = false
   @State private var subscriptionMessage: String?
   @Environment(\.entitlementState) private var entitlementState
   @Environment(\.presentPaywall) private var presentPaywall
@@ -30,6 +31,7 @@ struct InnerCaptureView: View {
     #endif
   }
   private var isStarting: Bool { capture.phase == .starting }
+  private var persona: CoachPersona { coach.personaStore.persona }
   private var isSessionFailed: Bool {
     if case .failed = capture.phase { return true }
     return false
@@ -64,6 +66,12 @@ struct InnerCaptureView: View {
             }
           }
           .ignoresSafeArea()
+        if let target = coach.angleStore.profile?.measurement, let frameSize = coach.angle.frameSize {
+          // Where the owner's face sits in their saved photo, so the photographer can frame to it.
+          PhotographerTargetView(
+            frameSize: frameSize, target: target, isMatched: coach.angle.guidance?.isMatched == true)
+            .ignoresSafeArea()
+        }
       }
       trailingScrim
       shutterFlash
@@ -73,6 +81,9 @@ struct InnerCaptureView: View {
       if let countdown = coach.countdown {
         // Mirrors the outer countdown so the photographer sees progress after pressing the shutter.
         CountdownView(value: countdown)
+          .allowsHitTesting(false)
+      } else if let cue = coach.countdownCue {
+        CountdownCueView(text: cue)
           .allowsHitTesting(false)
       }
       VStack(spacing: 0) {
@@ -94,6 +105,9 @@ struct InnerCaptureView: View {
     .sheet(isPresented: $isSettingsPresented) {
       settingsSheet
     }
+    .sheet(isPresented: $isCoachStudioPresented) {
+      CoachStudioView(lastPhotoData: capture.lastPhotoData)
+    }
     .sheet(isPresented: $isSubjectPreviewPresented) {
       SubjectCoachView(model: coach)
         .presentationDetents([.medium, .large])
@@ -110,8 +124,23 @@ struct InnerCaptureView: View {
     .task {
       await coach.runTipCycle()
     }
+    .onAppear {
+      let coach = coach
+      let capture = capture
+      capture.onLiveFrame = { frame in
+        let persona = coach.personaStore.persona
+        let shouldShoot = coach.angle.ingest(
+          frame, target: coach.angleStore.profile?.measurement, tolerance: persona.tolerance)
+        // The saved angle held: count down and shoot without anyone touching the phone.
+        if shouldShoot, persona.autoShoot, capture.phase == .live {
+          Task { await coach.runCountdown { await capture.capturePhoto() } }
+        }
+      }
+    }
     .onDisappear {
+      capture.onLiveFrame = nil
       capture.stop()
+      coach.angle.reset()
     }
     .modifier(
       CameraCaptureAccessoryHost(
@@ -129,6 +158,12 @@ struct InnerCaptureView: View {
       .labelStyle(.iconOnly)
       .buttonStyle(.glass)
       .buttonBorderShape(.circle)
+      // The owner's coach: best angle, chat, and customization.
+      Button(persona.name, systemImage: "wand.and.stars") {
+        isCoachStudioPresented = true
+      }
+      .font(.footnote.weight(.semibold))
+      .buttonStyle(.glass)
       // The closed outer display is too narrow for the wordmark and the readout together.
       if horizontalSizeClass == .regular {
         Text("capture.brand")
@@ -156,10 +191,10 @@ struct InnerCaptureView: View {
         Text(verbatim: "4:3")
         Text(verbatim: "·").foregroundStyle(FilmToolTokens.Palette.inkFaint)
       }
-      // The shutter runs CoachModel's 3-2-1 countdown before every photo.
+      // The shutter runs CoachModel's countdown, at the owner's chosen length, before every photo.
       HStack(spacing: 3) {
         Image(systemName: "timer")
-        Text(verbatim: "3S")
+        Text(verbatim: "\(persona.countdownSeconds)S")
       }
     }
     .font(.system(size: 12, weight: .semibold, design: .monospaced))
@@ -173,10 +208,14 @@ struct InnerCaptureView: View {
     .accessibilityElement(children: .combine)
   }
 
-  /// Only real problems surface here, as one quiet pill.
+  /// Only real problems surface here, as one quiet pill, plus the photographer's best-angle cue.
   @ViewBuilder
   private var statusStack: some View {
     VStack(spacing: FilmToolTokens.Space.s3) {
+      if let guidance = coach.angle.guidance, !coach.isCountingDown {
+        PhotographerCuePill(guidance: guidance)
+          .animation(FilmToolMotion.m1Animation(reduceMotion: reduceMotion), value: guidance.photographer)
+      }
       if let banner {
         Text(banner)
           .font(.footnote.weight(.medium))
@@ -396,8 +435,7 @@ struct InnerCaptureView: View {
       // The shutter advances the tip (§11.3.6), runs the T3 countdown on the outer coach, then takes the photo.
       coach.advanceTip()
       Task {
-        await coach.startCountdown()
-        await capture.capturePhoto()
+        await coach.runCountdown { await capture.capturePhoto() }
       }
     } label: {
       ZStack {
@@ -414,7 +452,7 @@ struct InnerCaptureView: View {
     }
     .buttonStyle(FilmToolShutterButtonStyle())
     .disabled(
-      isStarting || isSessionFailed || capture.phase == .shutterFlash || coach.countdown != nil)
+      isStarting || isSessionFailed || capture.phase == .shutterFlash || coach.isCountingDown)
     // Peak-End: haptic on shutterFlash entry, same-frame as the flash (causality).
     .sensoryFeedback(.impact(weight: .light), trigger: capture.phase == .shutterFlash) { _, isFlashing in
       // Fire on entry only; the trigger also changes when the flash ends.
@@ -462,6 +500,15 @@ struct InnerCaptureView: View {
             if coach.isProSimulated {
               Image(systemName: "checkmark")
             }
+          }
+        }
+        Button("capture.settings.simulateAngleMatch") {
+          // Rehearsal without a camera: the matched cues, then the owner's countdown and phrase.
+          isSettingsPresented = false
+          coach.angle.simulateMatch()
+          Task {
+            await coach.runCountdown { await capture.capturePhoto() }
+            coach.angle.reset()
           }
         }
         Button("capture.settings.simulateCountdown") {

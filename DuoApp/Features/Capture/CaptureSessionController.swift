@@ -13,7 +13,19 @@ final class CaptureSessionController {
   private(set) var capturedPhotoCount = 0
   /// True when the most recent shutter produced no photo. Cleared by the next shutter.
   private(set) var lastPhotoFailed = false
+  /// The most recent photo, kept in memory only so the owner can save it as their best angle.
+  @ObservationIgnored private(set) var lastPhotoData: Data?
+  /// Receives analyzed frames for the best-angle coach and the outer mirror.
+  @ObservationIgnored var onLiveFrame: (@MainActor (LiveFrame) -> Void)?
   @ObservationIgnored private let pipeline = CapturePipeline()
+
+  init() {
+    pipeline.frames.setSink { [weak self] frame in
+      Task { @MainActor in
+        self?.onLiveFrame?(frame)
+      }
+    }
+  }
 
   var session: AVCaptureSession { pipeline.session }
   /// `shutterFlash` belongs to the live family (§07): the preview stays up while a photo is taken.
@@ -70,15 +82,20 @@ final class CaptureSessionController {
     lastPhotoFailed = false
     async let minimumFlash: Void? = try? Task.sleep(for: .milliseconds(200))
     let outcome: PhotoCaptureOutcome
+    var photoData: Data?
     if resume == .live {
-      outcome = await pipeline.capturePhoto()
+      (outcome, photoData) = await pipeline.capturePhoto()
     } else {
       // Simulator / noDevices: visible flash + tip advance without AV capture.
       outcome = .captured
     }
     _ = await minimumFlash
     switch outcome {
-    case .captured: capturedPhotoCount += 1
+    case .captured:
+      capturedPhotoCount += 1
+      if let photoData {
+        lastPhotoData = photoData
+      }
     case .failed: lastPhotoFailed = true
     }
     // `stop()` may have run while the photo was processing.
@@ -107,11 +124,13 @@ private final class CapturePipeline: NSObject, AVCapturePhotoCaptureDelegate, @u
   }
 
   let session = AVCaptureSession()
+  let frames = LiveFrameAnalyzer()
   private let photoOutput = AVCapturePhotoOutput()
   private let queue = DispatchQueue(label: "outerlens.capture")
   private var input: AVCaptureDeviceInput?
   /// Keyed by `AVCapturePhotoSettings.uniqueID`. Touched only on `queue`.
-  private var pendingPhotos: [Int64: (outcome: PhotoCaptureOutcome?, finish: (PhotoCaptureOutcome) -> Void)] = [:]
+  private var pendingPhotos:
+    [Int64: (outcome: PhotoCaptureOutcome?, data: Data?, finish: (PhotoCaptureOutcome, Data?) -> Void)] = [:]
 
   func start(position: AVCaptureDevice.Position) async -> StartResult {
     await withCheckedContinuation { continuation in
@@ -136,28 +155,30 @@ private final class CapturePipeline: NSObject, AVCapturePhotoCaptureDelegate, @u
     }
   }
 
-  func capturePhoto() async -> PhotoCaptureOutcome {
+  func capturePhoto() async -> (PhotoCaptureOutcome, Data?) {
     await withCheckedContinuation { continuation in
       queue.async {
         // Capturing without an active video connection raises an Objective-C exception.
         guard self.session.isRunning,
           self.photoOutput.connection(with: .video)?.isActive == true
         else {
-          continuation.resume(returning: .failed)
+          continuation.resume(returning: (.failed, nil))
           return
         }
         let settings = AVCapturePhotoSettings()
-        self.pendingPhotos[settings.uniqueID] = (nil, { continuation.resume(returning: $0) })
+        self.pendingPhotos[settings.uniqueID] = (nil, nil, { continuation.resume(returning: ($0, $1)) })
         self.photoOutput.capturePhoto(with: settings, delegate: self)
       }
     }
   }
 
   func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-    let outcome = PhotoCaptureOutcome(fileData: photo.fileDataRepresentation(), error: error)
+    let data = photo.fileDataRepresentation()
+    let outcome = PhotoCaptureOutcome(fileData: data, error: error)
     let id = photo.resolvedSettings.uniqueID
     queue.async {
       self.pendingPhotos[id]?.outcome = outcome
+      self.pendingPhotos[id]?.data = outcome == .captured ? data : nil
     }
   }
 
@@ -169,7 +190,8 @@ private final class CapturePipeline: NSObject, AVCapturePhotoCaptureDelegate, @u
     let id = resolvedSettings.uniqueID
     queue.async {
       guard let pending = self.pendingPhotos.removeValue(forKey: id) else { return }
-      pending.finish(error == nil ? pending.outcome ?? .failed : .failed)
+      let outcome = error == nil ? pending.outcome ?? .failed : .failed
+      pending.finish(outcome, outcome == .captured ? pending.data : nil)
     }
   }
 
@@ -191,9 +213,14 @@ private final class CapturePipeline: NSObject, AVCapturePhotoCaptureDelegate, @u
     }
     session.addInput(newInput)
     input = newInput
-    if session.outputs.isEmpty, session.canAddOutput(photoOutput) {
+    if !session.outputs.contains(photoOutput), session.canAddOutput(photoOutput) {
       session.addOutput(photoOutput)
     }
+    // Live frames feed the best-angle coach; the photo path works without them.
+    if !session.outputs.contains(frames.output), session.canAddOutput(frames.output) {
+      session.addOutput(frames.output)
+    }
+    frames.configureConnection()
     session.commitConfiguration()
     if !session.isRunning {
       session.startRunning()
