@@ -1,0 +1,9 @@
+# Local Xcode state and build output
+.DS_Store
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+
+# Human dashboard values stay local
+DuoApp/docs-runtime/RC-IDs.md
