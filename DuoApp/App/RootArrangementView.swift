@@ -40,9 +40,9 @@ struct RootArrangementView: View {
     outerLensPrimarySlot
   }
 
-  /// SCR-OL-B. LANE-CCA swaps in InnerCaptureView and attaches CameraCaptureAccessoryHost here.
+  /// SCR-OL-B. InnerCaptureView attaches CameraCaptureAccessoryHost itself.
   private var outerLensPrimarySlot: some View {
-    SlotPlaceholder(title: "Outer Lens", pose: pose.mode)
+    InnerCaptureView()
   }
 
   // MARK: FrostDuo cutover
