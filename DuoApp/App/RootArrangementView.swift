@@ -1,8 +1,13 @@
 import SwiftUI
 
+#if canImport(RevenueCat)
+  import RevenueCat
+#endif
+
 // Root host (bible §08.2B, §08.3). Layout follows PoseRouter and reserved regions; hinge input only drives effects.
 // Features inject through the named slots below instead of rewriting this file.
 struct RootArrangementView: View {
+  @StateObject private var entitlements = EntitlementsModel.shared
   @State private var pose = PoseRouter()
   @State private var isPaywallPresented = false
   @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -30,7 +35,13 @@ struct RootArrangementView: View {
     }
     .environment(pose)
     .environment(\.cutoverFlag, cutover)
-    .environment(\.presentPaywall, PaywallPresenter { isPaywallPresented = true })
+    .environment(\.entitlementState, entitlements.state)
+    .environment(\.presentPaywall, PaywallPresenter(pose: pose.mode) { isPaywallPresented = true })
+    .onChange(of: pose.mode) { _, mode in
+      if mode == .closed || mode == .unknown {
+        isPaywallPresented = false
+      }
+    }
   }
 
   // MARK: Outer Lens
@@ -84,27 +95,50 @@ struct RootArrangementView: View {
 
   // MARK: Paywall
 
-  /// SCR-OL-D / SCR-FD-D. Presented as a sheet from the inner display only. LANE-RC supplies PaywallHostView.
+  /// SCR-OL-D / SCR-FD-D. Presented as a sheet from the inner display only.
+  @ViewBuilder
   private var paywallSlot: some View {
-    SlotPlaceholder(title: "Paywall", pose: pose.mode, fill: .raised)
+    #if canImport(RevenueCat)
+      if Purchases.isConfigured {
+        PaywallHostView(isPresented: $isPaywallPresented)
+      } else {
+        unavailablePaywall
+      }
+    #else
+      unavailablePaywall
+    #endif
+  }
+
+  private var unavailablePaywall: some View {
+    VStack(spacing: FilmToolTokens.Space.s5) {
+      Text("Purchases unavailable")
+      Button("Close") {
+        isPaywallPresented = false
+      }
+    }
+    .padding(FilmToolTokens.Space.s5)
   }
 }
 
 /// Opens the inner paywall slot. Features call it; only the root presents.
 struct PaywallPresenter: Sendable {
+  let isAvailable: Bool
   private let open: @MainActor @Sendable () -> Void
 
-  init(_ open: @escaping @MainActor @Sendable () -> Void) {
+  init(pose: PoseMode = .unknown, _ open: @escaping @MainActor @Sendable () -> Void) {
+    isAvailable = pose != .closed && pose != .unknown
     self.open = open
   }
 
   @MainActor func callAsFunction() {
+    guard isAvailable else { return }
     open()
   }
 }
 
 extension EnvironmentValues {
   @Entry var presentPaywall = PaywallPresenter {}
+  @Entry var entitlementState = EntitlementState(status: .unknown, entitlementID: "")
 }
 
 /// Stand-in until a lane lands its view. Shows the current pose so fold changes are visible on the simulator.

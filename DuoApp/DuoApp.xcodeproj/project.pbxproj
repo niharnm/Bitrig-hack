@@ -27,6 +27,7 @@
 		B58CF2576124869F7E24C07C /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5280A7B339BB8FE6AE5CF89 /* Tokens.swift */; };
 		B9B9578EB2CE807C299DB389 /* RCIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DB8CCC16138EFD544F27CD /* RCIdentifiers.swift */; };
 		BDA28D68FD1AC793BDDE5FBD /* CutoverFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F75A4811FF91EAECD2B468 /* CutoverFlag.swift */; };
+		C13ACC0AB190CC954A2C59B6 /* PaywallPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326591DB60E17B942E78357 /* PaywallPresentationTests.swift */; };
 		C1D8EA3703D7B244839CACC2 /* FrostStandbyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BAB1F6A600D82293CF0471 /* FrostStandbyTests.swift */; };
 		C42CFAC24925FC7ED0CF2692 /* CaptureSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB2D7DF959653FAFDCA266B5 /* CaptureSessionController.swift */; };
 		C545986439EBF638CCCA5BD7 /* CaptureDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A29FFBDEC41539EDC234A06 /* CaptureDeniedView.swift */; };
@@ -54,6 +55,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0326591DB60E17B942E78357 /* PaywallPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallPresentationTests.swift; sourceTree = "<group>"; };
 		049DF790BE3A93C72EBBB12B /* CameraCaptureAccessoryHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureAccessoryHost.swift; sourceTree = "<group>"; };
 		26DFA355642198D1C0A8C0F3 /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
 		3A29FFBDEC41539EDC234A06 /* CaptureDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureDeniedView.swift; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 			children = (
 				89BAB1F6A600D82293CF0471 /* FrostStandbyTests.swift */,
 				AFBA01B4542BE5B7794E90EA /* MotionAccessibilityTests.swift */,
+				0326591DB60E17B942E78357 /* PaywallPresentationTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 			files = (
 				C1D8EA3703D7B244839CACC2 /* FrostStandbyTests.swift in Sources */,
 				916B7F931C4C8305D0620FA3 /* MotionAccessibilityTests.swift in Sources */,
+				C13ACC0AB190CC954A2C59B6 /* PaywallPresentationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
