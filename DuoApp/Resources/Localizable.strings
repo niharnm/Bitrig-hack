@@ -39,6 +39,17 @@
 "capture.settings.simulatePro" = "Simulate Pro unlock";
 "capture.settings.simulateCountdown" = "Simulate countdown";
 "capture.settings.tipInterval" = "Tip cycle";
+"capture.settings.manageSubscription" = "Manage subscription";
+"capture.settings.restore" = "Restore purchases";
+"capture.settings.lifetime" = "Unlock lifetime";
+"capture.settings.yearly" = "Unlock yearly";
+"capture.settings.monthly" = "Unlock monthly";
+"capture.settings.purchases" = "Purchases";
+"capture.settings.purchasesUnavailable" = "Purchases unavailable in this build";
+"capture.settings.customerCenterUnavailable" = "Customer Center unavailable";
+"capture.settings.restoreUnlocked" = "Pro restored.";
+"capture.settings.restoreEmpty" = "No active Pro entitlement found.";
+"capture.close" = "Close";
 "capture.countdownSequence" = "3 · 2 · 1";
 
 "tip.free.1" = "Chin up · eyes to the lens";

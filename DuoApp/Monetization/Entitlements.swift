@@ -42,6 +42,9 @@ public final class EntitlementsModel: ObservableObject {
                 )
                 return
             }
+            Task {
+                try? await OfferingsRepository.assertCurrentOfferingMatchesDashboard()
+            }
             do {
                 let info = try await Purchases.shared.customerInfo()
                 self?.apply(customerInfo: info)
@@ -62,6 +65,7 @@ public final class EntitlementsModel: ObservableObject {
         #endif
     }
 
+    /// Immediate unlock path for paywall completion — do not wait for the next stream tick.
     #if canImport(RevenueCat)
     public func apply(customerInfo info: CustomerInfo) {
         let activeIDs = info.entitlements.active.keys

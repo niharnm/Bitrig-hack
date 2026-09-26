@@ -1,26 +1,22 @@
-# RevenueCat in DuoApp
+# RevenueCat — Outer Lens Pro (soft-fallback)
 
-## Objective
+## Decision (2026-09-26)
 
-Integrate the RevenueCat iOS SDK into the SwiftUI app in this repo: configure the public Test Store key, check the existing `pro` entitlement, purchase and restore with error handling, and present Paywall plus Customer Center.
+- **Entitlement:** unlock only on `pro` (never `photon_pro` or other dashboard aliases).
+- **Primary purchase surface:** `PaywallView` on the inner display (`PaywallHostView`).
+- **Settings fallback:** when `Purchases.isConfigured`, inner capture settings expose Customer Center, restore, and lifetime/yearly/monthly package buttons.
+- **Package resolution:** `OfferingPackages.resolvePurchasePackageId` prefers the requested id when present on the current offering; otherwise lifetime → yearly → monthly; finally authoritative `$rc_monthly`.
+- **Configure:** `PurchasesConfig.configureIfNeeded()` remains DEBUG-only; Release hits `assertionFailure`.
+- **Entitlements:** `EntitlementsModel` applies `SubscriptionAccess` from initial `customerInfo()` then `customerInfoStream`; paywall/settings call `apply(customerInfo:)` for immediate unlock.
 
-## Scope
+## Files
 
-`DuoApp` only. There is no separate photon Xcode project in this folder. SPM `purchases-ios-spm` (RevenueCat and RevenueCatUI, minimum 5.43.0, resolved 5.91.0) was already on the DuoApp target.
+- `DuoApp/Monetization/RCIdentifiers.swift` — dashboard ids + `SubscriptionAccess` + `OfferingPackages`
+- `DuoApp/Monetization/OfferingsRepository.swift` — purchase/restore with soft resolver
+- `DuoApp/Monetization/Entitlements.swift` — stream + dashboard offering assert
+- `DuoApp/Features/Paywall/PaywallHostView.swift` — dismiss only when unlocked
+- `DuoApp/Features/Capture/InnerCaptureView.swift` — settings purchase hooks
 
-## Decisions
+## Gate
 
-- Unlock uses only the existing Test Store entitlement `pro`.
-- Package lookup uses offering package identifiers `lifetime`, `yearly`, and `monthly`. No new App Store product ids.
-- Paywall stays `PaywallView` on the inner sheet. Customer Center, restore, and package purchase live in capture settings so a custom `purchase(package:)` is not running inside `PaywallView`.
-- `Purchases.configure` runs for Debug and Release with `RCIdentifiers.apiKey` (environment override, otherwise the public test key).
-
-## Checks
-
-- `xcodebuild` Debug iphonesimulator with Xcode 27.1 beta: BUILD SUCCEEDED (2026-09-26).
-- `DuoAppTests/PaywallPresentationTests` on iPhone 17 Pro simulator: TEST SUCCEEDED after the `pro`-only change, including `testWiredPackageIdentifiersAndProAccess`.
-- A live Test Store purchase was not run.
-
-## Next action
-
-Publish the current offering with packages `lifetime`, `yearly`, and `monthly`, then exercise paywall purchase, restore, and Customer Center on a simulator. Unlock stays on `pro`.
+See `DuoApp/docs-runtime/GATE-RC.md` — live purchase tests TC-R03/R04/R05 marked PARTIAL/BLOCKED until Test Store evidence is captured.

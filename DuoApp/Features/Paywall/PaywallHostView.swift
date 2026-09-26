@@ -17,7 +17,6 @@ import RevenueCatUI
 
 public struct PaywallHostView: View {
     @Binding public var isPresented: Bool
-    @ObservedObject private var entitlements = EntitlementsModel.shared
     @State private var actionError: String?
 
     public init(isPresented: Binding<Bool>) {
@@ -29,7 +28,7 @@ public struct PaywallHostView: View {
             #if canImport(RevenueCatUI)
             PaywallView(displayCloseButton: true)
                 .onPurchaseCompleted { customerInfo in
-                    entitlements.apply(customerInfo: customerInfo)
+                    EntitlementsModel.shared.apply(customerInfo: customerInfo)
                     if Self.isUnlocked(customerInfo) {
                         isPresented = false
                     }
@@ -38,7 +37,7 @@ public struct PaywallHostView: View {
                     actionError = error.localizedDescription
                 }
                 .onRestoreCompleted { customerInfo in
-                    entitlements.apply(customerInfo: customerInfo)
+                    EntitlementsModel.shared.apply(customerInfo: customerInfo)
                     if Self.isUnlocked(customerInfo) {
                         isPresented = false
                     }

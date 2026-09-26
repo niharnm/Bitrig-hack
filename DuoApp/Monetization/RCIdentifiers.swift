@@ -23,8 +23,9 @@ public enum RCIdentifiers {
     public static let entitlementId = "pro"
     public static let productId = "outerlens_pro_monthly"
     public static let offeringId = "default"
+    /// Authoritative package on the live Test Store offering.
     public static let packageId = "$rc_monthly"
-    /// Offering package identifiers. These are not App Store product ids.
+    /// Optional offering package identifiers. Prefer these when present; else fall back to `packageId`.
     public static let lifetimePackageId = "lifetime"
     public static let yearlyPackageId = "yearly"
     public static let monthlyPackageId = "monthly"
@@ -55,5 +56,25 @@ public enum OfferingPackages {
     public static func matchingWiredPackages(availableIdentifiers: [String]) -> [String] {
         let available = Set(availableIdentifiers)
         return RCIdentifiers.subscriptionPackageIds.filter { available.contains($0) }
+    }
+
+    /// Prefer an exact custom package id when on the offering; otherwise soft-fall back to `$rc_monthly`.
+    public static func resolvePurchasePackageId(
+        requested: String,
+        availableIdentifiers: [String]
+    ) -> String? {
+        let available = Set(availableIdentifiers)
+        if available.contains(requested) {
+            return requested
+        }
+        guard RCIdentifiers.subscriptionPackageIds.contains(requested)
+            || requested == RCIdentifiers.packageId
+        else {
+            return nil
+        }
+        if available.contains(RCIdentifiers.packageId) {
+            return RCIdentifiers.packageId
+        }
+        return nil
     }
 }

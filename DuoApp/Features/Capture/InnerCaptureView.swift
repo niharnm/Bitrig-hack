@@ -1,9 +1,7 @@
 import SwiftUI
-
 #if canImport(RevenueCat)
   import RevenueCat
 #endif
-
 #if canImport(RevenueCatUI)
   import RevenueCatUI
 #endif
@@ -24,6 +22,13 @@ struct InnerCaptureView: View {
   @Environment(\.scenePhase) private var scenePhase
 
   private var isPro: Bool { entitlements.state.isPro || coach.isProSimulated }
+  private var isPurchasesConfigured: Bool {
+    #if canImport(RevenueCat)
+      Purchases.isConfigured
+    #else
+      false
+    #endif
+  }
   private var isStarting: Bool { capture.phase == .starting }
   private var isSessionFailed: Bool {
     if case .failed = capture.phase { return true }
@@ -218,8 +223,7 @@ struct InnerCaptureView: View {
       .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
       .overlay(
         RoundedRectangle(cornerRadius: 18, style: .continuous)
-          .stroke(.white.opacity(0.2), lineWidth: 1)
-      )
+          .stroke(.white.opacity(0.2), lineWidth: 1))
       .accessibilityHidden(true)
   }
 
@@ -288,21 +292,28 @@ struct InnerCaptureView: View {
   private var settingsSheet: some View {
     NavigationStack {
       List {
-        Section {
-          NavigationLink("capture.settings.manageSubscription") {
-            subscriptionManagement
+        if isPurchasesConfigured {
+          Section {
+            NavigationLink("capture.settings.manageSubscription") {
+              subscriptionManagement
+            }
+            Button("capture.settings.restore") {
+              Task { await restorePurchases() }
+            }
+            Button("capture.settings.lifetime") {
+              Task { await purchase(RCIdentifiers.lifetimePackageId) }
+            }
+            Button("capture.settings.yearly") {
+              Task { await purchase(RCIdentifiers.yearlyPackageId) }
+            }
+            Button("capture.settings.monthly") {
+              Task { await purchase(RCIdentifiers.monthlyPackageId) }
+            }
           }
-          Button("capture.settings.restore") {
-            Task { await restorePurchases() }
-          }
-          Button("capture.settings.lifetime") {
-            Task { await purchase(RCIdentifiers.lifetimePackageId) }
-          }
-          Button("capture.settings.yearly") {
-            Task { await purchase(RCIdentifiers.yearlyPackageId) }
-          }
-          Button("capture.settings.monthly") {
-            Task { await purchase(RCIdentifiers.monthlyPackageId) }
+        } else {
+          Section {
+            Text("capture.settings.purchasesUnavailable")
+              .foregroundStyle(.secondary)
           }
         }
         Button("capture.settings.simulateTip") {
@@ -352,8 +363,8 @@ struct InnerCaptureView: View {
 
   @ViewBuilder
   private var subscriptionManagement: some View {
-    #if canImport(RevenueCatUI) && canImport(RevenueCat)
-      if Purchases.isConfigured {
+    #if canImport(RevenueCatUI)
+      if isPurchasesConfigured {
         CustomerCenterView(
           navigationOptions: CustomerCenterNavigationOptions(
             usesNavigationStack: true,
@@ -365,6 +376,7 @@ struct InnerCaptureView: View {
           subscriptionMessage = error.localizedDescription
         }
         .onCustomerCenterRestoreCompleted { customerInfo in
+          EntitlementsModel.shared.apply(customerInfo: customerInfo)
           let activeIDs = customerInfo.entitlements.active.keys
           if SubscriptionAccess.isUnlocked(activeEntitlementIDs: activeIDs) {
             subscriptionMessage = String(localized: "capture.settings.restoreUnlocked")
@@ -372,7 +384,7 @@ struct InnerCaptureView: View {
         }
       } else {
         ContentUnavailableView(
-          "capture.settings.customerCenterUnavailable",
+          "capture.settings.purchasesUnavailable",
           systemImage: "person.crop.circle.badge.exclamationmark")
       }
     #else

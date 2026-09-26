@@ -47,19 +47,18 @@ public enum OfferingsRepository {
         }
     }
 
-    /// Purchases one wired offering package. Do not call this while `PaywallView` is purchasing.
+    /// Purchases one wired offering package (soft-fallback to `$rc_monthly` when needed).
+    /// Do not call this while `PaywallView` is purchasing.
     public static func purchase(packageIdentifier: String) async throws -> SubscriptionSnapshot {
-        guard RCIdentifiers.subscriptionPackageIds.contains(packageIdentifier) else {
-            throw SubscriptionError.missingPackage(packageIdentifier)
-        }
         guard Purchases.isConfigured else { throw SubscriptionError.notConfigured }
         let offerings = try await Purchases.shared.offerings()
         guard let current = offerings.current else { throw SubscriptionError.missingOffering }
-        let wired = OfferingPackages.matchingWiredPackages(
-            availableIdentifiers: current.availablePackages.map(\.identifier)
-        )
-        guard wired.contains(packageIdentifier),
-              let package = current.availablePackages.first(where: { $0.identifier == packageIdentifier })
+        let availableIds = current.availablePackages.map(\.identifier)
+        guard let resolved = OfferingPackages.resolvePurchasePackageId(
+            requested: packageIdentifier,
+            availableIdentifiers: availableIds
+        ),
+            let package = current.availablePackages.first(where: { $0.identifier == resolved })
         else {
             throw SubscriptionError.missingPackage(packageIdentifier)
         }
@@ -108,7 +107,7 @@ public enum OfferingsRepository {
     #endif
 }
 
-public enum OfferingsError: Error {
+public enum OfferingsError: Error, Equatable {
     case currentNil
 }
 
