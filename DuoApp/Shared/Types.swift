@@ -130,6 +130,40 @@ enum RecoveryKind: Equatable, Sendable {
   case tipOnlyOuter
 }
 
+public enum FilmStock: String, CaseIterable, Identifiable, Sendable {
+  case natural
+  case leicaMono
+  case warmAmber
+  case portraSoft
+
+  public var id: String { rawValue }
+
+  public var requiresPro: Bool {
+    switch self {
+    case .natural: return false
+    case .leicaMono, .warmAmber, .portraSoft: return true
+    }
+  }
+
+  public var displayNameKey: String {
+    switch self {
+    case .natural: return "filmStock.natural.name"
+    case .leicaMono: return "filmStock.leicaMono.name"
+    case .warmAmber: return "filmStock.warmAmber.name"
+    case .portraSoft: return "filmStock.portraSoft.name"
+    }
+  }
+
+  public var descriptionKey: String {
+    switch self {
+    case .natural: return "filmStock.natural.description"
+    case .leicaMono: return "filmStock.leicaMono.description"
+    case .warmAmber: return "filmStock.warmAmber.description"
+    case .portraSoft: return "filmStock.portraSoft.description"
+    }
+  }
+}
+
 public enum TipPack: String, CaseIterable, Identifiable, Sendable {
   case free
   case kidsPro
@@ -152,4 +186,3 @@ public enum TipPack: String, CaseIterable, Identifiable, Sendable {
     }
   }
 }
-

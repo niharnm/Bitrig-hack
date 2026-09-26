@@ -18,6 +18,8 @@
 		56596641116D800D81AFACC2 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 81A995483E897810C9EA48FD /* RevenueCat */; };
 		5E09491D982F6A3401942275 /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DFA355642198D1C0A8C0F3 /* Motion.swift */; };
 		69302CD4B12D63FD46A74AD7 /* InnerCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D7EE2EFA14676C1E96EDB6 /* InnerCaptureView.swift */; };
+		FS010001B32F372B6A370001 /* FilmStockSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FS01000202A3E03F6C8E0002 /* FilmStockSelectorView.swift */; };
+		FS01000303D7B244839C0003 /* CaptureFilmStockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FS010004A600D82293CF0004 /* CaptureFilmStockTests.swift */; };
 		6E1FFA4FFC0B59D616E9B499 /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37F7A8121D8285F11C95F74 /* CountdownView.swift */; };
 		744ADA8E5315618169350853 /* PermissionPrimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE3C36BADCCD2711D3BE376 /* PermissionPrimerView.swift */; };
 		91561718E6B85D9F49419092 /* FrostOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71770844385F3444B97EA92 /* FrostOverlayView.swift */; };
@@ -86,6 +88,8 @@
 		C71770844385F3444B97EA92 /* FrostOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrostOverlayView.swift; sourceTree = "<group>"; };
 		CB2D7DF959653FAFDCA266B5 /* CaptureSessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSessionController.swift; sourceTree = "<group>"; };
 		D3D7EE2EFA14676C1E96EDB6 /* InnerCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerCaptureView.swift; sourceTree = "<group>"; };
+		FS01000202A3E03F6C8E0002 /* FilmStockSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmStockSelectorView.swift; sourceTree = "<group>"; };
+		FS010004A600D82293CF0004 /* CaptureFilmStockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureFilmStockTests.swift; sourceTree = "<group>"; };
 		D4F75A4811FF91EAECD2B468 /* CutoverFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutoverFlag.swift; sourceTree = "<group>"; };
 		D75A75678192D0392AC4FB3D /* SubjectCoachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectCoachView.swift; sourceTree = "<group>"; };
 		DA714F0A5004D73538251A71 /* RootArrangementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootArrangementView.swift; sourceTree = "<group>"; };
@@ -214,6 +218,7 @@
 				89BAB1F6A600D82293CF0003 /* MonetizationTests.swift */,
 				AFBA01B4542BE5B7794E90EA /* MotionAccessibilityTests.swift */,
 				0326591DB60E17B942E78357 /* PaywallPresentationTests.swift */,
+				FS010004A600D82293CF0004 /* CaptureFilmStockTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -260,6 +265,7 @@
 				3A29FFBDEC41539EDC234A06 /* CaptureDeniedView.swift */,
 				CB2D7DF959653FAFDCA266B5 /* CaptureSessionController.swift */,
 				D3D7EE2EFA14676C1E96EDB6 /* InnerCaptureView.swift */,
+				FS01000202A3E03F6C8E0002 /* FilmStockSelectorView.swift */,
 				8EE3C36BADCCD2711D3BE376 /* PermissionPrimerView.swift */,
 			);
 			path = Capture;
@@ -365,6 +371,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1D8EA3703D7B244839CA0C1 /* CaptureSessionTests.swift in Sources */,
+				FS01000303D7B244839C0003 /* CaptureFilmStockTests.swift in Sources */,
 				KM0100010000000000000002 /* CoachOverlayTests.swift in Sources */,
 				C1D8EA3703D7B244839CACC2 /* FrostStandbyTests.swift in Sources */,
 				C1D8EA3703D7B244839CA003 /* MonetizationTests.swift in Sources */,
@@ -382,6 +389,7 @@
 				E312F9D95D6ED75590A8E799 /* CameraCaptureAccessoryHost.swift in Sources */,
 				C545986439EBF638CCCA5BD7 /* CaptureDeniedView.swift in Sources */,
 				C42CFAC24925FC7ED0CF2692 /* CaptureSessionController.swift in Sources */,
+				FS010001B32F372B6A370001 /* FilmStockSelectorView.swift in Sources */,
 				6E1FFA4FFC0B59D616E9B499 /* CountdownView.swift in Sources */,
 				BDA28D68FD1AC793BDDE5FBD /* CutoverFlag.swift in Sources */,
 				E28FF05C30DABC29B0730375 /* DuoAppApp.swift in Sources */,
