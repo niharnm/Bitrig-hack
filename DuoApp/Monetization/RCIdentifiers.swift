@@ -10,7 +10,12 @@ import Foundation
 
 public enum RCIdentifiers {
     // Transcribed dashboard constants from docs-runtime/RC-IDs.md
-    public static let apiKey = "test_vLzHLIyotfZAGehQHdRCKFPRyyN"
+    public static let apiKey: String = {
+        if let envKey = ProcessInfo.processInfo.environment["REVENUECAT_API_KEY"], !envKey.isEmpty {
+            return envKey
+        }
+        return "test_vLzHLIyotfZAGehQHdRCKFPRyyN"
+    }()
     public static let entitlementId = "pro"
     public static let productId = "outerlens_pro_monthly"
     public static let offeringId = "default"
