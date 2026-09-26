@@ -1,6 +1,6 @@
 # Outer Lens scaffold
 
-This is the Cursor scaffold from bible §06 and §18. The app currently opens a charcoal placeholder with the Outer Lens wordmark. Named feature files contain only ownership stubs.
+This project has a generated DuoApp target, DesignSystem tokens and motion, shared app types, and an isolated Frost standby slice. The app root remains a placeholder. Duo-core pose and arrangement, Outer Lens capture and CameraCaptureAccessory, RevenueCat configuration and purchase flow, and cutover integration are not complete.
 
 ## Build
 
@@ -10,12 +10,14 @@ Open `DuoApp.xcodeproj` and select the `DuoApp` scheme. XcodeGen 2.46.0 generate
 xcodegen generate --spec DuoApp/project.yml
 ```
 
-Run that command from the repository root. The provisional bundle identifier is `dev.outerlens.DuoApp`; the integrator sets the signing team before device deployment. Deployment starts at iOS 26.0 for the ordinary single-display scaffold. Duo APIs require the 27.1 SDK and availability guards when Duo-core implements them.
+Run that command from the repository root. The provisional bundle identifier is `dev.outerlens.DuoApp`; the integrator sets the signing team before device deployment. Duo APIs require the 27.1 SDK and availability guards when Duo-core implements them.
 
-SPM references RevenueCat and RevenueCatUI from purchases-ios-spm, starting at 5.43.0. No SDK configuration or purchase behavior is present. Package.resolved pins version 5.91.0 after successful dependency resolution.
+SPM references RevenueCat and RevenueCatUI from purchases-ios-spm, starting at 5.43.0. Package.resolved pins version 5.91.0. The SDK is referenced, but no RevenueCat configuration, entitlement flow, or purchase behavior is implemented.
 
-## Ownership and readiness
+## Evidence and ownership
 
-See `docs-runtime/GATE-SCAFFOLD.md` for verified build and launch evidence and remaining Duo prerequisites. See `docs-runtime/DEMO-LAST-PASS.md` for the pending acceptance suite.
+The current Debug build passed with the iOS 27.1 SDK. Nine unit tests passed on an ordinary iPhone 17 Pro simulator running iOS 27.0. These tests are not Duo launch or fold evidence, and test fixtures do not prove a RevenueCat purchase. The Release build is still running; no result is recorded.
 
-Scaffold stubs in Monetization, Paywall, and Frost are reserved paths only. Their implementations belong to separate lanes. Cursor integration and polish wait for Duo-core, CCA, and RC handoffs. No cutover decision is made here.
+See `docs-runtime/GATE-SCAFFOLD.md` for current toolchain and Duo simulator evidence. The Duo simulator is booted and the placeholder launch is visually verified. Timed launch and fold behavior remain unverified. See `docs-runtime/DEMO-LAST-PASS.md` for acceptance statuses and `docs-runtime/GATE-FROST.md` for the isolated standby status.
+
+Cursor integration remains pending the Duo-core, Capture/CCA, and RevenueCat handoffs. The cutover flag remains untouched. `docs-runtime/DEMO-SCRIPT.md` is planned and unrehearsed. No canonical acceptance gate is marked PASS.
