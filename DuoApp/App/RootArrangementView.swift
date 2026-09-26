@@ -14,9 +14,11 @@ struct RootArrangementView: View {
   private let cutover = CutoverFlag.current
 
   var body: some View {
-    let paywallPresenter = PaywallPresenter(currentPose: { pose.mode }) {
-      isPaywallPresented = true
-    }
+    let paywallPresenter = PaywallPresenter(
+      currentPose: { pose.mode },
+      {
+        isPaywallPresented = true
+      })
 
     NavigationStack {
       Group {

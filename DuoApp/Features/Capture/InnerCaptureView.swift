@@ -6,15 +6,15 @@ struct InnerCaptureView: View {
   @State private var isSubjectEnabled = true
   @State private var isSubjectAvailable = false
   @State private var isSettingsPresented = false
-  @ObservedObject private var entitlements = EntitlementsModel.shared
+  @Environment(\.entitlementState) private var entitlementState
   @Environment(\.presentPaywall) private var presentPaywall
 
-  private var isPro: Bool { entitlements.state.isPro || coach.isProSimulated }
+  private var isPro: Bool { entitlementState.isPro || coach.isProSimulated }
 
   var body: some View {
     ZStack(alignment: .bottom) {
       // Black preview stand-in until CaptureSessionController lands.
-      Color.black.ignoresSafeArea()
+      FilmToolTokens.Palette.canvas.ignoresSafeArea()
       if !isSubjectAvailable {
         subjectPreview
           .frame(maxHeight: .infinity)
@@ -66,7 +66,8 @@ struct InnerCaptureView: View {
       .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
       .overlay(
         RoundedRectangle(cornerRadius: 18, style: .continuous)
-          .stroke(.white.opacity(0.2), lineWidth: 1))
+          .stroke(.white.opacity(0.2), lineWidth: 1)
+      )
       .accessibilityHidden(true)
   }
 
@@ -84,15 +85,20 @@ struct InnerCaptureView: View {
   @ViewBuilder
   private var proControl: some View {
     if isPro {
-      Label("capture.proActive", systemImage: "checkmark.seal.fill")
-        .font(.subheadline.weight(.semibold))
-        .foregroundStyle(GuideOvalView.accent)
+      Label(
+        LocalizedStringKey(
+          entitlementState.isPro ? "capture.proActive" : "capture.simulatedProActive"
+        ), systemImage: "checkmark.seal.fill"
+      )
+      .font(.subheadline.weight(.semibold))
+      .foregroundStyle(GuideOvalView.accent)
     } else {
       Button("capture.proCTA") {
         presentPaywall()
       }
       .buttonStyle(.glass)
       .tint(GuideOvalView.accent)
+      .disabled(!presentPaywall.isAvailable)
     }
   }
 
@@ -107,6 +113,7 @@ struct InnerCaptureView: View {
         .padding(6)
         .overlay(Circle().stroke(.white, lineWidth: 3))
     }
+    .buttonStyle(FilmToolShutterButtonStyle())
     .accessibilityLabel("Shutter")
   }
 

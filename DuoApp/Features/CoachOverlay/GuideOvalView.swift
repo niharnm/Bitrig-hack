@@ -2,7 +2,7 @@ import SwiftUI
 
 /// T2 Pro framing guide: a faint amber oval around the face region. Never shown on the free tier.
 struct GuideOvalView: View {
-  static let accent = Color(red: 232 / 255, green: 168 / 255, blue: 56 / 255)
+  static let accent = FilmToolTokens.Palette.accent
 
   var body: some View {
     Ellipse()
