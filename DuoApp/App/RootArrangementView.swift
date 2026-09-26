@@ -34,7 +34,7 @@ struct RootArrangementView: View {
         }
       }
       .publishRegions(to: pose)
-      .navigationTitle(cutover.isFrost ? "FrostDuo" : "Outer Lens")
+      .navigationTitle(cutover.isFrost ? "FrostDuo" : "Insider")
       .navigationBarTitleDisplayMode(.inline)
       .sheet(
         isPresented: Binding(

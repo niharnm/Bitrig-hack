@@ -2,7 +2,7 @@ import SwiftUI
 
 enum FilmToolTokens {
   enum Brand {
-    static let name = "Outer Lens"
+    static let name = "Insider"
     static let nameFrost = "FrostDuo"
     static let size: CGFloat = 15
     static let font = Font.system(size: size, weight: .medium)

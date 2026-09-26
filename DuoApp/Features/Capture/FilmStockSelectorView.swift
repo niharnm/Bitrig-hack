@@ -22,19 +22,29 @@ public struct FilmStockSelectorView: View {
     self.onLockedSelected = onLockedSelected
   }
 
+  @State private var lockedTapCount = 0
+
   public var body: some View {
-    HStack(spacing: 4) {
+    // Plain text strip like the Camera app's mode picker: the selection is the only highlighted item.
+    // Scrolls only when the names don't fit, such as on the narrow outer display or with larger text.
+    ViewThatFits(in: .horizontal) {
+      stockRow
+      ScrollView(.horizontal) {
+        stockRow
+          .padding(.horizontal, FilmToolTokens.Space.s2)
+      }
+      .scrollIndicators(.hidden)
+    }
+    .sensoryFeedback(.selection, trigger: selectedStock)
+    .sensoryFeedback(.impact(flexibility: .rigid), trigger: lockedTapCount)
+  }
+
+  private var stockRow: some View {
+    HStack(spacing: FilmToolTokens.Space.s5) {
       ForEach(FilmStock.allCases) { stock in
         stockChip(for: stock)
       }
     }
-    .padding(4)
-    .background(.ultraThinMaterial, in: Capsule())
-    .overlay(
-      Capsule()
-        .stroke(Color.white.opacity(0.18), lineWidth: 1)
-    )
-    .shadow(color: .black.opacity(0.25), radius: 8, x: 0, y: 4)
   }
 
   @ViewBuilder
@@ -45,59 +55,47 @@ public struct FilmStockSelectorView: View {
     Button {
       handleSelection(stock)
     } label: {
-      HStack(spacing: 4) {
+      HStack(spacing: FilmToolTokens.Space.s1) {
         Text(LocalizedStringKey(stock.displayNameKey))
-          .font(.system(size: 13, weight: isSelected ? .semibold : .medium, design: .rounded))
-          .foregroundStyle(isSelected ? Color.white : Color.white.opacity(0.70))
-
+          .textCase(.uppercase)
+          .kerning(0.8)
         if isLocked {
           Image(systemName: "lock.fill")
-            .font(.system(size: 10, weight: .bold))
-            .foregroundStyle(FilmToolTokens.Palette.accent)
+            .imageScale(.small)
+            .accessibilityHidden(true)
         }
       }
-      .padding(.horizontal, 10)
-      .padding(.vertical, 6)
-      .background {
-        if isSelected {
-          Capsule()
-            .fill(Color.white.opacity(0.20))
-            .overlay(
-              Capsule()
-                .stroke(Color.white.opacity(0.25), lineWidth: 0.8)
-            )
-        }
-      }
-      .contentShape(Capsule())
+      .font(.footnote.weight(.semibold))
+      .foregroundStyle(isSelected ? FilmToolTokens.Palette.accent : FilmToolTokens.Palette.ink)
+      .shadow(color: .black.opacity(0.35), radius: 2)
+      .frame(minHeight: 32)
+      .contentShape(Rectangle())
     }
     .buttonStyle(FilmStockChipButtonStyle())
     .accessibilityLabel(Text(LocalizedStringKey(stock.displayNameKey)))
-    .accessibilityValue(isLocked ? "Locked" : (isSelected ? "Selected" : ""))
+    .accessibilityValue(isLocked ? Text("filmStock.locked") : Text(verbatim: ""))
+    .accessibilityAddTraits(isSelected ? .isSelected : [])
   }
 
   private func handleSelection(_ stock: FilmStock) {
     if stock.requiresPro && !isPro {
-      // Rigid haptic feedback on locked attempt
-      UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+      lockedTapCount += 1
       showPaywall = true
       presentPaywall()
       onLockedSelected?()
     } else {
-      // Light haptic feedback on unlocked selection
-      UIImpactFeedbackGenerator(style: .light).impactOccurred()
-      withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
+      withAnimation(.snappy) {
         selectedStock = stock
       }
     }
   }
 }
 
-/// Subtle tactile button style for film stock chips
+/// Subtle tactile button style for film stock labels
 private struct FilmStockChipButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
-      .scaleEffect(configuration.isPressed ? 0.94 : 1.0)
-      .opacity(configuration.isPressed ? 0.85 : 1.0)
-      .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+      .opacity(configuration.isPressed ? 0.6 : 1.0)
+      .animation(.snappy(duration: 0.12), value: configuration.isPressed)
   }
 }

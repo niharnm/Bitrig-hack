@@ -48,6 +48,7 @@
 		EF772DC9E7DFAB8E98532483 /* SimulateThreatControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD37CDFA039841965EFFE2F1 /* SimulateThreatControl.swift */; };
 		F184AB5502B60473C91B582B /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = D2F0175F102F9F30123BB887 /* RevenueCatUI */; };
 		FA52A34D7C3B7E342058EED9 /* RootArrangementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA714F0A5004D73538251A71 /* RootArrangementView.swift */; };
+		0E1A2B3C4D5E6F7A8B9C0D1E /* OuterLensDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2E3D4C5B6A79880A1B2C3D /* OuterLensDemoView.swift */; };
 		FAE0EE74E0F3FC37A35A4BCC /* SubjectCoachView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D75A75678192D0392AC4FB3D /* SubjectCoachView.swift */; };
 /* End PBXBuildFile section */
 
@@ -93,6 +94,7 @@
 		D4F75A4811FF91EAECD2B468 /* CutoverFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutoverFlag.swift; sourceTree = "<group>"; };
 		D75A75678192D0392AC4FB3D /* SubjectCoachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectCoachView.swift; sourceTree = "<group>"; };
 		DA714F0A5004D73538251A71 /* RootArrangementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootArrangementView.swift; sourceTree = "<group>"; };
+		1F2E3D4C5B6A79880A1B2C3D /* OuterLensDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OuterLensDemoView.swift; sourceTree = "<group>"; };
 		E27BD154A10EF35D209B69EF /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		EA772F70308E0826C46ACC4E /* ArrangementRegions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrangementRegions.swift; sourceTree = "<group>"; };
 		EE9354EC8492B413DA144E21 /* PurchasesConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesConfig.swift; sourceTree = "<group>"; };
@@ -255,6 +257,7 @@
 			children = (
 				93BABD7BDE391BB692107487 /* DuoAppApp.swift */,
 				DA714F0A5004D73538251A71 /* RootArrangementView.swift */,
+				1F2E3D4C5B6A79880A1B2C3D /* OuterLensDemoView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -407,6 +410,7 @@
 				A2A09ECFE9F851531F218CDA /* PurchasesConfig.swift in Sources */,
 				B9B9578EB2CE807C299DB389 /* RCIdentifiers.swift in Sources */,
 				FA52A34D7C3B7E342058EED9 /* RootArrangementView.swift in Sources */,
+				0E1A2B3C4D5E6F7A8B9C0D1E /* OuterLensDemoView.swift in Sources */,
 				A2A09ECFE9F851531F218002 /* PurchaseService.swift in Sources */,
 				E0555A5912D624A809E3A1F6 /* SensitiveSurfaceView.swift in Sources */,
 				EF772DC9E7DFAB8E98532483 /* SimulateThreatControl.swift in Sources */,
@@ -477,8 +481,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Outer Lens";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Outer Lens uses the camera so you can shoot from the inner display while coaching the subject on the outer.";
+				INFOPLIST_KEY_CFBundleDisplayName = Insider;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Insider uses the camera so you can shoot from the inner display while coaching the subject on the outer.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -594,8 +598,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Outer Lens";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Outer Lens uses the camera so you can shoot from the inner display while coaching the subject on the outer.";
+				INFOPLIST_KEY_CFBundleDisplayName = Insider;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Insider uses the camera so you can shoot from the inner display while coaching the subject on the outer.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
