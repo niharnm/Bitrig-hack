@@ -77,6 +77,7 @@
 "outer.simulatedProBadge" = "SIMULATED PRO";
 
 "filmStock.locked" = "Locked";
+"filmStock.dial" = "Film stock";
 "filmStock.natural.name" = "Natural";
 "filmStock.natural.description" = "True-to-life color with balanced contrast";
 "filmStock.leicaMono.name" = "Mono";

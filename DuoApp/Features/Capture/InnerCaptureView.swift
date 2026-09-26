@@ -19,6 +19,7 @@ struct InnerCaptureView: View {
   @Environment(\.entitlementState) private var entitlementState
   @Environment(\.presentPaywall) private var presentPaywall
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
+  @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
   private var isPro: Bool { entitlementState.isPro || coach.isProSimulated }
   private var isPurchasesConfigured: Bool {
@@ -64,7 +65,7 @@ struct InnerCaptureView: View {
           }
           .ignoresSafeArea()
       }
-      controlScrim
+      trailingScrim
       shutterFlash
       if isStarting {
         startingOverlay
@@ -78,8 +79,16 @@ struct InnerCaptureView: View {
         topBar
         statusStack
         Spacer(minLength: 0)
-        bottomControls
+        if !isStarting {
+          subjectCard
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, FilmToolTokens.Space.s4)
+            .padding(.bottom, FilmToolTokens.Space.s4)
+        }
       }
+      controlColumn
+        .frame(maxWidth: .infinity, alignment: .trailing)
+        .padding(.trailing, FilmToolTokens.Space.s5)
     }
     .toolbarVisibility(.hidden, for: .navigationBar)
     .sheet(isPresented: $isSettingsPresented) {
@@ -111,21 +120,57 @@ struct InnerCaptureView: View {
         model: coach))
   }
 
-  /// Settings on the leading edge, Pro on the trailing edge. Nothing else competes with the preview.
+  /// Settings and the wordmark lead, Pro trails, and one readout of what the shot will be sits between them.
   private var topBar: some View {
-    HStack {
+    HStack(spacing: FilmToolTokens.Space.s3) {
       Button("capture.settings.title", systemImage: "gearshape") {
         isSettingsPresented = true
       }
       .labelStyle(.iconOnly)
       .buttonStyle(.glass)
       .buttonBorderShape(.circle)
+      // The closed outer display is too narrow for the wordmark and the readout together.
+      if horizontalSizeClass == .regular {
+        Text("capture.brand")
+          .font(FilmToolTokens.Brand.font)
+          .foregroundStyle(FilmToolTokens.Palette.ink.opacity(0.82))
+          .shadow(color: .black.opacity(0.4), radius: 3)
+      }
       Spacer()
       proControl
     }
+    .overlay { captureReadout }
     .tint(.white)
     .padding(.horizontal, FilmToolTokens.Space.s4)
     .padding(.top, FilmToolTokens.Space.s2)
+  }
+
+  /// Stock, frame and timer in one monospaced capsule, like a camera's top plate.
+  private var captureReadout: some View {
+    HStack(spacing: FilmToolTokens.Space.s2) {
+      Text(LocalizedStringKey(selectedStock.displayNameKey))
+        .textCase(.uppercase)
+      Text(verbatim: "·").foregroundStyle(FilmToolTokens.Palette.inkFaint)
+      // The photo session preset captures 4:3. Dropped on the narrow outer display so the capsule clears Pro.
+      if horizontalSizeClass == .regular {
+        Text(verbatim: "4:3")
+        Text(verbatim: "·").foregroundStyle(FilmToolTokens.Palette.inkFaint)
+      }
+      // The shutter runs CoachModel's 3-2-1 countdown before every photo.
+      HStack(spacing: 3) {
+        Image(systemName: "timer")
+        Text(verbatim: "3S")
+      }
+    }
+    .font(.system(size: 12, weight: .semibold, design: .monospaced))
+    .kerning(1)
+    .foregroundStyle(FilmToolTokens.Palette.ink)
+    .padding(.horizontal, FilmToolTokens.Space.s4)
+    .frame(height: 32)
+    .glassEffect(in: Capsule())
+    .contentTransition(.opacity)
+    .animation(.snappy, value: selectedStock)
+    .accessibilityElement(children: .combine)
   }
 
   /// Only real problems surface here, as one quiet pill.
@@ -151,29 +196,30 @@ struct InnerCaptureView: View {
     .padding(.top, FilmToolTokens.Space.s3)
   }
 
-  /// Film stock strip above a symmetric shutter row, like the system Camera app.
-  private var bottomControls: some View {
-    VStack(spacing: FilmToolTokens.Space.s5) {
-      // Locked stocks open the paywall only through presentPaywall, which is inner-display only.
-      FilmStockSelectorView(selectedStock: $selectedStock, isPro: isPro)
-      HStack {
-        leadingSlot
-          .frame(maxWidth: .infinity)
-        shutterButton
-        flipButton
-          .frame(maxWidth: .infinity)
-      }
+  /// Subject screen, shutter and flip stacked on the trailing edge: under the thumb and clear of the fold.
+  /// The film stock dial wraps the shutter's leading side.
+  private var controlColumn: some View {
+    VStack(spacing: 28) {
+      subjectToggle
+      shutterButton
+        .overlay {
+          // Locked stocks open the paywall only through presentPaywall, which is inner-display only.
+          FilmStockSelectorView(selectedStock: $selectedStock, isPro: isPro)
+            .offset(x: FilmStockSelectorView.overlayOffset)
+        }
+      flipButton
     }
-    .padding(.horizontal, FilmToolTokens.Space.s5)
-    .padding(.bottom, FilmToolTokens.Space.s4)
   }
 
-  /// Darkens the bottom of the preview so the controls stay legible over bright scenes.
-  private var controlScrim: some View {
+  /// Darkens the trailing edge so the dial and shutter stay legible over bright scenes, without a hard rail.
+  private var trailingScrim: some View {
     LinearGradient(
-      colors: [.clear, .black.opacity(0.55)],
-      startPoint: .center,
-      endPoint: .bottom
+      stops: [
+        .init(color: .clear, location: 0.45),
+        .init(color: .black.opacity(0.6), location: 1),
+      ],
+      startPoint: .leading,
+      endPoint: .trailing
     )
     .ignoresSafeArea()
     .allowsHitTesting(false)
@@ -235,43 +281,90 @@ struct InnerCaptureView: View {
       .accessibilityHidden(true)
   }
 
-  /// Where the Camera app puts the last photo: the subject screen toggle, or a thumbnail of what the subject sees.
+  private var isSubjectLive: Bool { isSubjectAvailable && isSubjectEnabled }
+
+  /// Shown only while the system can present the accessory; enabled is the user's choice.
+  /// Glass with a live dot rather than an amber fill, so amber keeps meaning Pro.
   @ViewBuilder
-  private var leadingSlot: some View {
+  private var subjectToggle: some View {
     if isSubjectAvailable {
-      // Shown only while the system can present the accessory; enabled is the user's choice.
-      Toggle("capture.subjectToggle", systemImage: "person.crop.rectangle", isOn: $isSubjectEnabled)
-        .toggleStyle(.button)
-        .labelStyle(.iconOnly)
-        .font(FilmToolTokens.Control.iconFont)
-        .frame(width: FilmToolTokens.Control.minHit, height: FilmToolTokens.Control.minHit)
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
-        .controlSize(.large)
-        // On reads as amber, like the Camera app's active toggles, so the white glyph stays visible.
-        .tint(FilmToolTokens.Palette.accent)
-    } else if !isStarting {
-      subjectThumbnail
+      Button("capture.subjectToggle", systemImage: "person.crop.rectangle") {
+        isSubjectEnabled.toggle()
+      }
+      .labelStyle(.iconOnly)
+      .font(FilmToolTokens.Control.iconFont)
+      .frame(width: FilmToolTokens.Control.minHit, height: FilmToolTokens.Control.minHit)
+      .buttonStyle(.glass)
+      .buttonBorderShape(.circle)
+      .controlSize(.large)
+      .tint(.white)
+      .overlay(alignment: .topTrailing) {
+        if isSubjectEnabled {
+          liveDot.offset(x: -2, y: 2)
+        }
+      }
+      .accessibilityAddTraits(isSubjectEnabled ? .isSelected : [])
+    } else {
+      Color.clear.frame(width: FilmToolTokens.Control.minHit, height: FilmToolTokens.Control.minHit)
     }
   }
 
-  /// Without the accessory, a tap shows the photographer what the subject would see.
-  private var subjectThumbnail: some View {
-    Button {
+  private var liveDot: some View {
+    Circle()
+      .fill(FilmToolTokens.Palette.success)
+      .frame(width: 7, height: 7)
+      .background(Circle().fill(FilmToolTokens.Palette.success.opacity(0.2)).padding(-3))
+      .accessibilityHidden(true)
+  }
+
+  /// What the outer display is saying right now. A tap shows the photographer the subject's view.
+  private var subjectCard: some View {
+    let tips = coach.currentTips(isPro: isPro)
+    let pack: TipPack = isPro ? coach.activePack : .free
+    return Button {
       isSubjectPreviewPresented = true
     } label: {
-      SubjectCoachView(model: coach)
-        .frame(width: 466, height: 678)
-        .scaleEffect(48.0 / 466)
-        .frame(width: 48, height: 70)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .overlay(
-          RoundedRectangle(cornerRadius: 8, style: .continuous)
-            .stroke(.white.opacity(0.6), lineWidth: 1.5))
-        .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+      HStack(spacing: FilmToolTokens.Space.s3) {
+        SubjectCoachView(model: coach)
+          .frame(width: 466, height: 678)
+          .scaleEffect(48.0 / 466)
+          .frame(width: 48, height: 70)
+          .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+          .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+              .stroke(.white.opacity(0.35), lineWidth: 1))
+          .allowsHitTesting(false)
+        VStack(alignment: .leading, spacing: 5) {
+          HStack(spacing: 6) {
+            Text("capture.subjectToggle")
+              .textCase(.uppercase)
+              .font(.system(size: 10.5, weight: .semibold, design: .monospaced))
+              .kerning(1.4)
+              .foregroundStyle(FilmToolTokens.Palette.inkMuted)
+            if isSubjectLive {
+              liveDot
+            }
+          }
+          Text(LocalizedStringKey(coach.tipKey(isPro: isPro)))
+            .font(.system(size: 16, weight: .semibold))
+            .foregroundStyle(FilmToolTokens.Palette.ink)
+            .lineLimit(1)
+          (Text(LocalizedStringKey(pack.displayNameKey))
+            + Text(verbatim: " · \(coach.tipIndex % tips.count + 1)/\(tips.count)"))
+            .font(.caption)
+            .foregroundStyle(FilmToolTokens.Palette.inkMuted)
+        }
+        .frame(maxWidth: 260, alignment: .leading)
+      }
+      .padding(.leading, FilmToolTokens.Space.s2)
+      .padding(.trailing, FilmToolTokens.Space.s4)
+      .padding(.vertical, FilmToolTokens.Space.s2)
+      .glassEffect(in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+      .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
     .buttonStyle(FilmToolSideButtonStyle())
-    .accessibilityLabel("capture.subjectPreview")
+    .accessibilityElement(children: .combine)
+    .accessibilityHint(Text("capture.subjectPreview"))
   }
 
   @ViewBuilder
