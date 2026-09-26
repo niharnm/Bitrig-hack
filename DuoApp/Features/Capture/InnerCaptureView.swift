@@ -235,7 +235,10 @@ struct InnerCaptureView: View {
     .disabled(
       isStarting || isSessionFailed || capture.phase == .shutterFlash || coach.countdown != nil)
     // Peak-End: haptic on shutterFlash entry, same-frame as the flash (causality).
-    .sensoryFeedback(.impact(weight: .light), trigger: capture.phase == .shutterFlash)
+    .sensoryFeedback(.impact(weight: .light), trigger: capture.phase == .shutterFlash) { _, isFlashing in
+      // Fire on entry only; the trigger also changes when the flash ends.
+      isFlashing
+    }
     .accessibilityLabel("Shutter")
   }
 
