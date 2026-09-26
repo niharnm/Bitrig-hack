@@ -10,6 +10,8 @@ struct RootArrangementView: View {
   @StateObject private var entitlements = EntitlementsModel.shared
   @State private var pose = PoseRouter()
   @State private var isPaywallPresented = false
+  @State private var threatLevel: ThreatLevel = .clear
+  @State private var isProtectEnabled = true
   @Environment(\.horizontalSizeClass) private var horizontalSizeClass
   private let cutover = CutoverFlag.current
 
@@ -91,17 +93,30 @@ struct RootArrangementView: View {
 
   /// SCR-FD-A. LANE-FROST supplies SensitiveSurfaceView.
   private var frostPrimarySlot: some View {
-    SlotPlaceholder(title: "Sensitive surface", pose: pose.mode)
+    SensitiveSurfaceView(
+      threatLevel: threatLevel,
+      title: "Private Notes",
+      secret: "Passcode: 9812",
+      bodyText: "Confidential strategy notes. Screen blurs as external threats are detected."
+    )
   }
 
   /// SCR-FD-B. LANE-FROST supplies FrostControlsView with Simulate Threat.
   private var frostSecondarySlot: some View {
-    SlotPlaceholder(title: "Frost controls", pose: pose.mode, fill: .raised)
+    FrostControlsView(
+      protectEnabled: $isProtectEnabled,
+      threatLevel: $threatLevel,
+      entitlementState: EntitlementsModel.shared.state,
+      onUnlockCoverVault: { isPaywallPresented = true }
+    )
   }
 
   /// SCR-FD-C. Shown when the scene moves to the closed outer display. No second window is opened on the outer.
   private var frostOuterDecoySlot: some View {
-    SlotPlaceholder(title: "Outer decoy", pose: pose.mode)
+    OuterDecoyStageView(
+      threatLevel: threatLevel,
+      entitlementState: EntitlementsModel.shared.state
+    )
   }
 
   // MARK: Paywall

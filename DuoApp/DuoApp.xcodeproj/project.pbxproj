@@ -23,6 +23,8 @@
 		91561718E6B85D9F49419092 /* FrostOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71770844385F3444B97EA92 /* FrostOverlayView.swift */; };
 		916B7F931C4C8305D0620FA3 /* MotionAccessibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBA01B4542BE5B7794E90EA /* MotionAccessibilityTests.swift */; };
 		A2A09ECFE9F851531F218CDA /* PurchasesConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9354EC8492B413DA144E21 /* PurchasesConfig.swift */; };
+		A2A09ECFE9F851531F218002 /* PurchaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9354EC8492B413DA144002 /* PurchaseService.swift */; };
+		C1D8EA3703D7B244839CA003 /* MonetizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BAB1F6A600D82293CF0003 /* MonetizationTests.swift */; };
 		AB3DFCD4FEA6150867D9FEB2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C78C8D4E652405C1DDF0493 /* Localizable.strings */; };
 		B58CF2576124869F7E24C07C /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5280A7B339BB8FE6AE5CF89 /* Tokens.swift */; };
 		B9B9578EB2CE807C299DB389 /* RCIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DB8CCC16138EFD544F27CD /* RCIdentifiers.swift */; };
@@ -87,6 +89,8 @@
 		E27BD154A10EF35D209B69EF /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		EA772F70308E0826C46ACC4E /* ArrangementRegions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrangementRegions.swift; sourceTree = "<group>"; };
 		EE9354EC8492B413DA144E21 /* PurchasesConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesConfig.swift; sourceTree = "<group>"; };
+		EE9354EC8492B413DA144002 /* PurchaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseService.swift; sourceTree = "<group>"; };
+		89BAB1F6A600D82293CF0003 /* MonetizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationTests.swift; sourceTree = "<group>"; };
 		F37F7A8121D8285F11C95F74 /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
 		F8F3F09C00CAC75DC5439751 /* TipPlateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipPlateView.swift; sourceTree = "<group>"; };
 		FDCC1482B943CB5C8E35503D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -129,6 +133,7 @@
 			children = (
 				8FFDD7694A77E6F63DD78FBB /* Entitlements.swift */,
 				7596C579F54164B525207AC3 /* OfferingsRepository.swift */,
+				EE9354EC8492B413DA144002 /* PurchaseService.swift */,
 				EE9354EC8492B413DA144E21 /* PurchasesConfig.swift */,
 				C1DB8CCC16138EFD544F27CD /* RCIdentifiers.swift */,
 			);
@@ -197,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				89BAB1F6A600D82293CF0471 /* FrostStandbyTests.swift */,
+				89BAB1F6A600D82293CF0003 /* MonetizationTests.swift */,
 				AFBA01B4542BE5B7794E90EA /* MotionAccessibilityTests.swift */,
 				0326591DB60E17B942E78357 /* PaywallPresentationTests.swift */,
 			);
@@ -350,6 +356,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1D8EA3703D7B244839CACC2 /* FrostStandbyTests.swift in Sources */,
+				C1D8EA3703D7B244839CA003 /* MonetizationTests.swift in Sources */,
 				916B7F931C4C8305D0620FA3 /* MotionAccessibilityTests.swift in Sources */,
 				C13ACC0AB190CC954A2C59B6 /* PaywallPresentationTests.swift in Sources */,
 			);
@@ -380,6 +387,7 @@
 				A2A09ECFE9F851531F218CDA /* PurchasesConfig.swift in Sources */,
 				B9B9578EB2CE807C299DB389 /* RCIdentifiers.swift in Sources */,
 				FA52A34D7C3B7E342058EED9 /* RootArrangementView.swift in Sources */,
+				A2A09ECFE9F851531F218002 /* PurchaseService.swift in Sources */,
 				E0555A5912D624A809E3A1F6 /* SensitiveSurfaceView.swift in Sources */,
 				EF772DC9E7DFAB8E98532483 /* SimulateThreatControl.swift in Sources */,
 				FAE0EE74E0F3FC37A35A4BCC /* SubjectCoachView.swift in Sources */,
