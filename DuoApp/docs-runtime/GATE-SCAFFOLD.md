@@ -1,27 +1,32 @@
-# Scaffold gate
+# Scaffold and Cursor integration evidence
 
-**Status: BLOCKED for canonical Duo acceptance.** The iOS 27.1 SDK Debug build passed, and the placeholder launch was visually verified on Duo. The timed launch and fold checks remain unverified. This is not `GATE-SCAFFOLD=PASS`.
+**Status: PARTIAL. Canonical Duo acceptance remains blocked.**
 
-## Scope and current implementation
+## Implemented
 
-The project has a generated DuoApp target, DesignSystem tokens and motion, shared app types, and an isolated Frost standby view slice. The root now hosts the initial capture shell and CameraCaptureAccessory tip handoff. The camera preview and shutter remain unwired to a capture session. Duo-core pose routing, arrangement slots, and the initial CameraCaptureAccessory host are present. Capture-session behavior, RevenueCat configuration and purchases, and Frost slot wiring remain incomplete. The Frost views are not activated by a cutover decision.
+Generated app/test targets, frozen shared contracts, copy, DesignSystem tokens and motion, and isolated Frost standby are present. The incoming Duo-core and Capture/CCA handoffs are consumed. Root configuration calls the provided RC API, observes its entitlement model, and supplies a read-only snapshot to capture and accessory consumers. The supplied paywall host is inner-only; retained presenters check the current pose, and closing dismisses presentation. Pro rehearsal states are visibly labeled simulated.
 
-## Verified environment and checks
+Tip, countdown, guide-oval, and shutter consumers now use shared motion and Reduce Motion handling. The guide oval reacts to the entitlement snapshot or the explicit rehearsal override. Owner commit `fc65ca8` adds camera preview and photo-capture wiring; live behavior remains unverified. No live purchase or cross-display unlock is claimed. Frost remains standby; `CUTOVER.flag` is untouched.
 
-- Xcode 27.1, build 27A9269, with iOS SDK 27.1.
-- Registered iOS 27.1 simulator runtime, build 24A94401.
-- Duo simulator UDID `AF299D52-1471-4F63-9B56-877C15E9C8A4` is Booted with SpringBoard running. DuoApp installed and launched successfully; `/tmp/outer-lens-duo-launch-inner.png` shows the charcoal Outer Lens placeholder on display 1. No timed launch or Device Hub fold proof is recorded.
-- Debug build with the iOS 27.1 SDK passed.
-- The final integrated nine unit tests passed on an ordinary iPhone 17 Pro simulator running iOS 27.0. These tests are not Duo device behavior evidence. Test fixtures are not proof of a configured RevenueCat purchase.
-- The final integrated Release build passed on the Duo simulator destination.
+## Verification
 
-## Remaining scaffold evidence
+- Xcode 27.1 build 27A9269, iOS SDK 27.1; registered Duo runtime 24A94401.
+- Current Debug build: PASS, `/tmp/outer-lens-cursor-final-debug.log`.
+- Current Release build: PASS, `/tmp/outer-lens-cursor-final-release.log`.
+- Swift formatter lint for changed Swift files, localization/project plist validation, and `git diff --check`: PASS.
+- Three paywall policy tests run in a hostless macOS package using the actual presenter and test source. Final rerun: 3 tests PASS, 0 failures, `/tmp/outer-lens-policy-final.log`.
+- Historical pre-RC integration: nine unit tests passed on iPhone 17 Pro / iOS 27.0. This does not cover the current integrated app or live purchases.
+- Current iOS app-host tests: BLOCKED. The test host stopped before app code at `_dyld_start`; after resuming only that host, simulator launch failed with `NoSuchProcess`. The run was cancelled without assertions. Log: `/tmp/outer-lens-root-bridge-final-tests.log`.
+- Historical Duo placeholder/capture-shell screenshots prove launch only. Duo-core records partial pose evidence in `SHELL-READY.md`; timed launch, all fold poses, and live accessory behavior remain unverified here.
 
-1. Measure a clean Duo launch against the TC-S01 time requirement. The first boot reported a migration progress-window incident, although the device and app became usable.
-2. Preserve launch evidence; ordinary placeholder launch is verified, feature behavior is not.
-3. Change pose in Device Hub and observe the arrangement response. The merged root has pose routing and arrangement slots; their fold behavior remains unverified.
-4. Complete the remaining Capture/CCA and RevenueCat handoffs before final integration acceptance. A regular iPhone simulator build does not substitute for these Duo checks.
+## Owner blockers
 
-`CUTOVER.flag` remains untouched. No canonical scaffold PASS, CCA gate, or RevenueCat gate is claimed here.
+The incoming RC access-control error was resolved by `d0e4243`. Release still lacks SDK configuration, retains the supplied Test Store key, and DEBUG configuration logs the key. These findings were sent to the coordinating tasks for the RC owner. Cursor has not changed `Monetization/**` or `Features/Paywall/**`.
 
-Duo XCTest failed before connecting, with signal kill during bootstrap; no test cases ran in that attempt. Its cause remains unresolved. The integrated capture shell was visually observed in `/tmp/outer-lens-integrated-duo-inner.png`, with the accessory-unavailable banner and an unwired shutter. This is launch evidence only.
+No canonical scaffold, CCA, RevenueCat, Frost, or demo PASS follows from these builds, tests, or source presence.
+
+## Incoming owner revision verification
+
+Exact committed revision `1a4e42fedffca355d3f4fdfa6f6802c5dd7462f8`: Release simulator build PASS with SDK 27.1, log `/tmp/outer-lens-1a4e42f-release.log`. A scan of that fresh executable using the original supplied key from the earlier committed identifiers still finds the Test Store key. DEBUG bootstrap still logs its configured key. Source grep gates do not substitute for this executable scan.
+
+Bitrig QA separately reports an `InnerCaptureView.swift:242:25` constructor error in the dirty shared checkout. That is not attributed to this committed revision; preserve owner edits and resolve it in their lane. The newly wired Frost slots compile. Protect governs automatic sensing; manual Simulate remains allowed when it is off per §12.5.3 and §12.6.1. Automatic sensing is not implemented, and no cutover acceptance is claimed.

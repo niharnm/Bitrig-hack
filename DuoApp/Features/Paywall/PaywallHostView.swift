@@ -18,6 +18,7 @@ import RevenueCatUI
 public struct PaywallHostView: View {
     @Binding public var isPresented: Bool
     @ObservedObject private var entitlements = EntitlementsModel.shared
+    @State private var actionError: String?
 
     public init(isPresented: Binding<Bool>) {
         self._isPresented = isPresented
@@ -28,14 +29,20 @@ public struct PaywallHostView: View {
             #if canImport(RevenueCatUI)
             PaywallView(displayCloseButton: true)
                 .onPurchaseCompleted { customerInfo in
-                    print("PaywallHostView: Purchase completed. Entitlements: \(customerInfo.entitlements)")
-                    isPresented = false
-                }
-                .onRestoreCompleted { customerInfo in
-                    print("PaywallHostView: Restore completed. Entitlements: \(customerInfo.entitlements)")
-                    if customerInfo.entitlements[RCIdentifiers.entitlementId]?.isActive == true {
+                    if Self.isUnlocked(customerInfo) {
                         isPresented = false
                     }
+                }
+                .onPurchaseFailure { error in
+                    actionError = error.localizedDescription
+                }
+                .onRestoreCompleted { customerInfo in
+                    if Self.isUnlocked(customerInfo) {
+                        isPresented = false
+                    }
+                }
+                .onRestoreFailure { error in
+                    actionError = error.localizedDescription
                 }
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
@@ -127,7 +134,27 @@ public struct PaywallHostView: View {
             }
             #endif
         }
+        .alert(
+            "Purchases",
+            isPresented: Binding(
+                get: { actionError != nil },
+                set: { if !$0 { actionError = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {
+                actionError = nil
+            }
+        } message: {
+            Text(actionError ?? "")
+        }
     }
+
+    #if canImport(RevenueCat)
+    private static func isUnlocked(_ customerInfo: CustomerInfo) -> Bool {
+        let activeIDs = customerInfo.entitlements.active.keys
+        return SubscriptionAccess.isUnlocked(activeEntitlementIDs: activeIDs)
+    }
+    #endif
 }
 
 private struct FeatureRow: View {
