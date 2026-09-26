@@ -1,1 +1,60 @@
 "brand.name" = "Outer Lens";
+
+"pitch.brad.outerLens" = "Parents photographing kids can’t see framing or pose while they shoot — Duo’s outer is the subject coach; free outer preview, Pro pose overlays.";
+"pitch.matt.outerLens" = "Free: outer preview. Pro: pose overlays on the outer display.";
+"pitch.close.outerLens" = "Parents pay for the overlays that make the kid look good without turning the phone around. That’s Outer Lens.";
+"demo.verbal.ccaFlake" = "Subject coach is CCA; sim can’t always light outer for camera — on device the outer faces the kid.";
+
+"perm.brand" = "Outer Lens";
+"perm.title" = "Subject coaching needs the camera";
+"perm.body" = "Outer Lens shows framing tips on the outer display while you shoot from the inner. Photos stay on this device.";
+"perm.cta" = "Continue to Camera";
+"perm.notNow" = "Not now";
+"perm.plist.camera" = "Outer Lens uses the camera so you can shoot from the inner display while coaching the subject on the outer.";
+
+"capture.brand" = "Outer Lens";
+"capture.close" = "Close";
+"capture.subjectToggle" = "Subject screen";
+"capture.flip" = "Flip";
+"capture.tipPack.free" = "Free";
+"capture.tipPack.kids" = "Kids";
+"capture.tipPack.portrait" = "Portrait";
+"capture.proCTA" = "Pro coaching";
+"capture.proActive" = "Pro";
+"capture.starting" = "Getting ready…";
+"capture.banner.accessoryUnavailable" = "Subject screen unavailable on this device";
+"capture.banner.noDevices" = "Camera preview unavailable — tips still work";
+"capture.settings.title" = "Settings";
+"capture.settings.simulateTip" = "Simulate tip";
+"capture.settings.simulatePro" = "Simulate Pro unlock";
+"capture.settings.simulateCountdown" = "Simulate countdown";
+"capture.settings.tipInterval" = "Tip cycle";
+"capture.countdownSequence" = "3 · 2 · 1";
+
+"tip.free.1" = "Chin up · eyes to the lens";
+"tip.free.2" = "Fill the frame · step closer";
+"tip.free.3" = "Soft smile · both faces in";
+"tip.kids.1" = "Kneel to their eye line";
+"tip.kids.2" = "Catch the laugh — wait";
+"tip.kids.3" = "Two kids: squeeze in";
+"tip.portrait.1" = "Drop the near shoulder";
+"tip.portrait.2" = "Chin over toes";
+"tip.portrait.3" = "Leave headroom";
+
+"outer.brand" = "Outer Lens";
+"outer.proBadge" = "Pro";
+"outer.gettingReady" = "Getting ready…";
+
+"paywall.benefit" = "Pose overlays on the subject screen";
+"paywall.mattSpoken" = "Free: outer preview. Pro: pose overlays on the outer display.";
+
+"error.denied.title" = "Camera access needed";
+"error.denied.body" = "Enable camera in Settings to shoot and coach on the outer display.";
+"error.denied.openSettings" = "Open Settings";
+"error.denied.notNow" = "Not now";
+"error.restricted.title" = "Camera unavailable";
+"error.restricted.body" = "Camera is restricted on this device.";
+"error.accessoryUnavailable" = "Subject screen unavailable on this device";
+"error.noDevices" = "Camera preview unavailable — tips still work";
+"error.sessionFailed" = "Couldn’t start the camera. Try again.";
+"error.retry" = "Retry";
