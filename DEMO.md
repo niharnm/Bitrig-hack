@@ -1,39 +1,35 @@
-# Event demo (two-pane stand-in)
+# Insider demo
 
-No physical iPhone Duo and no simulator camera. The app launches straight into a two-pane stand-in:
+Insider learns the angle you look best from, then guides whoever holds the phone to it.
+The iPhone Duo's two displays split the job: INNER coaches the photographer, OUTER shows you the match.
 
-- **INNER**: charcoal Film Tool stage with a drawn stand-in subject, plus the tip buttons and **Pro**.
-- **OUTER**: one amber tip plate. Pro adds the dashed amber pose overlay.
-
-Capture session, CameraCaptureAccessory, and permission screens are off the launch path
-(`DuoApp/App/DuoAppApp.swift` now hosts `OuterLensDemoView`; `RootArrangementView` is untouched).
+No camera on the simulator, so the phone's position is simulated. Tap an arrow (or drag the stage) to "move the phone".
 
 ## Run it
 
-Needs Xcode 27.1 (Xcode 27.0 is missing the Duo SDK symbols and fails to build).
+Needs Xcode 27.1.
 
 ```bash
 cd DuoApp && DEVELOPER_DIR=/Applications/Xcode-27.1-beta.app/Contents/Developer xcodebuild build -project DuoApp.xcodeproj -scheme DuoApp -destination "platform=iOS Simulator,name=iPhone Duo,OS=27.1"
 ```
 
-Or open `DuoApp/DuoApp.xcodeproj` in Xcode 27.1, pick **iPhone Duo**, press Run.
+Start fresh at account creation (clears the saved account, angles, and Pro):
 
-Before going on stage: relaunch the app so Pro is off and the subject is centered.
-If you rehearsed with Pro on, open **Pro** and tap **Turn Pro off for rehearsal**.
+```bash
+xcrun simctl launch --terminate-running-process "iPhone Duo" dev.outerlens.DuoApp -resetDemo YES
+```
 
-## 70 second tap script
+For the AI step, add a few selfies to the simulator first (drag image files onto the simulator window).
+With no faces in the picked photos the app says so and you set angles by hand.
 
-| Time | Tap | What the room sees | Say |
-|------|-----|--------------------|-----|
-| 0-10s | nothing (or **Reset**) | Subject centered, outer reads "Look at the outer" | **Brad:** "Parents photographing kids can't see framing or pose while they shoot. Duo's outer is the subject coach; free outer preview, Pro pose overlays." Then once: "No Duo in the room; this stand-in is the subject Capture Accessory would drive." |
-| 10-20s | **Step left** | Subject slides left and leans; outer plate reads "Step left" | Point at the outer plate. |
-| 20-30s | **Chin up** | Subject rises, eyes lift; outer reads "Chin up" | Point at the outer plate again. |
-| 30-40s | **Hold still** | Subject freezes, "…" appears; outer reads "Hold still" | Let it sit for a beat. |
-| 40-55s | **That's the shot** | Quick flash, subject settles with a bigger smile; outer reads "That's the shot" | "That's the shot." |
-| 55-70s | **Pro**, then **Simulate Test Store purchase** | Sheet closes, amber guide oval lands around the subject and a pose overlay appears on the outer | **Matt:** "Free: outer preview. Pro: pose overlays on the outer display." |
+## Tap path
 
-## If something goes wrong
-
-- A tap does nothing: tap again and hold a touch longer. There is no network or camera dependency on this path.
-- The oval is already showing: Pro was left on. Use **Turn Pro off for rehearsal** or relaunch.
-- Pro here is a simulated purchase. No real RevenueCat purchase runs and no store account is used.
+1. **Create account**: type a name, tap Create account.
+2. **Set your angles**: pick Camera height, Your good side, Framing. The stick figure previews the angle.
+3. **Pro (payments)**: Let AI find your best angles, then Unlock with Pro, then Unlock Pro. The RevenueCat Test Store dialog appears; choose Test valid purchase. If the store fails, a "Simulate purchase (demo)" button appears.
+4. **AI analysis**: Choose favorite photos. On-device face detection reads head turn, tilt, and face size in each photo and sets your angles.
+5. **Save my angles**: the Duo splits into two panes.
+   - INNER (photographer): your stick figure, a dashed amber ghost of your saved angle, arrows (Raise, Lower, Left, Right, Closer, Back), one instruction line.
+   - OUTER (you): how you look right now and a live match percentage.
+6. **Follow the arrows**: each tap moves the phone. Three taps per arrow; the match climbs to 100% and turns green, "Perfect angle. Take it."
+7. **New stranger** resets the phone off-angle. The account button has Edit my angles and Sign out.
