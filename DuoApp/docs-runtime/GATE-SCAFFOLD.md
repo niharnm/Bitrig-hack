@@ -21,7 +21,7 @@ Tip, countdown, guide-oval, and shutter consumers now use shared motion and Redu
 
 ## Owner blockers
 
-The incoming RC access-control error was resolved by `d0e4243`. Release still lacks SDK configuration, retains the supplied Test Store key, and DEBUG configuration logs the key. These findings were sent to the coordinating tasks for the RC owner. Cursor has not changed `Monetization/**` or `Features/Paywall/**`.
+The incoming RC access-control error was resolved by `d0e4243`. Release still lacks SDK configuration. Earlier key-retention and bootstrap-logging findings were resolved by owner revision `2b321c1`, as verified below. These findings were sent to the coordinating tasks for the RC owner. Cursor has not changed `Monetization/**` or `Features/Paywall/**`.
 
 No canonical scaffold, CCA, RevenueCat, Frost, or demo PASS follows from these builds, tests, or source presence.
 
@@ -30,3 +30,7 @@ No canonical scaffold, CCA, RevenueCat, Frost, or demo PASS follows from these b
 Exact committed revision `1a4e42fedffca355d3f4fdfa6f6802c5dd7462f8`: Release simulator build PASS with SDK 27.1, log `/tmp/outer-lens-1a4e42f-release.log`. A scan of that fresh executable using the original supplied key from the earlier committed identifiers still finds the Test Store key. DEBUG bootstrap still logs its configured key. Source grep gates do not substitute for this executable scan.
 
 Bitrig QA separately reports an `InnerCaptureView.swift:242:25` constructor error in the dirty shared checkout. That is not attributed to this committed revision; preserve owner edits and resolve it in their lane. The newly wired Frost slots compile. Protect governs automatic sensing; manual Simulate remains allowed when it is off per §12.5.3 and §12.6.1. Automatic sensing is not implemented, and no cutover acceptance is claimed.
+
+## RC key-fix verification
+
+Exact owner revision `2b321c1d0e5a8c488e57485e3af77ae696fa7295`: Release simulator build PASS with SDK 27.1, `/tmp/outer-lens-key-fix-release.log`. The fresh executable no longer contains the original supplied Test Store key. Source inspection confirms the bootstrap print no longer interpolates the configured key. This supersedes the key-retention findings above; runtime SDK logging and live purchase/restore remain unverified. The dirty shared checkout and its separate subscriber-settings commit were not modified or included in this check.

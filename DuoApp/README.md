@@ -16,6 +16,6 @@ The provisional bundle identifier is `dev.outerlens.DuoApp`. Device deployment n
 
 ## Evidence and remaining work
 
-See `docs-runtime/GATE-SCAFFOLD.md` for build and test evidence and `docs-runtime/DEMO-LAST-PASS.md` for acceptance limits. Live capture, purchase, restore, and cross-display unlock are not verified. The RC owner configures DEBUG only; Release purchase behavior is unavailable, and the Release executable retains the supplied Test Store key. The owner must remove that key from Release and stop logging it before release acceptance. Cursor has not edited monetization or paywall implementation.
+See `docs-runtime/GATE-SCAFFOLD.md` for build and test evidence and `docs-runtime/DEMO-LAST-PASS.md` for acceptance limits. Live capture, purchase, restore, and cross-display unlock are not verified. The RC owner configures DEBUG only; Release purchase behavior is unavailable, but owner revision `2b321c1` passed a fresh Release executable key-removal scan and removed key interpolation from the bootstrap print. Live purchase and restore still need acceptance evidence. Cursor has not edited monetization or paywall implementation.
 
 The initial RC access-control build error at `7e6eb80` was resolved by owner commit `d0e4243`. `GATE-RC.md` readiness claims are not treated as observed purchase proof. No canonical CCA, RevenueCat, or demo PASS is claimed here.
