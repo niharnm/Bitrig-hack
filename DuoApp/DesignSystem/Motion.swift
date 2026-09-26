@@ -79,3 +79,16 @@ struct FilmToolShutterButtonStyle: ButtonStyle {
       )
   }
 }
+
+/// P2 press micro for side controls (flip / Subject). Ease-out; never scale(0).
+struct FilmToolSideButtonStyle: ButtonStyle {
+  @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+  func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+      .scaleEffect(configuration.isPressed ? FilmToolMotion.p2Scale(reduceMotion: reduceMotion) : 1)
+      .animation(
+        FilmToolMotion.p2Animation(reduceMotion: reduceMotion), value: configuration.isPressed
+      )
+  }
+}

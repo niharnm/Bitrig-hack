@@ -35,13 +35,18 @@ final class CaptureSessionController {
   }
 
   func start() async {
-    guard permission == .authorized, phase == .idle else { return }
+    guard permission == .authorized else { return }
+    switch phase {
+    case .idle, .failed: break
+    default: return
+    }
     phase = .starting
     let result = await pipeline.start(position: .back)
     hasCamera = result != .noCamera
-    phase = result == .running ? .live : .idle
-    if result == .failed {
-      phase = .failed(.configuration)
+    switch result {
+    case .running: phase = .live
+    case .noCamera: phase = .idle
+    case .failed: phase = .failed(.configuration)
     }
   }
 
@@ -55,13 +60,22 @@ final class CaptureSessionController {
     _ = await pipeline.flip()
   }
 
-  /// C8: live → shutterFlash → live. The flash lasts at least 200ms (§11.2.4 B.capturing).
+  /// C8: live → shutterFlash → live. No-camera idle still flashes for Peak-End tip theater.
+  /// The flash lasts at least 200ms (§11.2.4 B.capturing).
   func capturePhoto() async {
-    guard phase == .live else { return }
+    let canFlash = phase == .live || (phase == .idle && !hasCamera)
+    guard canFlash else { return }
+    let resume: CaptureSessionPhase = phase == .live ? .live : .idle
     phase = .shutterFlash
     lastPhotoFailed = false
     async let minimumFlash: Void? = try? Task.sleep(for: .milliseconds(200))
-    let outcome = await pipeline.capturePhoto()
+    let outcome: PhotoCaptureOutcome
+    if resume == .live {
+      outcome = await pipeline.capturePhoto()
+    } else {
+      // Simulator / noDevices: visible flash + tip advance without AV capture.
+      outcome = .captured
+    }
     _ = await minimumFlash
     switch outcome {
     case .captured: capturedPhotoCount += 1
@@ -69,7 +83,7 @@ final class CaptureSessionController {
     }
     // `stop()` may have run while the photo was processing.
     if phase == .shutterFlash {
-      phase = .live
+      phase = resume
     }
   }
 }
