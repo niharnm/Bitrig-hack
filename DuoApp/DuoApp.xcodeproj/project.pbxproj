@@ -21,11 +21,13 @@
 		6E1FFA4FFC0B59D616E9B499 /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37F7A8121D8285F11C95F74 /* CountdownView.swift */; };
 		744ADA8E5315618169350853 /* PermissionPrimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE3C36BADCCD2711D3BE376 /* PermissionPrimerView.swift */; };
 		91561718E6B85D9F49419092 /* FrostOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71770844385F3444B97EA92 /* FrostOverlayView.swift */; };
+		916B7F931C4C8305D0620FA3 /* MotionAccessibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBA01B4542BE5B7794E90EA /* MotionAccessibilityTests.swift */; };
 		A2A09ECFE9F851531F218CDA /* PurchasesConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9354EC8492B413DA144E21 /* PurchasesConfig.swift */; };
 		AB3DFCD4FEA6150867D9FEB2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C78C8D4E652405C1DDF0493 /* Localizable.strings */; };
 		B58CF2576124869F7E24C07C /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5280A7B339BB8FE6AE5CF89 /* Tokens.swift */; };
 		B9B9578EB2CE807C299DB389 /* RCIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DB8CCC16138EFD544F27CD /* RCIdentifiers.swift */; };
 		BDA28D68FD1AC793BDDE5FBD /* CutoverFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F75A4811FF91EAECD2B468 /* CutoverFlag.swift */; };
+		C1D8EA3703D7B244839CACC2 /* FrostStandbyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BAB1F6A600D82293CF0471 /* FrostStandbyTests.swift */; };
 		C42CFAC24925FC7ED0CF2692 /* CaptureSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB2D7DF959653FAFDCA266B5 /* CaptureSessionController.swift */; };
 		C545986439EBF638CCCA5BD7 /* CaptureDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A29FFBDEC41539EDC234A06 /* CaptureDeniedView.swift */; };
 		C7BC5114BF437AC7CB54D5C4 /* ThreatLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6092AA6BA643BCE70C584 /* ThreatLevel.swift */; };
@@ -40,6 +42,16 @@
 		FAE0EE74E0F3FC37A35A4BCC /* SubjectCoachView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D75A75678192D0392AC4FB3D /* SubjectCoachView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		4FF94221983E3A8AAB6D2E99 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 901D238D33EA3426E29D4C7A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 24057CED48FE09674E6700DD;
+			remoteInfo = DuoApp;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		049DF790BE3A93C72EBBB12B /* CameraCaptureAccessoryHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureAccessoryHost.swift; sourceTree = "<group>"; };
 		26DFA355642198D1C0A8C0F3 /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
@@ -50,12 +62,15 @@
 		46026430B20A9E13EB686D14 /* DuoApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DuoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		475861CBA4629F76BF6348AF /* SensitiveSurfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitiveSurfaceView.swift; sourceTree = "<group>"; };
 		525314560A17BB45BA5C549C /* GuideOvalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideOvalView.swift; sourceTree = "<group>"; };
+		6F8C466DBFB7C4471F2A125D /* DuoAppTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DuoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C05765F02A3E03F6C8E45F1 /* PaywallHostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallHostView.swift; sourceTree = "<group>"; };
+		89BAB1F6A600D82293CF0471 /* FrostStandbyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrostStandbyTests.swift; sourceTree = "<group>"; };
 		89D85BE04E05C9F19A507638 /* OuterDecoyStageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OuterDecoyStageView.swift; sourceTree = "<group>"; };
 		8EE3C36BADCCD2711D3BE376 /* PermissionPrimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionPrimerView.swift; sourceTree = "<group>"; };
 		8FFDD7694A77E6F63DD78FBB /* Entitlements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entitlements.swift; sourceTree = "<group>"; };
 		93BABD7BDE391BB692107487 /* DuoAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuoAppApp.swift; sourceTree = "<group>"; };
 		A9AA2F89E872D4510C087FFF /* PoseRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoseRouter.swift; sourceTree = "<group>"; };
+		AFBA01B4542BE5B7794E90EA /* MotionAccessibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionAccessibilityTests.swift; sourceTree = "<group>"; };
 		B5280A7B339BB8FE6AE5CF89 /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
 		BD37CDFA039841965EFFE2F1 /* SimulateThreatControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulateThreatControl.swift; sourceTree = "<group>"; };
 		C1DB8CCC16138EFD544F27CD /* RCIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCIdentifiers.swift; sourceTree = "<group>"; };
@@ -155,6 +170,7 @@
 				5B4C5E3C78F860AFBBEB9113 /* Monetization */,
 				B1BC47A62EF1EB6B46C6D294 /* Resources */,
 				15E922DD3C3B26F9A97675EE /* Shared */,
+				AED86EABD6BA48586E133231 /* Tests */,
 				B1322A2481EF933C5D9CC5A8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -172,10 +188,20 @@
 			path = Frost;
 			sourceTree = "<group>";
 		};
+		AED86EABD6BA48586E133231 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				89BAB1F6A600D82293CF0471 /* FrostStandbyTests.swift */,
+				AFBA01B4542BE5B7794E90EA /* MotionAccessibilityTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 		B1322A2481EF933C5D9CC5A8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				46026430B20A9E13EB686D14 /* DuoApp.app */,
+				6F8C466DBFB7C4471F2A125D /* DuoAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -242,6 +268,24 @@
 			productReference = 46026430B20A9E13EB686D14 /* DuoApp.app */;
 			productType = "com.apple.product-type.application";
 		};
+		58A3F223564BC16487BAA9EA /* DuoAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 58145E81F5ECD74CF656EAD4 /* Build configuration list for PBXNativeTarget "DuoAppTests" */;
+			buildPhases = (
+				2749F063D65674A76E437FB7 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6FA573EA63C8C1DC5AF36306 /* PBXTargetDependency */,
+			);
+			name = DuoAppTests;
+			packageProductDependencies = (
+			);
+			productName = DuoAppTests;
+			productReference = 6F8C466DBFB7C4471F2A125D /* DuoAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -252,6 +296,9 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					24057CED48FE09674E6700DD = {
+						ProvisioningStyle = Automatic;
+					};
+					58A3F223564BC16487BAA9EA = {
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -274,6 +321,7 @@
 			projectRoot = "";
 			targets = (
 				24057CED48FE09674E6700DD /* DuoApp */,
+				58A3F223564BC16487BAA9EA /* DuoAppTests */,
 			);
 		};
 /* End PBXProject section */
@@ -291,6 +339,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2749F063D65674A76E437FB7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1D8EA3703D7B244839CACC2 /* FrostStandbyTests.swift in Sources */,
+				916B7F931C4C8305D0620FA3 /* MotionAccessibilityTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		72A3FB6D9E8AE6C7E151D7D2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -326,6 +383,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6FA573EA63C8C1DC5AF36306 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 24057CED48FE09674E6700DD /* DuoApp */;
+			targetProxy = 4FF94221983E3A8AAB6D2E99 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		060823391FB145C6810E1E78 /* Release */ = {
@@ -377,7 +442,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Outer Lens";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Outer Lens uses the camera to take photos and show framing to your subject.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Outer Lens uses the camera so you can shoot from the inner display while coaching the subject on the outer.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -420,6 +485,22 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.outerlens.DuoApp;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		46EDD65CC0698FF30FEFACC3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.outerlens.DuoAppTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DuoApp.app/DuoApp";
 			};
 			name = Debug;
 		};
@@ -478,7 +559,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Outer Lens";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Outer Lens uses the camera to take photos and show framing to your subject.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Outer Lens uses the camera so you can shoot from the inner display while coaching the subject on the outer.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -495,6 +576,22 @@
 			};
 			name = Debug;
 		};
+		7FF5B7F9D6BC6229B4292D87 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.outerlens.DuoAppTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DuoApp.app/DuoApp";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -503,6 +600,15 @@
 			buildConfigurations = (
 				6E19D33B9CF352BB584C5C0F /* Debug */,
 				060823391FB145C6810E1E78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		58145E81F5ECD74CF656EAD4 /* Build configuration list for PBXNativeTarget "DuoAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46EDD65CC0698FF30FEFACC3 /* Debug */,
+				7FF5B7F9D6BC6229B4292D87 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
