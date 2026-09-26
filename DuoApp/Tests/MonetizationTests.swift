@@ -19,6 +19,11 @@ final class MonetizationTests: XCTestCase {
     XCTAssertFalse(RCIdentifiers.offeringId.contains("PLACEHOLDER"), "Offering ID must be populated")
     XCTAssertFalse(RCIdentifiers.packageId.contains("PLACEHOLDER"), "Package ID must be populated")
     XCTAssertFalse(RCIdentifiers.productId.contains("PLACEHOLDER"), "Product ID must be populated")
+    XCTAssertEqual(RCIdentifiers.packageId, "$rc_monthly")
+    XCTAssertEqual(
+      RCIdentifiers.subscriptionPackageIds,
+      [RCIdentifiers.lifetimePackageId, RCIdentifiers.yearlyPackageId, RCIdentifiers.monthlyPackageId]
+    )
   }
 
   func testEntitlementStateStatusMachine() {
@@ -49,6 +54,14 @@ final class MonetizationTests: XCTestCase {
   func testOfferingsErrorCases() {
     let err = OfferingsError.currentNil
     XCTAssertEqual(err, OfferingsError.currentNil)
+  }
+
+  func testSubscriptionErrorDescriptions() {
+    XCTAssertNotNil(SubscriptionError.notConfigured.errorDescription)
+    XCTAssertNotNil(SubscriptionError.missingOffering.errorDescription)
+    XCTAssertNotNil(SubscriptionError.missingPackage("yearly").errorDescription)
+    XCTAssertNotNil(SubscriptionError.cancelled.errorDescription)
+    XCTAssertEqual(SubscriptionError.underlying("x").errorDescription, "x")
   }
 
   func testPurchaseOutcomeCases() {
