@@ -30,6 +30,16 @@ Sources checked on 2026-09-26:
 
 ## Phase 1: visual QA and preview diagnosis, start now
 
+### Conversation scope
+
+Use multiple Bitrig chats, one per bounded task. Start a fresh chat when the objective, owner, or validation revision changes substantially. Keep each handoff short: objective, exact revision and dirty state, files to read or write, verified evidence, blockers, and expected output. Do not carry the full project history into every chat.
+
+- Keep setup/build diagnosis, visual QA, demo planning/captures, and authorized ASSETS edits in separate chats.
+- Give each chat its own output file. The visual QA chat owns `BITRIG-REVIEW.md`; the demo planning chat owns `BITRIG-DEMO-PLAN.md` under `DuoApp/docs-runtime/`.
+- Only one chat controls the shared simulator or builds the shared checkout at a time. Independent source review and demo planning may run alongside it.
+- Preserve existing file ownership and the three-writer limit. New chats do not grant new code-edit permissions.
+- Close each task with a compact result and use that result as the next chat's handoff.
+
 Code is read-only. Bitrig may write only `DuoApp/docs-runtime/BITRIG-REVIEW.md`. Build output and screenshots belong in temporary directories outside the repository.
 
 1. Read the lane contract, design direction, acceptance tests, and current scaffold gate.
