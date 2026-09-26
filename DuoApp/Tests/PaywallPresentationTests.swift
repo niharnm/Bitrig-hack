@@ -65,4 +65,45 @@ final class PaywallPresentationTests: XCTestCase {
     presenter()
     XCTAssertEqual(presentations, 1)
   }
+
+  func testSubscriptionAccessUnlocksOnlyPro() {
+    XCTAssertTrue(SubscriptionAccess.isUnlocked(activeEntitlementIDs: ["pro"]))
+    XCTAssertFalse(SubscriptionAccess.isUnlocked(activeEntitlementIDs: ["photon_pro"]))
+    XCTAssertFalse(SubscriptionAccess.isUnlocked(activeEntitlementIDs: []))
+    XCTAssertEqual(
+      SubscriptionAccess.displayedEntitlementID(activeEntitlementIDs: ["photon_pro"]),
+      RCIdentifiers.entitlementId
+    )
+  }
+
+  func testOfferingPackagesSoftFallbackPrefersWiredPackages() {
+    let available = ["lifetime", "$rc_monthly"]
+    XCTAssertEqual(
+      OfferingPackages.resolvePurchasePackageId(requested: "yearly", availableIdentifiers: available),
+      "lifetime"
+    )
+    XCTAssertEqual(
+      OfferingPackages.resolvePurchasePackageId(requested: "lifetime", availableIdentifiers: available),
+      "lifetime"
+    )
+  }
+
+  func testOfferingPackagesSoftFallbackToRcMonthly() {
+    let available = ["$rc_monthly"]
+    XCTAssertEqual(
+      OfferingPackages.resolvePurchasePackageId(requested: "yearly", availableIdentifiers: available),
+      RCIdentifiers.packageId
+    )
+    XCTAssertEqual(
+      OfferingPackages.resolvePurchasePackageId(requested: "missing", availableIdentifiers: []),
+      RCIdentifiers.packageId
+    )
+  }
+
+  func testMatchingWiredPackagesFiltersOffering() {
+    XCTAssertEqual(
+      OfferingPackages.matchingWiredPackages(availableIdentifiers: ["yearly", "weekly", "lifetime"]),
+      ["lifetime", "yearly"]
+    )
+  }
 }
