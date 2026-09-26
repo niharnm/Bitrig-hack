@@ -3,22 +3,21 @@ import XCTest
 @testable import DuoApp
 
 final class PaywallPresentationTests: XCTestCase {
-  func testWiredPackageIdentifiersAndPhotonProAccess() {
+  func testWiredPackageIdentifiersAndProAccess() {
     XCTAssertEqual(
       RCIdentifiers.subscriptionPackageIds,
       ["lifetime", "yearly", "monthly"]
     )
-    XCTAssertEqual(RCIdentifiers.photonProEntitlementId, "photon_pro")
+    XCTAssertEqual(RCIdentifiers.entitlementId, "pro")
     XCTAssertEqual(
       OfferingPackages.matchingWiredPackages(availableIdentifiers: ["yearly", "other", "monthly"]),
       ["yearly", "monthly"]
     )
-    XCTAssertTrue(SubscriptionAccess.isUnlocked(activeEntitlementIDs: ["photon_pro"]))
     XCTAssertTrue(SubscriptionAccess.isUnlocked(activeEntitlementIDs: ["pro"]))
     XCTAssertFalse(SubscriptionAccess.isUnlocked(activeEntitlementIDs: ["lifetime"]))
     XCTAssertEqual(
-      SubscriptionAccess.displayedEntitlementID(activeEntitlementIDs: ["pro", "photon_pro"]),
-      "photon_pro"
+      SubscriptionAccess.displayedEntitlementID(activeEntitlementIDs: ["pro"]),
+      "pro"
     )
   }
 

@@ -113,7 +113,6 @@ public enum OfferingsError: Error {
 }
 
 public struct SubscriptionSnapshot: Equatable, Sendable {
-    public var photonProActive: Bool
     public var proActive: Bool
     public var activeEntitlementIDs: [String]
 
@@ -125,7 +124,6 @@ public struct SubscriptionSnapshot: Equatable, Sendable {
     init(customerInfo: CustomerInfo) {
         let active = Array(customerInfo.entitlements.active.keys).sorted()
         activeEntitlementIDs = active
-        photonProActive = active.contains(RCIdentifiers.photonProEntitlementId)
         proActive = active.contains(RCIdentifiers.entitlementId)
     }
     #endif

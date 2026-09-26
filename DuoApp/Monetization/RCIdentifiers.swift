@@ -17,8 +17,6 @@ public enum RCIdentifiers {
         return "test_vLzHLIyotfZAGehQHdRCKFPRyyN"
     }()
     public static let entitlementId = "pro"
-    /// Entitlement requested for this integration. `pro` stays the existing Test Store id.
-    public static let photonProEntitlementId = "photon_pro"
     public static let productId = "outerlens_pro_monthly"
     public static let offeringId = "default"
     public static let packageId = "$rc_monthly"
@@ -40,19 +38,12 @@ public enum RCIdentifiers {
 
 public enum SubscriptionAccess {
     public static func isUnlocked(activeEntitlementIDs: some Sequence<String>) -> Bool {
-        let ids = Set(activeEntitlementIDs)
-        return ids.contains(RCIdentifiers.photonProEntitlementId) || ids.contains(RCIdentifiers.entitlementId)
+        Set(activeEntitlementIDs).contains(RCIdentifiers.entitlementId)
     }
 
     public static func displayedEntitlementID(activeEntitlementIDs: some Sequence<String>) -> String {
-        let ids = Set(activeEntitlementIDs)
-        if ids.contains(RCIdentifiers.photonProEntitlementId) {
-            return RCIdentifiers.photonProEntitlementId
-        }
-        if ids.contains(RCIdentifiers.entitlementId) {
-            return RCIdentifiers.entitlementId
-        }
-        return RCIdentifiers.photonProEntitlementId
+        _ = activeEntitlementIDs
+        return RCIdentifiers.entitlementId
     }
 }
 

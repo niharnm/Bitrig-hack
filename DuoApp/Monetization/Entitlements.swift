@@ -48,7 +48,7 @@ public final class EntitlementsModel: ObservableObject {
             } catch {
                 self?.state = EntitlementState(
                     status: .error,
-                    entitlementID: RCIdentifiers.photonProEntitlementId,
+                    entitlementID: RCIdentifiers.entitlementId,
                     lastError: error.localizedDescription
                 )
             }
@@ -58,7 +58,7 @@ public final class EntitlementsModel: ObservableObject {
             }
         }
         #else
-        state = EntitlementState(status: .inactive, entitlementID: RCIdentifiers.photonProEntitlementId, lastError: nil)
+        state = EntitlementState(status: .inactive, entitlementID: RCIdentifiers.entitlementId, lastError: nil)
         #endif
     }
 

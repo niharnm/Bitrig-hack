@@ -13,7 +13,7 @@ DEVELOPER_DIR=/Applications/Xcode-27.1-beta.app/Contents/Developer \
 ## Monetization
 
 - `PurchasesConfig` calls `Purchases.configure` with the public Test Store key in `RCIdentifiers`.
-- Unlock checks `photon_pro` and the existing Test Store entitlement `pro`.
+- Unlock checks the existing Test Store entitlement `pro`.
 - Current-offering package identifiers are `lifetime`, `yearly`, and `monthly`.
 - The inner paywall presents RevenueCat `PaywallView`. Capture settings is the subscriber surface: Customer Center, restore, and those three packages.
 
