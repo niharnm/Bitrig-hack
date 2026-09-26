@@ -2,6 +2,7 @@ import SwiftUI
 
 /// Inner capture shell (SCR-OL-B). Hosts the outer coach and keeps the shutter working without it.
 struct InnerCaptureView: View {
+  @State private var capture = CaptureSessionController()
   @State private var coach = CoachModel()
   @State private var isSubjectEnabled = true
   @State private var isSubjectAvailable = false
@@ -12,23 +13,42 @@ struct InnerCaptureView: View {
   private var isPro: Bool { entitlements.state.isPro || coach.isProSimulated }
 
   var body: some View {
+    switch capture.permission {
+    case .notDetermined, .requesting:
+      PermissionPrimerView(isRequesting: capture.permission == .requesting) {
+        Task { await capture.requestAccess() }
+      }
+    case .denied, .restricted:
+      CaptureDeniedView(isRestricted: capture.permission == .restricted)
+    case .authorized:
+      captureShell
+    }
+  }
+
+  private var captureShell: some View {
     ZStack(alignment: .bottom) {
-      // Black preview stand-in until CaptureSessionController lands.
       Color.black.ignoresSafeArea()
+      if capture.phase == .live {
+        CapturePreviewView(session: capture.session)
+          .ignoresSafeArea()
+      }
       if !isSubjectAvailable {
         subjectPreview
           .frame(maxHeight: .infinity)
       }
       VStack(spacing: 16) {
-        if !isSubjectAvailable {
-          Text("capture.banner.accessoryUnavailable")
+        if let banner {
+          Text(banner)
             .font(.footnote.weight(.medium))
             .foregroundStyle(.white.opacity(0.7))
         }
         shutterButton
           .frame(maxWidth: .infinity)
           .overlay(alignment: .leading) {
-            subjectToggle
+            HStack(spacing: 12) {
+              flipButton
+              subjectToggle
+            }
           }
           .overlay(alignment: .trailing) {
             proControl
@@ -48,13 +68,42 @@ struct InnerCaptureView: View {
       settingsSheet
     }
     .task {
+      await capture.start()
+    }
+    .task {
       await coach.runTipCycle()
+    }
+    .onDisappear {
+      capture.stop()
     }
     .modifier(
       CameraCaptureAccessoryHost(
         isEnabled: $isSubjectEnabled,
         isAvailable: $isSubjectAvailable,
         model: coach))
+  }
+
+  /// One status line at most. Missing camera wins because it explains the black preview.
+  private var banner: LocalizedStringKey? {
+    if case .failed = capture.phase {
+      return "error.sessionFailed"
+    }
+    if !capture.hasCamera {
+      return "capture.banner.noDevices"
+    }
+    return isSubjectAvailable ? nil : "capture.banner.accessoryUnavailable"
+  }
+
+  @ViewBuilder
+  private var flipButton: some View {
+    if capture.phase == .live {
+      Button("capture.flip", systemImage: "camera.rotate") {
+        Task { await capture.flipCamera() }
+      }
+      .labelStyle(.iconOnly)
+      .buttonStyle(.glass)
+      .tint(.white)
+    }
   }
 
   /// While the system is not presenting the accessory, show the photographer what the subject would see.
@@ -98,7 +147,8 @@ struct InnerCaptureView: View {
 
   private var shutterButton: some View {
     Button {
-      // Photo capture wires to CaptureSessionController next; the shutter also advances the tip (§11.3.6).
+      // The shutter also advances the tip (§11.3.6).
+      capture.capturePhoto()
       coach.advanceTip()
     } label: {
       Circle()
