@@ -85,5 +85,33 @@ enum FilmToolTokens {
     public static let minScale: CGFloat = 0.96
     public static let maxScale: CGFloat = 1.16
   }
+
+  struct FilmGrade: Sendable, Equatable {
+    let contrast: Double
+    let saturation: Double
+    let amberTintOpacity: Double
+    let tintColor: Color
+
+    static let natural = FilmGrade(
+      contrast: 1.0, saturation: 1.0, amberTintOpacity: 0.0, tintColor: .clear)
+    static let leicaMono = FilmGrade(
+      contrast: 1.28, saturation: 0.0, amberTintOpacity: 0.0, tintColor: .clear)
+    static let warmAmber = FilmGrade(
+      contrast: 1.08, saturation: 1.15, amberTintOpacity: 0.24,
+      tintColor: FilmToolTokens.Palette.accent)
+    static let portraSoft = FilmGrade(
+      contrast: 0.94, saturation: 0.90, amberTintOpacity: 0.08,
+      tintColor: Color(red: 245 / 255, green: 215 / 255, blue: 185 / 255))
+  }
 }
 
+extension FilmStock {
+  var grade: FilmToolTokens.FilmGrade {
+    switch self {
+    case .natural: return .natural
+    case .leicaMono: return .leicaMono
+    case .warmAmber: return .warmAmber
+    case .portraSoft: return .portraSoft
+    }
+  }
+}
