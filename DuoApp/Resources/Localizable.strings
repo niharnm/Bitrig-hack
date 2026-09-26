@@ -24,6 +24,7 @@
 "capture.starting" = "Getting ready…";
 "capture.banner.accessoryUnavailable" = "Subject screen unavailable on this device";
 "capture.banner.noDevices" = "Camera preview unavailable — tips still work";
+"capture.banner.photoFailed" = "Photo not taken. Try again.";
 "capture.settings.title" = "Settings";
 "capture.settings.simulateTip" = "Simulate tip";
 "capture.settings.simulatePro" = "Simulate Pro unlock";
